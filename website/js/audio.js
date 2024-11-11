@@ -1,12 +1,11 @@
 const audioes = document.querySelectorAll("audio.audio");
 const audioControls = document.querySelectorAll(".audio-controls");
-const playPauseBtns = document.querySelectorAll(".playPauseBtn");
 const playIcons = document.querySelectorAll(".playIcon");
 const pauseIcons = document.querySelectorAll(".pauseIcon");
 const progressBars = document.querySelectorAll(".progressBar");
 const timeDisplays = document.querySelectorAll(".timeDisplay");
 
-const playNextDuration = 5000;
+const playNextDuration = 5000; // 5s delay in Next Song
 
 function removeActiveClass() {
   [...progressBars, ...timeDisplays].forEach((item) => {
@@ -20,6 +19,7 @@ function pauseAnyContinuingAudio() {
   audioes.forEach((audio, index) => {
     if (!audio.paused) {
       audio.pause();
+      // shall i also reset the bar and strting time?
       playIcons[index].style.display = "block";
       pauseIcons[index].style.display = "none";
     }
@@ -30,6 +30,13 @@ function resetMusicPlayer(index) {
   playIcons[index].style.display = "block";
   pauseIcons[index].style.display = "none";
   removeActiveClass();
+}
+
+function uiSetupForNewMusic(index) {
+  playIcons[index].style.display = "none";
+  pauseIcons[index].style.display = "block";
+  progressBars[index].classList.add("player-is-active");
+  timeDisplays[index].classList.add("player-is-active");
 }
 
 // Toggle play/pause
@@ -56,32 +63,41 @@ audioControls.forEach((audioControl, index) => {
     if (index < audioes.length - 1) {
       audio.addEventListener("ended", () => {
         const playNext = localStorage.getItem("playNext");
+
+        // if `none` is selected.
         if (playNext === "false") {
           setTimeout(() => {
+            // remove the ended eventlistner for audio
             resetMusicPlayer(index);
           }, playNextDuration);
           return;
-        } else if (playNext === "true") {
+        }
+
+        // If "next" is selcted
+        else if (playNext === "true") {
           setTimeout(() => {
             resetMusicPlayer(index);
+            // audio.removeEventListener("ended", )
             audio = audioes[index + 1];
             audio.play();
-            playIcons[index + 1].style.display = "none";
-            pauseIcons[index + 1].style.display = "block";
-            progressBars[index + 1].classList.add("player-is-active");
-            timeDisplays[index + 1].classList.add("player-is-active");
+            uiSetupForNewMusic(index + 1);
+            index += 1;
           }, playNextDuration);
-        } else if (playNext === "repeat") {
+        }
+
+        // if same song repeat
+        else if (playNext === "repeat") {
           setTimeout(() => {
+            // remove eventlistners?
             resetMusicPlayer(index);
             audio = audioes[index];
             audio.play();
-            playIcons[index].style.display = "none";
-            pauseIcons[index].style.display = "block";
-            progressBars[index].classList.add("player-is-active");
-            timeDisplays[index].classList.add("player-is-active");
+            uiSetupForNewMusic(index);
           }, playNextDuration);
-        } else if (playNext === "shuffle") {
+        }
+
+        // if random shuffle
+        else if (playNext === "shuffle") {
           let k;
           do {
             k = Math.floor(Math.random() * audioes.length); // randint(0, len)
@@ -92,10 +108,7 @@ audioControls.forEach((audioControl, index) => {
             resetMusicPlayer(index);
             audio = audioes[k];
             audio.play();
-            playIcons[k].style.display = "none";
-            pauseIcons[k].style.display = "block";
-            progressBars[k].classList.add("player-is-active");
-            timeDisplays[k].classList.add("player-is-active");
+            uiSetupForNewMusic(k);
           }, playNextDuration);
         } else {
           console.log("No play next preference found");

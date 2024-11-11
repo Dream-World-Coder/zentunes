@@ -14,6 +14,8 @@
   overflow: hidden;
   width: 24px;
   height: 24px;
+  border: 1px solid black;
+  border-radius: 3px;
 }
 .play-next-options div.active {
   background-color: #859f3d;
@@ -87,7 +89,7 @@ ul.musics li.music .audio-player figure .audio-controls {
   gap: 15px;
   padding: 5px 15px;
   border-radius: 30px;
-  border: 1px solid #859f3d;
+  border: 1px solid black;
   background-color: #859f3d;
 }
 @media screen and (max-width: 640px) {

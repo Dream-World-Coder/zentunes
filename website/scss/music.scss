@@ -14,6 +14,8 @@
     overflow: hidden;
     width: 24px;
     height: 24px;
+    border: 1px solid black;
+    border-radius: 3px;
 
     &.active {
       // border: 1px solid #859f3d;
@@ -102,7 +104,7 @@ ul.musics {
           gap: $gap;
           padding: 5px $gap;
           border-radius: $gap * 2;
-          border: 1px solid $thumbColor;
+          border: 1px solid black;
           background-color: $audioBackgroundClr;
 
           @media screen and (max-width: 640px) {
