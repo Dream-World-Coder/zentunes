@@ -82,16 +82,20 @@ audioControls.forEach((audioControl, index) => {
             timeDisplays[index].classList.add("player-is-active");
           }, playNextDuration);
         } else if (playNext === "shuffle") {
-          let k = Math.floor(Math.random() * (audioes.length - index));
-          console.log(`k= ${k}`);
+          let k;
+          do {
+            k = Math.floor(Math.random() * audioes.length); // randint(0, len)
+          } while (k === index); // Recalculate if same
+
+          console.log(`k = ${k}`);
           setTimeout(() => {
             resetMusicPlayer(index);
-            audio = audioes[index + k];
+            audio = audioes[k];
             audio.play();
-            playIcons[index + k].style.display = "none";
-            pauseIcons[index + k].style.display = "block";
-            progressBars[index + k].classList.add("player-is-active");
-            timeDisplays[index + k].classList.add("player-is-active");
+            playIcons[k].style.display = "none";
+            pauseIcons[k].style.display = "block";
+            progressBars[k].classList.add("player-is-active");
+            timeDisplays[k].classList.add("player-is-active");
           }, playNextDuration);
         } else {
           console.log("No play next preference found");
