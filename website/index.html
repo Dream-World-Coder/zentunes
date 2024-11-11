@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>zentunes</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/header.css" />
+    <link rel="stylesheet" href="css/musics.css" />
+    <link rel="stylesheet" href="css/utils.css" />
+  </head>
+  <body>
+    <div id="root">
+      <div class="">
+        <header>
+          <div class="logo">
+            <img src="images/logo.svg" alt="logo" />
+          </div>
+          <nav>
+            <ul>
+              <li class="nav-li"><a href="#">Home</a></li>
+              <!-- `all songs` does not quite fit here -->
+              <li class="nav-li dropdown">
+                Categories
+                <ul class="music-categories">
+                  <li class="category-li"><a href="#">Nature</a></li>
+                  <li class="category-li"><a href="#">Classical</a></li>
+                  <li class="category-li">
+                    <a href="#">Retro Bangla</a>
+                  </li>
+                  <li class="category-li"><a href="#">Rabindra Sangeeet</a></li>
+                </ul>
+              </li>
+              <li class="nav-li"><a href="#">About</a></li>
+              <li class="nav-li"><a href="#">Contact</a></li>
+            </ul>
+          </nav>
+
+          <div class="mobile-nav dropdown">
+            <img src="images/ham.svg" alt="" srcset="" />
+            <ul>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Contact</a></li>
+            </ul>
+          </div>
+          <div class="options">
+            <div class="dark-mode-button">
+              <img src="images/dark-mode.svg" alt="dark-mode" />
+            </div>
+            <div class="download-button">
+              <img src="images/downloaded-songs.svg" alt="downloaded songs" />
+            </div>
+          </div>
+        </header>
+
+        <section>
+          <h2>Melodies of Nature</h2>
+          <p>
+            Some melodies of my collection. I hope you like them. Taken from
+            vivo's youtube channel.
+          </p>
+
+          <div class="play-next-options">
+            <div class="play-next">
+              <img src="images/play-next.svg" alt="play next" />
+            </div>
+            <div class="shuffle">
+              <img src="images/shuffle.svg" alt="shuffle" />
+            </div>
+            <div class="repeat">
+              <img src="images/repeat.svg" alt="repeat" />
+            </div>
+            <div class="none">
+              <img src="images/none.svg" alt="none" />
+            </div>
+            <script>
+              const playNext = document.querySelector(".play-next");
+              const shuffle = document.querySelector(".shuffle");
+              const repeat = document.querySelector(".repeat");
+              const none = document.querySelector(".none");
+
+              const playNextValue = localStorage.getItem("playNext");
+              if (playNextValue === "true") {
+                playNext.classList.add("active");
+              } else if (playNextValue === "shuffle") {
+                shuffle.classList.add("active");
+              } else if (playNextValue === "repeat") {
+                repeat.classList.add("active");
+              } else if (playNextValue === "false") {
+                none.classList.add("active");
+              }
+
+              playNext.addEventListener("click", () => {
+                localStorage.setItem("playNext", "true");
+                playNext.classList.add("active");
+                shuffle.classList.remove("active");
+                repeat.classList.remove("active");
+                none.classList.remove("active");
+              });
+              shuffle.addEventListener("click", () => {
+                localStorage.setItem("playNext", "shuffle");
+                playNext.classList.remove("active");
+                shuffle.classList.add("active");
+                repeat.classList.remove("active");
+                none.classList.remove("active");
+              });
+              repeat.addEventListener("click", () => {
+                localStorage.setItem("playNext", "repeat");
+                playNext.classList.remove("active");
+                shuffle.classList.remove("active");
+                repeat.classList.add("active");
+                none.classList.remove("active");
+              });
+              none.addEventListener("click", () => {
+                localStorage.setItem("playNext", "false");
+                playNext.classList.remove("active");
+                shuffle.classList.remove("active");
+                repeat.classList.remove("active");
+                none.classList.add("active");
+              });
+            </script>
+          </div>
+
+          <ul class="musics">
+            <li class="music">
+              <img src="images/music.svg" alt="audio" />
+              <div
+                class="audio-player"
+                class="link"
+                style="
+                  translate: none;
+                  rotate: none;
+                  scale: none;
+                  transform: translate(0px, 0px);
+                "
+              >
+                <figure>
+                  <figcaption>audio</figcaption>
+                  <div class="audio-controls">
+                    <audio class="audio">
+                      <source src="./song.mp3" type="audio/mpeg" />
+                      This audio is not supported by your browser.
+                    </audio>
+                    <div class="playPauseBtn">
+                      <img
+                        src="images/play.svg"
+                        alt="play music"
+                        class="playIcon"
+                        style="display: block"
+                      />
+                      <img
+                        src="images/pause.svg"
+                        alt="pause music"
+                        class="pauseIcon"
+                        style="display: none"
+                      />
+                    </div>
+                    <input
+                      class="progressBar"
+                      type="range"
+                      value="0"
+                      step="0.1"
+                    />
+                    <div class="timeDisplay">00:00</div>
+                  </div>
+                </figure>
+              </div>
+              <span
+                class="overlay"
+                style="
+                  translate: none;
+                  rotate: none;
+                  scale: none;
+                  transform-origin: 0px 0px;
+                  transform: scale(1, 0);
+                "
+              ></span>
+            </li>
+
+            <!-- 090909090 -->
+
+            <li class="music">
+              <img src="images/music.svg" alt="audio" />
+              <div
+                class="audio-player"
+                class="link"
+                style="
+                  translate: none;
+                  rotate: none;
+                  scale: none;
+                  transform: translate(0px, 0px);
+                "
+              >
+                <figure>
+                  <figcaption>audio</figcaption>
+                  <div class="audio-controls">
+                    <audio class="audio">
+                      <source src="./song.mp3" type="audio/mpeg" />
+                      This audio is not supported by your browser.
+                    </audio>
+                    <div class="playPauseBtn">
+                      <img
+                        src="images/play.svg"
+                        alt="play music"
+                        class="playIcon"
+                        style="display: block"
+                      />
+                      <img
+                        src="images/pause.svg"
+                        alt="pause music"
+                        class="pauseIcon"
+                        style="display: none"
+                      />
+                    </div>
+                    <input
+                      class="progressBar"
+                      type="range"
+                      value="0"
+                      step="0.1"
+                    />
+                    <div class="timeDisplay">00:00</div>
+                  </div>
+                </figure>
+              </div>
+              <span
+                class="overlay"
+                style="
+                  translate: none;
+                  rotate: none;
+                  scale: none;
+                  transform-origin: 0px 0px;
+                  transform: scale(1, 0);
+                "
+              ></span>
+            </li>
+            <li class="music">
+              <img src="images/music.svg" alt="audio" />
+              <div
+                class="audio-player"
+                class="link"
+                style="
+                  translate: none;
+                  rotate: none;
+                  scale: none;
+                  transform: translate(0px, 0px);
+                "
+              >
+                <figure>
+                  <figcaption>audio</figcaption>
+                  <div class="audio-controls">
+                    <audio class="audio">
+                      <source src="./song.mp3" type="audio/mpeg" />
+                      This audio is not supported by your browser.
+                    </audio>
+                    <div class="playPauseBtn">
+                      <img
+                        src="images/play.svg"
+                        alt="play music"
+                        class="playIcon"
+                        style="display: block"
+                      />
+                      <img
+                        src="images/pause.svg"
+                        alt="pause music"
+                        class="pauseIcon"
+                        style="display: none"
+                      />
+                    </div>
+                    <input
+                      class="progressBar"
+                      type="range"
+                      value="0"
+                      step="0.1"
+                    />
+                    <div class="timeDisplay">00:00</div>
+                  </div>
+                </figure>
+              </div>
+              <span
+                class="overlay"
+                style="
+                  translate: none;
+                  rotate: none;
+                  scale: none;
+                  transform-origin: 0px 0px;
+                  transform: scale(1, 0);
+                "
+              ></span>
+            </li>
+            <li class="music">
+              <img src="images/music.svg" alt="audio" />
+              <div
+                class="audio-player"
+                class="link"
+                style="
+                  translate: none;
+                  rotate: none;
+                  scale: none;
+                  transform: translate(0px, 0px);
+                "
+              >
+                <figure>
+                  <figcaption>audio</figcaption>
+                  <div class="audio-controls">
+                    <audio class="audio">
+                      <source src="./song.mp3" type="audio/mpeg" />
+                      This audio is not supported by your browser.
+                    </audio>
+                    <div class="playPauseBtn">
+                      <img
+                        src="images/play.svg"
+                        alt="play music"
+                        class="playIcon"
+                        style="display: block"
+                      />
+                      <img
+                        src="images/pause.svg"
+                        alt="pause music"
+                        class="pauseIcon"
+                        style="display: none"
+                      />
+                    </div>
+                    <input
+                      class="progressBar"
+                      type="range"
+                      value="0"
+                      step="0.1"
+                    />
+                    <div class="timeDisplay">00:00</div>
+                  </div>
+                </figure>
+              </div>
+              <span
+                class="overlay"
+                style="
+                  translate: none;
+                  rotate: none;
+                  scale: none;
+                  transform-origin: 0px 0px;
+                  transform: scale(1, 0);
+                "
+              ></span>
+            </li>
+            <li class="music">
+              <img src="images/music.svg" alt="audio" />
+              <div
+                class="audio-player"
+                class="link"
+                style="
+                  translate: none;
+                  rotate: none;
+                  scale: none;
+                  transform: translate(0px, 0px);
+                "
+              >
+                <figure>
+                  <figcaption>audio</figcaption>
+                  <div class="audio-controls">
+                    <audio class="audio">
+                      <source src="./song.mp3" type="audio/mpeg" />
+                      This audio is not supported by your browser.
+                    </audio>
+                    <div class="playPauseBtn">
+                      <img
+                        src="images/play.svg"
+                        alt="play music"
+                        class="playIcon"
+                        style="display: block"
+                      />
+                      <img
+                        src="images/pause.svg"
+                        alt="pause music"
+                        class="pauseIcon"
+                        style="display: none"
+                      />
+                    </div>
+                    <input
+                      class="progressBar"
+                      type="range"
+                      value="0"
+                      step="0.1"
+                    />
+                    <div class="timeDisplay">00:00</div>
+                  </div>
+                </figure>
+              </div>
+              <span
+                class="overlay"
+                style="
+                  translate: none;
+                  rotate: none;
+                  scale: none;
+                  transform-origin: 0px 0px;
+                  transform: scale(1, 0);
+                "
+              ></span>
+            </li>
+            <li class="music">
+              <img src="images/music.svg" alt="audio" />
+              <div
+                class="audio-player"
+                class="link"
+                style="
+                  translate: none;
+                  rotate: none;
+                  scale: none;
+                  transform: translate(0px, 0px);
+                "
+              >
+                <figure>
+                  <figcaption>audio</figcaption>
+                  <div class="audio-controls">
+                    <audio class="audio">
+                      <source src="./song.mp3" type="audio/mpeg" />
+                      This audio is not supported by your browser.
+                    </audio>
+                    <div class="playPauseBtn">
+                      <img
+                        src="images/play.svg"
+                        alt="play music"
+                        class="playIcon"
+                        style="display: block"
+                      />
+                      <img
+                        src="images/pause.svg"
+                        alt="pause music"
+                        class="pauseIcon"
+                        style="display: none"
+                      />
+                    </div>
+                    <input
+                      class="progressBar"
+                      type="range"
+                      value="0"
+                      step="0.1"
+                    />
+                    <div class="timeDisplay">00:00</div>
+                  </div>
+                </figure>
+              </div>
+              <span
+                class="overlay"
+                style="
+                  translate: none;
+                  rotate: none;
+                  scale: none;
+                  transform-origin: 0px 0px;
+                  transform: scale(1, 0);
+                "
+              ></span>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script type="text/javascript" src="./js/script.js"></script>
+    <script type="text/javascript" src="./js/audio.js"></script>
+    <script type="text/javascript" src="./js/dark-mode.js"></script>
+  </body>
+</html>
