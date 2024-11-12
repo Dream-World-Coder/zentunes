@@ -81,7 +81,7 @@ audioControls.forEach((audioControl, index) => {
             audio = audioes[index + 1];
             audio.play();
             uiSetupForNewMusic(index + 1);
-            index += 1;
+            // index += 1;
           }, playNextDuration);
         }
 
