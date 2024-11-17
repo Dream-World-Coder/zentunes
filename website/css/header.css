@@ -111,6 +111,10 @@ header nav ul li a:hover {
 header .mobile-nav {
   margin-right: 30px;
   display: none;
+  margin-left: auto;
+  margin-right: auto;
+  width: 20px;
+  height: 20px;
 }
 header .mobile-nav ul {
   flex-direction: column;
