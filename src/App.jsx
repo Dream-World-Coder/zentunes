@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
+import Lenis from "lenis";
 
 import "./styles/style.css";
 import "./App.css";
@@ -11,6 +13,22 @@ import ContactPage from "./pages/Contact/Contact";
 import NotFoundPage from "./pages/NotFound";
 
 export default function App() {
+    useEffect(() => {
+        const lenis = new Lenis({
+            duration: 0.1,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smooth: true,
+        });
+        function raf(time) {
+            lenis.raf(time);
+            requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+        return () => {
+            lenis.destroy();
+        };
+    }, []);
+
     return (
         <HelmetProvider>
             <Router>
