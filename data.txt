@@ -1,4 +1,1 @@
 first fetch & download the complete music, after that play
-
-
-"Get in touch with Subhajit Gorai, the developer and maintainer of OpenCanvas. Feel free to suggest any thoughts or connect via email, LinkedIn, GitHub, or other platforms."

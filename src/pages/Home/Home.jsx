@@ -4,7 +4,7 @@ import musicsData from "../MusicPage/musics";
 export default function Home() {
     const helmetObj = {
         title: "Home",
-        description: "Welcome",
+        description: "Homepage of zentunes",
         robotsTxt: "index, follow",
         currentUrl: "https://zentunes.netlify.app",
         cannonical: "https://zentunes.netlify.app",

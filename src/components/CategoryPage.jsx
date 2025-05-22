@@ -4,6 +4,7 @@ import { gsap } from "gsap";
 import PropTypes from "prop-types";
 
 import Header from "./Header";
+import Footer from "./Footer";
 import AudioItem from "./Music";
 import PlayOptions from "../hooks/playOptions";
 
@@ -11,7 +12,7 @@ export default function CategoryPage({
     helmetObj,
     pageHeading,
     pageDescription,
-    musicsList,
+    musicsList = [],
 }) {
     const musicItemsRef = useRef([]);
 
@@ -170,11 +171,18 @@ export default function CategoryPage({
                     })}
                 </script>
             </Helmet>
+
             <Header />
+
             <section className="container">
-                <h2>{pageHeading}</h2>
-                <p>{pageDescription || ""}</p>
-                <PlayOptions />
+                <h2 className="heading isr">{pageHeading}</h2>
+                <p
+                    className="description"
+                    dangerouslySetInnerHTML={{ __html: pageDescription || "" }}
+                ></p>
+
+                {musicsList.length > 0 && <PlayOptions />}
+
                 <ul className="musics">
                     {musicsList.map((music, index) => (
                         <li
@@ -193,12 +201,14 @@ export default function CategoryPage({
                     ))}
                 </ul>
             </section>
+
+            <Footer />
         </>
     );
 }
 CategoryPage.propTypes = {
-    helmetObj: PropTypes.object.isRequired,
-    musicsList: PropTypes.object.isRequired,
-    pageHeading: PropTypes.string.isRequired,
+    helmetObj: PropTypes.object,
+    musicsList: PropTypes.object,
+    pageHeading: PropTypes.string,
     pageDescription: PropTypes.string,
 };

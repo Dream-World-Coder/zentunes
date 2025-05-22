@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Emilys+Candy&family=Instrument+Serif:ital@0;1&display=swap");
+
 *,
 *:before,
 *:after {
@@ -7,7 +9,7 @@
 }
 
 @font-face {
-    font-family: Matter;
+    font-family: MatterBold;
     font-weight: 500;
     font-style: normal;
     src: url("assets/fonts/matter-medium.woff2") format("woff2");
@@ -20,4 +22,24 @@
     font-style: normal;
     src: url("assets/fonts/matter-light.woff2") format("woff2");
     font-display: swap;
+}
+
+.instrument-serif-regular,
+.isr {
+    font-family: "Instrument Serif", serif;
+    font-weight: 500;
+    font-style: normal;
+}
+
+.instrument-serif-regular-italic,
+.isri {
+    font-family: "Instrument Serif", serif;
+    font-weight: 400;
+    font-style: italic;
+}
+.emilys-candy-regular,
+.ecr {
+    font-family: "Emilys Candy", serif;
+    font-weight: 400;
+    font-style: normal;
 }

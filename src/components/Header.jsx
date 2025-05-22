@@ -97,7 +97,8 @@ export default function Header() {
         <header>
             <div className="wrapper">
                 <div className="logo">
-                    <img src={logo} alt="logo" />
+                    <div className="logoIcon ecr">Zs</div>
+                    <span className="">Zentunes</span>
                 </div>
                 <nav>
                     <ul>
@@ -149,8 +150,16 @@ export default function Header() {
                     >
                         {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
                     </div>
-                    <div className="download-button">
+                    {/* <div className="download-button">
                         <Download size={20} />
+                    </div> */}
+                    <div
+                        className="login-btn"
+                        onClick={() => {
+                            alert("not available now.");
+                        }}
+                    >
+                        Login
                     </div>
                 </div>
             </div>

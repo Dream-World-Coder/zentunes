@@ -45,7 +45,7 @@
     }
 
     .audio-player {
-        padding-right: 10px;
+        padding-right: 20px;
         width: 100%;
 
         figure {
@@ -59,7 +59,7 @@
             }
 
             figcaption {
-                $fs: 2.15rem;
+                $fs: 2rem;
                 font-size: $fs;
                 /* border: 1px solid; */
                 display: flex;
@@ -67,6 +67,7 @@
                 justify-content: center;
                 gap: 6px;
                 text-transform: capitalize;
+                font-family: Matter, sans-serif;
 
                 .ms {
                     height: $fs;
