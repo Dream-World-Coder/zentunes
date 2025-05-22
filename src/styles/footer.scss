@@ -6,6 +6,7 @@
     margin-top: 10rem;
     color: $headerClr;
     padding-top: 30px;
+    padding-bottom: 20px;
 
     &.dark {
         background-color: #222;
@@ -37,6 +38,11 @@
     &__title {
         font-size: 4rem;
         margin: 0;
+
+        @media screen and (max-width: 640px) {
+            font-size: 3rem;
+            padding-left: 2rem;
+        }
     }
 
     &__links {
@@ -54,7 +60,7 @@
         margin: 0;
         padding: 0;
 
-        & + & {
+        & {
             margin-left: 2rem;
             @media (min-width: 768px) {
                 margin-left: 4rem;
@@ -79,13 +85,13 @@
     }
 
     &__bottom {
-        padding: 3rem 2rem 2rem;
+        padding: 4rem 2rem 2rem;
         width: 100%;
         max-width: 1368px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 0.875rem;
+        font-size: 1.25rem;
 
         .dark & {
             border-color: #333;

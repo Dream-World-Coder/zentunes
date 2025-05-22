@@ -54,6 +54,11 @@ h3 {
     margin: 0;
 }
 
+.contact-ul {
+    padding-left: 2rem;
+    cursor: pointer;
+}
+
 body.dark {
     background: #1a1a19;
     color: #f6fcdf;

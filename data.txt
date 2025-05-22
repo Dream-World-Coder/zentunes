@@ -1,1 +1,3 @@
 first fetch & download the complete music, after that play
+good musics
+play/pause/repeat/random fix

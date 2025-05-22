@@ -208,7 +208,7 @@ export default function CategoryPage({
 }
 CategoryPage.propTypes = {
     helmetObj: PropTypes.object,
-    musicsList: PropTypes.object,
+    musicsList: PropTypes.array,
     pageHeading: PropTypes.string,
     pageDescription: PropTypes.string,
 };

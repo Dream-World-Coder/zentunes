@@ -15,7 +15,7 @@
 }
 
 $iconLength: 24px;
-$gapLen: 30px;
+$gapLen: 16px;
 
 header {
     @include flexed;
@@ -63,6 +63,11 @@ header {
             font-family: Georgia, "Times New Roman", Times, serif;
             /* border: 1px solid red; */
 
+            @media screen and (max-width: 640px) {
+                font-size: 0;
+                gap: 0;
+            }
+
             .logoIcon {
                 font-size: x-large;
                 border: 1px solid #859f3d;
@@ -71,6 +76,10 @@ header {
                 box-sizing: content-box;
                 padding: 1px 4px;
                 color: white !important;
+
+                @media screen and (max-width: 640px) {
+                    font-size: large;
+                }
             }
         }
 
@@ -88,21 +97,22 @@ header {
                 display: flex;
                 align-items: center;
                 justify-content: flex-end;
-                gap: $gapLen;
+                gap: 30px;
 
                 @media screen and (max-width: 640px) {
-                    gap: calc($gapLen/2);
+                    gap: 15px;
                 }
 
                 li {
                     position: relative;
                     font-size: 1.75rem;
-                    padding: 8px 0;
+                    padding: 4px 0;
 
                     @media screen and (max-width: 640px) {
                         font-size: 1.5rem;
                         padding: 4px 0;
 
+                        &:nth-last-child(4),
                         &:nth-last-child(1),
                         &:nth-last-child(2) {
                             display: none;
@@ -117,7 +127,10 @@ header {
                             left: -50%;
                             width: 200%;
                             height: auto;
-                            background-color: $headerBgClr;
+                            background-color: lighten(
+                                $color: $headerBgClr,
+                                $amount: 10
+                            );
                             color: $headerClr;
                             padding: calc($gapLen/2) 0;
                             border-radius: calc($gapLen/2);
@@ -147,6 +160,8 @@ header {
                         text-decoration: none;
                         &:hover {
                             text-decoration: underline;
+                            text-underline-offset: 2px;
+                            text-decoration-thickness: 1px;
                         }
                     }
                 }
@@ -154,17 +169,15 @@ header {
         }
 
         .mobile-nav {
-            margin-right: calc($gapLen);
             display: none;
-            margin-left: auto;
-            margin-right: auto;
             width: 20px;
             height: 20px;
+            margin: 0 7px;
 
             ul {
                 flex-direction: column;
                 position: absolute;
-                top: 50px;
+                top: 40px;
                 left: 0%;
                 width: 100%;
                 height: auto;
@@ -201,9 +214,15 @@ header {
             /* border: 1px solid red; */
 
             height: 100%;
-            gap: calc($gapLen/2);
+            margin-left: 15px;
+            gap: 30px;
             cursor: pointer;
             pointer-events: all;
+
+            @media screen and (max-width: 640px) {
+                margin-left: 5px;
+                gap: 15px;
+            }
 
             .dark-mode-button,
             .download-button {

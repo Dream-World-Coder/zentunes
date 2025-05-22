@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import { Sun, Moon, Download } from "lucide-react";
+import { Sun, Orbit } from "lucide-react";
 
 import "../styles/header.scss";
 
-import logo from "../assets/images/logo.svg";
+// import logo from "../assets/images/logo.svg";
 import ham from "../assets/images/ham.svg";
 
 export default function Header() {
@@ -134,6 +134,9 @@ export default function Header() {
                     <img src={ham} alt="" />
                     <ul>
                         <li>
+                            <NavLink to="/">Home</NavLink>
+                        </li>
+                        <li>
                             <NavLink to="/about">About</NavLink>
                         </li>
                         <li>
@@ -148,7 +151,7 @@ export default function Header() {
                         onClick={handleDarkModeToggle}
                         style={{ cursor: "pointer" }}
                     >
-                        {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                        {isDarkMode ? <Sun size={20} /> : <Orbit size={20} />}
                     </div>
                     {/* <div className="download-button">
                         <Download size={20} />

@@ -19,10 +19,10 @@ export default function ContactPage() {
         But in case if you have any suggestions or anything feel free to email me at blog.opencanvas@gmail.com.
         <br/><br/>
         Here are my other socials:<br/><br/>
-        <ul>
-            <li><a target="_blank" href="https://subhajit.pages.dev">My Portfolio</a></li>
-            <li><a target="_blank" href="https://www.linkedin.com/in/subhajitgorai">LinkedIn</a></li>
-            <li><a target="_blank" href="https://opencanvas.blog/u/subhajit">My Blog</a></li>
+        <ul class="contact-ul">
+            <li><a target="_blank" href="https://subhajit.pages.dev">My Portfolio (https://subhajit.pages.dev)</a></li>
+            <li><a target="_blank" href="https://www.linkedin.com/in/subhajitgorai">LinkedIn (https://www.linkedin.com/in/subhajitgorai)</a></li>
+            <li><a target="_blank" href="https://opencanvas.blog/u/subhajit">My Blog (https://opencanvas.blog/u/subhajit)</a></li>
         </ul>
         <br/><br/>
         By the way, I'm always ready to build cool projects, so feel free to connect & collaborate.
