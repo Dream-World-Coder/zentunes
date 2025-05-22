@@ -1,3 +1,5 @@
 first fetch & download the complete music, after that play
-good musics
+add good musics
 play/pause/repeat/random fix
+homepage
+audio tracking context
