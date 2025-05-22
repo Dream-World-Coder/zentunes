@@ -1,0 +1,33 @@
+.play-next-options {
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin-bottom: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 2rem;
+
+    div {
+        opacity: 1;
+        cursor: pointer;
+        overflow: hidden;
+        width: 24px;
+        height: 24px;
+        border: 1px solid black;
+        border-radius: 3px;
+
+        &.active {
+            // border: 1px solid #859f3d;
+            background-color: #859f3d;
+            border-radius: 10px;
+        }
+
+        & img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+    }
+}

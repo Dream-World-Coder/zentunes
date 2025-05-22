@@ -1,0 +1,80 @@
+html {
+    font-size: 10px;
+}
+
+body {
+    background: #f6fcdf;
+    color: rgb(52, 52, 52);
+    margin: 0;
+    padding: 0;
+    font-family: Matter, Helvetica, Arial, sans-serif;
+    font-size: 1.6rem;
+    font-weight: 300;
+}
+
+.container {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+section {
+    padding: 7.4rem 5rem 6rem;
+
+    @media (max-width: 440px) {
+        padding: 7.4rem 2.5rem 6rem;
+    }
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+h2 {
+    font-size: 7.2rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+
+    & + p {
+        margin-bottom: 4rem;
+    }
+
+    @media (max-width: 640px) {
+        font-size: 4rem;
+    }
+}
+
+h3 {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0;
+}
+
+body.dark {
+    background: #1a1a19;
+    color: #f6fcdf;
+
+    & header {
+        background-color: #31511e;
+
+        & nav ul li ul {
+            background-color: #31511e;
+        }
+    }
+
+    .play-next-options div img {
+        filter: invert(1);
+    }
+
+    & .musics .music {
+        /* background-color: #859f3d; */
+        /* background-color: #31511e; */
+        background-color: #1a1a19;
+        border-top-color: rgb(75, 75, 75);
+        border-bottom-color: rgb(75, 75, 75);
+    }
+    #root > div > section > ul > li > img {
+        filter: invert(1);
+    }
+}
