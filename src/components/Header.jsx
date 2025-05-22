@@ -51,19 +51,35 @@ export default function Header() {
             dropdownItems: [
                 {
                     title: "Nature",
-                    href: "/musics?category=nature",
+                    href: "/musics/nature",
                 },
                 {
                     title: "Classical",
-                    href: "/musics?category=classical",
+                    href: "/musics/classical",
                 },
                 {
                     title: "Retro Bangla",
-                    href: "/musics?category=bangla_retro",
+                    href: "/musics/bangla_retro",
+                },
+                {
+                    title: "Retro Bangla",
+                    href: "/musics/bangla_new",
                 },
                 {
                     title: "Rabindra Sangeeet",
-                    href: "/musics?category=rabindra",
+                    href: "/musics/rabindra_sangeet",
+                },
+                {
+                    title: "Hindi Retro",
+                    href: "/musics/hindi_retro",
+                },
+                {
+                    title: "Religious",
+                    href: "/musics/religious",
+                },
+                {
+                    title: "Song Clips",
+                    href: "/musics/song_clips",
                 },
             ],
         },
