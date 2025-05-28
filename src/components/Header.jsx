@@ -62,7 +62,7 @@ export default function Header() {
                     href: "/musics/bangla_retro",
                 },
                 {
-                    title: "Retro Bangla",
+                    title: "New Bangla",
                     href: "/musics/bangla_new",
                 },
                 {

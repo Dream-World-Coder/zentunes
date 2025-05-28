@@ -5,8 +5,8 @@ import PropTypes from "prop-types";
 
 import Header from "./Header";
 import Footer from "./Footer";
-import AudioItem from "./Music";
-import PlayOptions from "../hooks/playOptions";
+import AudioItem from "./Audio";
+import PlayOptions from "./PlayOptions";
 
 export default function CategoryPage({
     helmetObj,

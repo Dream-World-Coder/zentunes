@@ -1,5 +1,9 @@
 first fetch & download the complete music, after that play
 add good musics
-play/pause/repeat/random fix
+-done play/pause/repeat/random fix
 homepage
-audio tracking context
+-done --audio tracking context
+
+repeat fix,
+context fix, else index is coming same
+return 0 for playNext = true

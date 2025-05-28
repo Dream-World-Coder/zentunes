@@ -12,6 +12,8 @@ import AboutPage from "./pages/About/About";
 import ContactPage from "./pages/Contact/Contact";
 import NotFoundPage from "./pages/NotFound";
 
+import { AudioPlayerProvider } from "./contexts/AudioPlayerContext";
+
 export default function App() {
     useEffect(() => {
         const lenis = new Lenis({
@@ -31,16 +33,21 @@ export default function App() {
 
     return (
         <HelmetProvider>
-            <Router>
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/home" element={<Home />} />
-                    <Route path="/musics/:category" element={<MusicPage />} />
-                    <Route path="/about" element={<AboutPage />} />
-                    <Route path="/contact" element={<ContactPage />} />
-                    <Route path="*" element={<NotFoundPage />} />
-                </Routes>
-            </Router>
+            <AudioPlayerProvider>
+                <Router>
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/home" element={<Home />} />
+                        <Route
+                            path="/musics/:category"
+                            element={<MusicPage />}
+                        />
+                        <Route path="/about" element={<AboutPage />} />
+                        <Route path="/contact" element={<ContactPage />} />
+                        <Route path="*" element={<NotFoundPage />} />
+                    </Routes>
+                </Router>
+            </AudioPlayerProvider>
         </HelmetProvider>
     );
 }

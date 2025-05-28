@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useAudioPlayer } from "../contexts/AudioPlayerContext";
 
 import playNextIcon from "../assets/images/play-next.svg";
 import shuffleIcon from "../assets/images/shuffle.svg";
@@ -7,35 +7,8 @@ import noneIcon from "../assets/images/none.svg";
 
 import "../styles/playOptions.scss";
 
-export function usePlayOptions() {
-    const [activeOption, setActiveOption] = useState("false"); // Default to "none"
-
-    // Initialize play option from localStorage
-    useEffect(() => {
-        const playNextValue = localStorage.getItem("playNext");
-        if (playNextValue) {
-            setActiveOption(playNextValue);
-        } else {
-            // Set default if no value exists
-            setActiveOption("false");
-            localStorage.setItem("playNext", "false");
-        }
-    }, []);
-
-    // Handle option selection
-    const handleOptionClick = (option) => {
-        setActiveOption(option);
-        localStorage.setItem("playNext", option);
-    };
-
-    return {
-        activeOption,
-        setActiveOption: handleOptionClick,
-    };
-}
-
 export default function PlayOptions() {
-    const { activeOption, setActiveOption } = usePlayOptions();
+    const { activeOption, setActiveOption } = useAudioPlayer();
 
     return (
         <div className="play-next-options">
