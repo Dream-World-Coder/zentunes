@@ -125,14 +125,14 @@ header {
                             position: absolute;
                             top: 100%;
                             left: -50%;
-                            width: 200%;
+                            width: 250%;
                             height: auto;
                             background-color: lighten(
                                 $color: $headerBgClr,
                                 $amount: 10
                             );
                             color: $headerClr;
-                            padding: calc($gapLen/2) 0;
+                            padding: 15px;
                             border-radius: calc($gapLen/2);
                             overflow: hidden;
                             transform: scaleY(0);
@@ -140,6 +140,7 @@ header {
                             transform-origin: top center;
                             transition: all 0.4s
                                 cubic-bezier(0.175, 0.885, 0.32, 1.275);
+                            gap: 10px;
 
                             li {
                                 @include flexed;
