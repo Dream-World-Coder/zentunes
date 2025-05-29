@@ -14,7 +14,7 @@ export default function Footer() {
                 { title: "Nature", href: "/musics/nature" },
                 { title: "Classical", href: "/musics/classical" },
                 { title: "Retro Bangla", href: "/musics/bangla_retro" },
-                { title: "Retro Bangla", href: "/musics/bangla_new" },
+                { title: "Bangla", href: "/musics/bangla_new" },
                 {
                     title: "Rabindra Sangeeet",
                     href: "/musics/rabindra_sangeet",
@@ -37,6 +37,7 @@ export default function Footer() {
 
                 <div className="footer__links">
                     <ul className="footer__list">
+                        <h3 className="footer__item">Navigation</h3>
                         {navItems
                             .filter((item) => item.href !== "dropdown")
                             .map((i) => (
@@ -52,6 +53,7 @@ export default function Footer() {
                     </ul>
 
                     <ul className="footer__list">
+                        <h3 className="footer__item">Categories</h3>
                         {navItems
                             .find((item) => item.href === "dropdown")
                             ?.dropdownItems.map((i) => (
