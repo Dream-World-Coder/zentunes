@@ -134,7 +134,7 @@ export default function AudioItem({
     };
 
     return (
-        <div className="music">
+        <div className="music no-select">
             <div
                 className="audio-player link"
                 style={{

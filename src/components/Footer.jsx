@@ -29,7 +29,7 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="footer">
+        <footer className="footer no-select">
             <div className="footer__inner">
                 <div className="footer__logo">
                     <h2 className="footer__title ecr">Zentunes</h2>

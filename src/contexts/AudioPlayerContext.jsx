@@ -116,6 +116,7 @@ export const AudioPlayerProvider = ({ children }) => {
         }, 100);
     }
     const onAudioEnd = useCallback(onCurrentAudioEnd, [
+        currentAudio,
         activeOption,
         currentPlaylist,
     ]);
@@ -126,6 +127,21 @@ export const AudioPlayerProvider = ({ children }) => {
         // everything else will have isPlaying = false
     }
 
+    // fetch validPaths -- no need, cuz as of now they should be fixed bcz of music-page-data, just songs inside will vary
+    // const [validPaths, setValidPaths] = useState([]);
+    // useEffect(() => {}, []);
+    const validPaths = [
+        "home",
+        "nature",
+        "classical",
+        "bangla_retro",
+        "bangla_new",
+        "rabindra_sangeet",
+        "hindi_retro",
+        "religious",
+        "miscellaneous",
+    ];
+
     const value = {
         currentPlaylist,
         setCurrentPlaylist,
@@ -135,6 +151,7 @@ export const AudioPlayerProvider = ({ children }) => {
         setCurrentAudio,
         onAudioEnd,
         pauseOthers,
+        validPaths,
     };
 
     return (

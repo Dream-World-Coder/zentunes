@@ -62,12 +62,12 @@ const musicPageData = {
         previewImagePath: "/preview-image.png",
         mainEntityType: "MusicPlaylist",
     },
-    song_clips: {
-        title: "Fleeting Moments: Nostalgic Song Clips",
+    miscellaneous: {
+        title: "Nostalgic Song Clips",
         description:
-            "Short and sweet musical interludes to spark a memory or set a gentle mood. Perfect little escapes into moments of calm and nostalgia.",
+            "Sweet musical interludes to spark a memory or set a gentle mood. Perfect little escapes into moments of calm and nostalgia.",
         robotsTxt: "index, follow",
-        currentUrl: "https://zentunes.netlify.app/musics/song_clips",
+        currentUrl: "https://zentunes.netlify.app/musics/miscellaneous",
         previewImagePath: "/preview-image.png",
         mainEntityType: "MusicPlaylist",
     },

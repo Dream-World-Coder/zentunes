@@ -13,6 +13,7 @@ export default function CategoryPage({
     pageHeading,
     pageDescription,
     musicsList = [],
+    loading,
 }) {
     const musicItemsRef = useRef([]);
 
@@ -183,22 +184,23 @@ export default function CategoryPage({
 
                 {musicsList.length > 0 && <PlayOptions />}
 
-                <ul className="musics">
-                    {musicsList.map((music, index) => (
-                        <li
-                            key={index}
-                            ref={(el) => setMusicRef(el, index)}
-                            onMouseEnter={(e) => handleMouseEnter(e, index)}
-                            onMouseLeave={(e) => handleMouseLeave(e, index)}
-                        >
-                            <AudioItem
-                                src={music.src}
-                                title={music.title}
-                                mediaType={music.mediaType}
-                                index={index}
-                            />
-                        </li>
-                    ))}
+                <ul className={`musics ${loading ? "loading" : ""}`}>
+                    {musicsList.length > 0 &&
+                        musicsList.map((music, index) => (
+                            <li
+                                key={index}
+                                ref={(el) => setMusicRef(el, index)}
+                                onMouseEnter={(e) => handleMouseEnter(e, index)}
+                                onMouseLeave={(e) => handleMouseLeave(e, index)}
+                            >
+                                <AudioItem
+                                    src={music.src}
+                                    title={music.title}
+                                    mediaType={music.mediaType}
+                                    index={index}
+                                />
+                            </li>
+                        ))}
                 </ul>
             </section>
 
@@ -211,4 +213,5 @@ CategoryPage.propTypes = {
     musicsList: PropTypes.array,
     pageHeading: PropTypes.string,
     pageDescription: PropTypes.string,
+    loading: PropTypes.bool,
 };

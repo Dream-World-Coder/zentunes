@@ -1,266 +1,182 @@
-import agnipath from "../../assets/musics/home/agnipath.mp3";
-import classic1 from "../../assets/musics/home/classic1.mp3";
-import galliya from "../../assets/musics/home/galliya.mp3";
-import majheMajhe from "../../assets/musics/home/majhe-majhe-tobo.mp3";
+// mediaType: "audio/mpeg", is default in prop, so no need to specify it
 
 const musicsData = {
     nature: [
         {
             src: "https://raw.githubusercontent.com/Dream-World-Coder/Relaxing-Melody/main/deep_forest.mp3",
             title: "deep forest",
-            mediaType: "audio/mpeg",
         },
         {
             src: "https://raw.githubusercontent.com/Dream-World-Coder/Relaxing-Melody/main/rain.mp3",
             title: "rain",
-            mediaType: "audio/mpeg",
         },
         {
             src: "https://raw.githubusercontent.com/Dream-World-Coder/Relaxing-Melody/main/sea_beach.mp3",
             title: "sea beach",
-            mediaType: "audio/mpeg",
         },
         {
             src: "https://raw.githubusercontent.com/Dream-World-Coder/Relaxing-Melody/main/wind_chime.mp3",
             title: "wind chime",
-            mediaType: "audio/mpeg",
         },
     ],
     classical: [
         {
             src: "https://raw.githubusercontent.com/Dream-World-Coder/Relaxing-Melody/main/Piano.mp3",
             title: "Alla Turka | Turkish March",
-            mediaType: "audio/mpeg",
         },
         {
             src: "https://cdn.freesound.org/previews/714/714266_8432823-lq.mp3",
             title: "Moonlight Sonata",
-            mediaType: "audio/mpeg",
         },
         {
             src: "https://cdn.freesound.org/previews/719/719388_8432823-lq.mp3",
             title: "Symphony no. 5, Beethoven",
-            mediaType: "audio/mpeg",
         },
         {
             src: "https://cdn.freesound.org/previews/740/740597_8432823-lq.mp3",
             title: "Lacrimosa",
-            mediaType: "audio/mpeg",
+        },
+        {
+            src: "/audios/classical/fur-elise.mp3",
+            title: "fur elise",
+        },
+        {
+            src: "/audios/classical/24-caprices.mp3",
+            title: "24 caprices",
+        },
+        {
+            src: "/audios/classical/paganini-caprice-no-5.mp3",
+            title: "paganini caprice no 5",
+        },
+        {
+            src: "https://cdn.freesound.org/previews/727/727792_8432823-lq.mp3",
+            title: "Piano classics collection",
         },
     ],
     bangla_retro: [
         {
-            src: "https://archive.org/download/oldbanglasongs/AAA%20Ami%20Rajanoi.mp3",
-            title: "Ami Rajanoi",
-            mediaType: "audio/mpeg",
+            src: "/audios/bangla-retro/aguner-poroshmoni.mp3",
+            title: "aguner poroshmoni",
         },
         {
-            src: "https://archive.org/download/oldbanglasongs/AAKASH%20KE%20PROSHNO.mp3",
-            title: "Aakash Ke Proshno",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://archive.org/download/oldbanglasongs/AMAR%20MON%20BOLE.mp3",
-            title: "Amar Mon Bole",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://archive.org/download/oldbanglasongs/Abar%20bhubone.mp3",
-            title: "Abar Bhubone",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://archive.org/download/oldbanglasongs/Ainate%20Oi%20Mukh.mp3",
-            title: "Ainate Oi Mukh",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://archive.org/download/oldbanglasongs/Ajke%20na%20hoy.mp3",
-            title: "Ajke Na Hoy",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://archive.org/download/oldbanglasongs/Akane%20dujone.mp3",
-            title: "Akane Dujone",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://archive.org/download/oldbanglasongs/Amake%20Porate%20Jodi.mp3",
-            title: "Amake Porate Jodi",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://archive.org/download/oldbanglasongs/Achen%20Amar%20Mukter.mp3",
-            title: "Achen Amar Mukter",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://archive.org/download/oldbanglasongs/Amar%20Mon%20Bole.mp3",
-            title: "Amar Mon Bole",
-            mediaType: "audio/mpeg",
+            src: "/audios/bangla-retro/gram-chhara-oi.mp3",
+            title: "gram chhara oi ranga matir path",
         },
     ],
     bangla_new: [
         {
-            src: majheMajhe,
+            src: "/audios/bangla-new/bojhena-se-bojhena.mp3",
+            title: "Bojhena Shey Bojhena",
+        },
+        {
+            src: "/audios/bangla-new/ke-tui-bol.mp3",
+            title: "ke tui bol",
+        },
+        {
+            src: "/audios/bangla-new/mon-majhi-re.mp3",
+            title: "mon majhi re",
+        },
+        {
+            src: "/audios/rabindra-sangeet/majhe-majhe-tobo.mp3",
             title: "majhe majhe tobo dekha pai chirodin keno pai na",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://wynk.in/music/song/bhalobashar-morshum/hu_8903243452075",
-            title: "Bhalobashar Morshum",
-            artist: "Arijit Singh & Shreya Ghoshal",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://wynk.in/music/song/bojhena-shey-bojhena-female-version/hu_8903243452075",
-            title: "Bojhena Shey Bojhena (Female Version)",
-            artist: "Prashmita Paul",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://wynk.in/music/song/chaiche-mon-onno-chawa/hu_8903243452075",
-            title: "Chaiche Mon Onno Chawa",
-            artist: "Shreya Ghoshal",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://wynk.in/music/song/tomake-chuye-dilam/hu_8903243452075",
-            title: "Tomake Chuye Dilam",
-            artist: "Shreya Ghoshal",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://wynk.in/music/song/kolkata/hu_8903243452075",
-            title: "Kolkata",
-            artist: "Shreya Ghoshal & Anupam Roy",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://wynk.in/music/song/pherari-mon/hu_8903243452075",
-            title: "Pherari Mon",
-            artist: "Shreya Ghoshal & Babul Supriyo",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://wynk.in/music/song/jao-pakhi/hu_8903243452075",
-            title: "Jao Pakhi",
-            artist: "Shreya Ghoshal",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://wynk.in/music/song/jaani-dekha-hobe-female-version/hu_8903243452075",
-            title: "Jaani Dekha Hobe (Female Version)",
-            artist: "Shreya Ghoshal",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://wynk.in/music/song/eto-alo/hu_8903243452075",
-            title: "Eto Alo",
-            artist: "Shreya Ghoshal",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://wynk.in/music/song/tomar-ki-naam/hu_8903243452075",
-            title: "Tomar Ki Naam",
-            artist: "Shreya Ghoshal",
-            mediaType: "audio/mpeg",
         },
     ],
     rabindra_sangeet: [
         {
-            src: "https://archive.org/download/dli.pb.rabindra.1/01%20-%20Amar%20Shonar%20Bangla.mp3",
-            title: "Amar Shonar Bangla",
-            mediaType: "audio/mpeg",
+            src: "/audios/rabindra-sangeet/majhe-majhe-tobo.mp3",
+            title: "majhe majhe tobo dekha pai chirodin keno pai na",
         },
         {
-            src: "https://archive.org/download/dli.pb.rabindra.1/02%20-%20Aguner%20Parashmoni.mp3",
-            title: "Aguner Parashmoni",
-            mediaType: "audio/mpeg",
+            src: "/audios/bangla-retro/aguner-poroshmoni.mp3",
+            title: "aguner poroshmoni",
         },
         {
-            src: "https://archive.org/download/dli.pb.rabindra.1/03%20-%20Jodi%20Tare%20Nai%20Chinyo.mp3",
-            title: "Jodi Tare Nai Chinyo",
-            mediaType: "audio/mpeg",
+            src: "/audios/bangla-retro/gram-chhara-oi.mp3",
+            title: "gram chhara oi ranga matir path",
         },
         {
-            src: "https://archive.org/download/dli.pb.rabindra.1/04%20-%20Purano%20Shei%20Diner%20Kotha.mp3",
-            title: "Purano Shei Diner Kotha",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://archive.org/download/dli.pb.rabindra.1/05%20-%20Ekla%20Chalo%20Re.mp3",
-            title: "Ekla Chalo Re",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://archive.org/download/dli.pb.rabindra.1/06%20-%20Amaro%20Porano%20Jaha%20Chay.mp3",
-            title: "Amaro Porano Jaha Chay",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://archive.org/download/dli.pb.rabindra.1/07%20-%20Tumi%20Robey%20Nirobe.mp3",
-            title: "Tumi Robey Nirobe",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://archive.org/download/dli.pb.rabindra.1/08%20-%20Bhalobashi%20Bhalobashi.mp3",
-            title: "Bhalobashi Bhalobashi",
-            mediaType: "audio/mpeg",
-        },
-        {
-            src: "https://archive.org/download/dli.pb.rabindra.1/09%20-%20Ami%20Chini%20Go%20Chini%20Tomare.mp3",
+            src: "/audios/rabindra-sangeet/ami-chini-go-chini.m4a",
             title: "Ami Chini Go Chini Tomare",
-            mediaType: "audio/mpeg",
+            mediaType: "audio/mp4",
         },
         {
-            src: "https://archive.org/download/dli.pb.rabindra.1/10%20-%20Anondoloke%20Mangolaloke.mp3",
-            title: "Anondoloke Mangolaloke",
-            mediaType: "audio/mpeg",
+            src: "/audios/rabindra-sangeet/amaro-parano-jaha-chay.m4a",
+            title: "Amaro Porano Jaha Chai",
+            mediaType: "audio/mp4",
         },
         {
-            src: "https://archive.org/download/dli.pb.rabindra.1/11%20-%20Chokher%20Aloy%20Dekhechi%20Tomay.mp3",
-            title: "Chokher Aloy Dekhechi Tomay",
-            mediaType: "audio/mpeg",
+            src: "https://pagalworldmusic.com/download.php?title=Tumi+Robe+Nirobe-320kbps&path=downloads%2Fhigh%2FOD5eUyJgYX4%2FOD5eUyJgYX4.mp3",
+            title: "Tumi Robey Nirobe",
         },
         {
-            src: "https://archive.org/download/dli.pb.rabindra.1/12%20-%20Tomar%20Khola%20Hawa.mp3",
-            title: "Tomar Khola Hawa",
-            mediaType: "audio/mpeg",
+            src: "https://pagalworldmusic.com/download.php?title=Purano+Sei-320kbps&path=downloads%2Fhigh%2FISAseSxiVnE%2FISAseSxiVnE.mp3",
+            title: "purano sei diner kotha",
         },
         {
-            src: "https://archive.org/download/dli.pb.rabindra.1/13%20-%20Aaji%20Bangladesher%20Hridoy%20Hote.mp3",
-            title: "Aaji Bangladesher Hridoy Hote",
-            mediaType: "audio/mpeg",
+            src: "https://pagalworldmusic.com/download.php?title=Mono+Chittae-320kbps&path=downloads%2Fhigh%2FPVg4XidmREY%2FPVg4XidmREY.mp3",
+            title: "momo chittye (music)",
         },
         {
-            src: "https://archive.org/download/dli.pb.rabindra.1/14%20-%20Bhenge%20Mor%20Gharer%20Chabi.mp3",
-            title: "Bhenge Mor Gharer Chabi",
-            mediaType: "audio/mpeg",
+            src: "https://pagalworldmusic.com/download.php?title=Bhenge+Mor+Ghorer+Chabi-320kbps&path=downloads%2Fhigh%2FGjk9dD5JBWY%2FGjk9dD5JBWY.mp3",
+            title: "Bhenge Mor Gharer Chabi (music)",
+        },
+        // {
+        //     src: "https://pagalworldmusic.com/download.php?title=Jodi+Tor+Dak-320kbps&path=downloads%2Fhigh%2FAiAFXEEIfV0%2FAiAFXEEIfV0.mp3",
+        //     title: "Ekla Chalo Re",
+        // },
+        {
+            src: "/audios/rabindra-sangeet/",
+            title: "Chokher Aloy Dekhechi",
         },
         {
-            src: "https://archive.org/download/dli.pb.rabindra.1/15%20-%20Jokhon%20Porbe%20Na%20Mor%20Payer%20Chinho.mp3",
+            src: "/audios/rabindra-sangeet/",
+            title: "Jodi Tare Nai Chinyo",
+        },
+        {
+            src: "/audios/rabindra-sangeet/",
             title: "Jokhon Porbe Na Mor Payer Chinho",
-            mediaType: "audio/mpeg",
+        },
+        {
+            src: "/audios/rabindra-sangeet/",
+            title: "bhalobeshe sokhi",
         },
     ],
-    hindi_retro: [],
-    religious: [],
+    hindi_retro: [
+        {
+            src: "/audios/rabindra-sangeet/",
+            title: "bhalobeshe sokhi",
+        },
+    ],
+    religious: [
+        {
+            src: "/audios/religious/ek-radha-ek-mira.mp3",
+            title: "ek radha ek mira",
+        },
+        {
+            src: "/audios/religious/ek-radha-ek-mira.mp3",
+            title: "ek radha ek mira",
+        },
+    ],
     song_clips: [
         {
-            src: agnipath,
-            title: "agnipath",
-            mediaType: "audio/mpeg",
+            src: "/audios/song-clips/agnipath.mp3",
+            title: "agnipath clip",
         },
         {
-            src: classic1,
-            title: "classic",
-            mediaType: "audio/mpeg",
+            src: "/audios/song-clips/classic1.mp3",
+            title: "classical clip",
         },
         {
-            src: galliya,
-            title: "teri galliya",
-            mediaType: "audio/mpeg",
+            src: "/audios/song-clips/galliya.mp3",
+            title: "teri galliya clip",
+        },
+        {
+            src: "https://cdn.freesound.org/previews/252/252800_108576-lq.mp3",
+            title: "movie score loop",
+        },
+        {
+            src: "/audios/song-clips/light-no-theme.mp3",
+            title: "light's theme",
         },
     ],
     get home() {
@@ -274,4 +190,5 @@ const musicsData = {
         ];
     },
 };
+
 export default musicsData;

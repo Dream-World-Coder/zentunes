@@ -22,8 +22,8 @@ section {
     padding: 7.4rem 5rem 6rem;
     min-height: 75vh;
 
-    @media (max-width: 440px) {
-        padding: 7.4rem 2.5rem 6rem;
+    @media (max-width: 640px) {
+        padding: 5rem 2rem 7rem;
     }
 }
 
@@ -38,6 +38,10 @@ h2.heading {
     margin-bottom: 1.5rem;
     text-transform: capitalize;
     /* font-family: MatterBold, sans-serif; */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Standard syntax */
 
     @media (max-width: 640px) {
         font-size: 3rem;
@@ -47,17 +51,31 @@ h2.heading {
 p.description {
     margin-bottom: 10rem;
     max-width: 100ch;
+
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Standard syntax */
 }
 
 h3 {
     font-size: 1.5rem;
     font-weight: 500;
     margin: 0;
+
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Standard syntax */
 }
 
 .contact-ul {
     padding-left: 2rem;
     cursor: pointer;
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Standard syntax */
 }
 
 body.dark {
@@ -86,4 +104,11 @@ body.dark {
     #root > div > section > ul > li > img {
         filter: invert(1);
     }
+}
+
+.no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }

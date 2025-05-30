@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Zentunes Backend</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.js"></script>
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css"
+            rel="stylesheet"
+        />
+        <style>
+            .tab-content {
+                display: none;
+            }
+            .tab-content.active {
+                display: block;
+            }
+            .tab-button.active {
+                background-color: #3b82f6;
+                color: white;
+            }
+        </style>
+    </head>
+    <body class="bg-gray-100 min-h-screen">
+        <div class="container mx-auto p-6 max-w-4xl">
+            <h1 class="text-3xl font-bold text-center mb-8 text-gray-800">
+                Zentunes Backend
+            </h1>
+
+            <!-- Tab Navigation -->
+            <div class="flex space-x-2 mb-6 border-b">
+                <button
+                    class="tab-button px-4 py-2 rounded-t-lg border-b-2 border-transparent hover:border-blue-500 active"
+                    onclick="showTab('upload')"
+                >
+                    Upload Audio
+                </button>
+                <button
+                    class="tab-button px-4 py-2 rounded-t-lg border-b-2 border-transparent hover:border-blue-500"
+                    onclick="showTab('list-all')"
+                >
+                    List All Categories
+                </button>
+                <button
+                    class="tab-button px-4 py-2 rounded-t-lg border-b-2 border-transparent hover:border-blue-500"
+                    onclick="showTab('list-category')"
+                >
+                    List by Category
+                </button>
+                <button
+                    class="tab-button px-4 py-2 rounded-t-lg border-b-2 border-transparent hover:border-blue-500"
+                    onclick="showTab('play-audio')"
+                >
+                    Play Audio
+                </button>
+            </div>
+
+            <!-- Upload Audio Tab -->
+            <div
+                id="upload"
+                class="tab-content active bg-white p-6 rounded-lg shadow-md"
+            >
+                <h2 class="text-2xl font-semibold mb-4">Upload Audio File</h2>
+                <form id="uploadForm" class="space-y-4">
+                    <div>
+                        <label
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                            >Security Key:</label
+                        >
+                        <input
+                            type="password"
+                            id="securityKey"
+                            class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                            >Category (Subdirectory):</label
+                        >
+                        <input
+                            type="text"
+                            id="subdirPath"
+                            placeholder="e.g., music, podcasts, audiobooks"
+                            class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            required
+                        />
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-sm font-medium text-gray-700 mb-1"
+                            >Audio File:</label
+                        >
+                        <input
+                            type="file"
+                            id="audioFile"
+                            accept=".mp3,.m4a,.wav,.ogg"
+                            class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            required
+                        />
+                        <p class="text-sm text-gray-500 mt-1">
+                            Accepted formats: MP3, M4A, WAV, OGG
+                        </p>
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                    >
+                        Upload Audio
+                    </button>
+                </form>
+
+                <div id="uploadResult" class="mt-4 p-3 rounded-md hidden"></div>
+            </div>
+
+            <!-- List All Categories Tab -->
+            <div
+                id="list-all"
+                class="tab-content bg-white p-6 rounded-lg shadow-md"
+            >
+                <h2 class="text-2xl font-semibold mb-4">
+                    All Audio Categories
+                </h2>
+                <button
+                    onclick="listAllCategories()"
+                    class="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 mb-4"
+                >
+                    Refresh Categories
+                </button>
+                <div id="categoriesResult" class="space-y-2"></div>
+            </div>
+
+            <!-- List by Category Tab -->
+            <div
+                id="list-category"
+                class="tab-content bg-white p-6 rounded-lg shadow-md"
+            >
+                <h2 class="text-2xl font-semibold mb-4">
+                    List Audio by Category
+                </h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                        >Category Name:</label
+                    >
+                    <input
+                        type="text"
+                        id="categoryName"
+                        placeholder="e.g., music, podcasts"
+                        class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                    <button
+                        onclick="listByCategory()"
+                        class="mt-2 bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700"
+                    >
+                        List Audio Files
+                    </button>
+                </div>
+                <div id="categoryAudioResult" class="space-y-2"></div>
+            </div>
+
+            <!-- Play Audio Tab -->
+            <div
+                id="play-audio"
+                class="tab-content bg-white p-6 rounded-lg shadow-md"
+            >
+                <h2 class="text-2xl font-semibold mb-4">Play Audio File</h2>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                        >Category:</label
+                    >
+                    <input
+                        type="text"
+                        id="playCategory"
+                        placeholder="e.g., music"
+                        class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
+                    />
+
+                    <label class="block text-sm font-medium text-gray-700 mb-1"
+                        >Filename:</label
+                    >
+                    <input
+                        type="text"
+                        id="playFilename"
+                        placeholder="e.g., song.mp3"
+                        class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-2"
+                    />
+
+                    <button
+                        onclick="playAudio()"
+                        class="bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700"
+                    >
+                        Load Audio
+                    </button>
+                </div>
+
+                <div id="audioPlayerContainer" class="hidden">
+                    <audio id="audioPlayer" controls class="w-full">
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Tab functionality
+            function showTab(tabName) {
+                // Hide all tab contents
+                const tabContents = document.querySelectorAll(".tab-content");
+                tabContents.forEach((content) =>
+                    content.classList.remove("active"),
+                );
+
+                // Remove active class from all buttons
+                const tabButtons = document.querySelectorAll(".tab-button");
+                tabButtons.forEach((button) =>
+                    button.classList.remove("active"),
+                );
+
+                // Show selected tab and activate button
+                document.getElementById(tabName).classList.add("active");
+                event.target.classList.add("active");
+            }
+
+            // File to Base64 converter
+            function fileToBase64(file) {
+                return new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload = () => {
+                        const base64 = reader.result.split(",")[1];
+                        resolve(base64);
+                    };
+                    reader.onerror = (error) => reject(error);
+                });
+            }
+
+            // Upload Audio
+            document
+                .getElementById("uploadForm")
+                .addEventListener("submit", async (e) => {
+                    e.preventDefault();
+
+                    const securityKey =
+                        document.getElementById("securityKey").value;
+                    const subdirPath =
+                        document.getElementById("subdirPath").value;
+                    const audioFile =
+                        document.getElementById("audioFile").files[0];
+
+                    if (!audioFile) {
+                        showResult(
+                            "uploadResult",
+                            "Please select an audio file",
+                            "error",
+                        );
+                        return;
+                    }
+
+                    // Use the original filename from the selected file
+                    const filename = audioFile.name;
+
+                    try {
+                        const audioBase64 = await fileToBase64(audioFile);
+
+                        const response = await fetch("/add-audio", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                                security_key: securityKey,
+                                subdir_path: subdirPath,
+                                filename: filename,
+                                audio_file: audioBase64,
+                            }),
+                        });
+
+                        const result = await response.json();
+
+                        if (response.ok) {
+                            showResult(
+                                "uploadResult",
+                                `Success: ${result.message}`,
+                                "success",
+                            );
+                            document.getElementById("uploadForm").reset();
+                        } else {
+                            showResult(
+                                "uploadResult",
+                                `Error: ${result.error}`,
+                                "error",
+                            );
+                        }
+                    } catch (error) {
+                        showResult(
+                            "uploadResult",
+                            `Error: ${error.message}`,
+                            "error",
+                        );
+                    }
+                });
+
+            // List All Categories
+            async function listAllCategories() {
+                try {
+                    const response = await fetch("/audio/list");
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        const categoriesDiv =
+                            document.getElementById("categoriesResult");
+                        if (Object.keys(result.list).length === 0) {
+                            categoriesDiv.innerHTML =
+                                '<p class="text-gray-500">No categories found</p>';
+                        } else {
+                            let html = '<div class="grid gap-2">';
+                            for (const [category, files] of Object.entries(
+                                result.list,
+                            )) {
+                                html += `
+                                <div class="bg-gray-50 p-3 rounded border">
+                                    <h3 class="font-semibold text-lg">${category}</h3>
+                                    <p class="text-sm text-gray-600">${files.length} files</p>
+                                    <div class="text-xs text-gray-500 mt-1">
+                                        ${files.slice(0, 3).join(", ")}${files.length > 3 ? "..." : ""}
+                                    </div>
+                                </div>
+                            `;
+                            }
+                            html += "</div>";
+                            categoriesDiv.innerHTML = html;
+                        }
+                    } else {
+                        document.getElementById("categoriesResult").innerHTML =
+                            `<p class="text-red-600">Error: ${result.error}</p>`;
+                    }
+                } catch (error) {
+                    document.getElementById("categoriesResult").innerHTML =
+                        `<p class="text-red-600">Error: ${error.message}</p>`;
+                }
+            }
+
+            // List by Category
+            async function listByCategory() {
+                const category = document
+                    .getElementById("categoryName")
+                    .value.trim();
+                if (!category) {
+                    showResult(
+                        "categoryAudioResult",
+                        "Please enter a category name",
+                        "error",
+                    );
+                    return;
+                }
+
+                try {
+                    const response = await fetch(
+                        `/audio/list/${encodeURIComponent(category)}`,
+                    );
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        const resultDiv = document.getElementById(
+                            "categoryAudioResult",
+                        );
+                        if (result.audio_data.length === 0) {
+                            resultDiv.innerHTML =
+                                '<p class="text-gray-500">No audio files found in this category</p>';
+                        } else {
+                            let html = '<div class="space-y-3">';
+                            result.audio_data.forEach((audio) => {
+                                html += `
+                                <div class="bg-gray-50 p-3 rounded border">
+                                    <h4 class="font-medium">${audio.title}</h4>
+                                    <p class="text-sm text-gray-600">Type: ${audio.mediaType}</p>
+                                    <p class="text-xs text-gray-500 break-all">${audio.src}</p>
+                                    <button onclick="directPlay('${audio.src}')" class="mt-2 bg-blue-500 text-white px-3 py-1 rounded text-sm hover:bg-blue-600">
+                                        Play
+                                    </button>
+                                </div>
+                            `;
+                            });
+                            html += "</div>";
+                            resultDiv.innerHTML = html;
+                        }
+                    } else {
+                        document.getElementById(
+                            "categoryAudioResult",
+                        ).innerHTML =
+                            `<p class="text-red-600">Error: ${result.error}</p>`;
+                    }
+                } catch (error) {
+                    document.getElementById("categoryAudioResult").innerHTML =
+                        `<p class="text-red-600">Error: ${error.message}</p>`;
+                }
+            }
+
+            // Play Audio
+            function playAudio() {
+                const category = document
+                    .getElementById("playCategory")
+                    .value.trim();
+                const filename = document
+                    .getElementById("playFilename")
+                    .value.trim();
+
+                if (!category || !filename) {
+                    alert("Please enter both category and filename");
+                    return;
+                }
+
+                const audioSrc = `/audios/${encodeURIComponent(category)}/${encodeURIComponent(filename)}`;
+                directPlay(audioSrc);
+            }
+
+            // Direct play function
+            function directPlay(src) {
+                const audioPlayer = document.getElementById("audioPlayer");
+                const container = document.getElementById(
+                    "audioPlayerContainer",
+                );
+
+                audioPlayer.src = src;
+                container.classList.remove("hidden");
+
+                // Switch to play audio tab
+                showTab("play-audio");
+                document
+                    .querySelector("[onclick=\"showTab('play-audio')\"]")
+                    .classList.add("active");
+            }
+
+            // Show result helper
+            function showResult(elementId, message, type) {
+                const element = document.getElementById(elementId);
+                element.className = `mt-4 p-3 rounded-md ${type === "success" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}`;
+                element.textContent = message;
+                element.classList.remove("hidden");
+
+                setTimeout(() => {
+                    element.classList.add("hidden");
+                }, 5000);
+            }
+
+            // Load categories on page load
+            window.addEventListener("load", () => {
+                listAllCategories();
+            });
+        </script>
+    </body>
+</html>

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { gsap } from "gsap";
@@ -8,11 +8,10 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import AudioItem from "../../components/Audio";
 import PlayOptions from "../../components/PlayOptions";
-import musicsData from "../MusicPage/musics";
 
 import "../../styles/home.scss";
 
-function HomePage({ helmetObj, pageHeading, musicsList = [] }) {
+function HomePage({ helmetObj, pageHeading, musicsList = [], loading }) {
     const musicItemsRef = useRef([]);
 
     /*
@@ -208,22 +207,23 @@ function HomePage({ helmetObj, pageHeading, musicsList = [] }) {
 
                 {musicsList.length > 0 && <PlayOptions />}
 
-                <ul className="musics">
-                    {musicsList.map((music, index) => (
-                        <li
-                            key={index}
-                            ref={(el) => setMusicRef(el, index)}
-                            onMouseEnter={(e) => handleMouseEnter(e, index)}
-                            onMouseLeave={(e) => handleMouseLeave(e, index)}
-                        >
-                            <AudioItem
-                                src={music.src}
-                                title={music.title}
-                                mediaType={music.mediaType}
-                                index={index}
-                            />
-                        </li>
-                    ))}
+                <ul className={`musics ${loading ? "loading" : ""}`}>
+                    {musicsList.length > 0 &&
+                        musicsList.map((music, index) => (
+                            <li
+                                key={index}
+                                ref={(el) => setMusicRef(el, index)}
+                                onMouseEnter={(e) => handleMouseEnter(e, index)}
+                                onMouseLeave={(e) => handleMouseLeave(e, index)}
+                            >
+                                <AudioItem
+                                    src={music.src}
+                                    title={music.title}
+                                    mediaType={music.mediaType}
+                                    index={index}
+                                />
+                            </li>
+                        ))}
                 </ul>
             </section>
 
@@ -235,6 +235,7 @@ HomePage.propTypes = {
     helmetObj: PropTypes.object,
     musicsList: PropTypes.array,
     pageHeading: PropTypes.string,
+    loading: PropTypes.bool,
 };
 
 export default function Home() {
@@ -248,13 +249,40 @@ export default function Home() {
         mainEntityType: "WebPage",
     };
     const pageHeading = "welcome to zentunes";
-    const musicsList = musicsData["home"];
+    const [musicsList, setMusicsList] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // fetch musicsList
+    useEffect(() => {
+        async function fetchMusicsList() {
+            const API_URL = `${import.meta.env.VITE_BACKEND_URL}/audio/list/home`;
+            setLoading(true);
+            try {
+                const res = await fetch(API_URL);
+                const data = await res.json();
+
+                if (data.audio_data) {
+                    setMusicsList(data.audio_data);
+                } else if (data.error) {
+                    console.log(`Error:`, data.error);
+                } else {
+                    console.log(`unknown response`);
+                }
+            } catch (e) {
+                console.log(e);
+            } finally {
+                setLoading(false);
+            }
+        }
+        fetchMusicsList();
+    }, []);
 
     return (
         <HomePage
             helmetObj={helmetObj}
             pageHeading={pageHeading}
             musicsList={musicsList}
+            loading={loading}
         />
     );
 }

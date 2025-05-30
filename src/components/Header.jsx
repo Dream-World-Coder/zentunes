@@ -48,6 +48,8 @@ export default function Header() {
         {
             title: "Categories",
             href: "dropdown",
+
+            // fetch them -- no need, cuz as of now they should be fixed bcz of music-page-data, just songs inside will vary
             dropdownItems: [
                 {
                     title: "Nature",
@@ -78,8 +80,8 @@ export default function Header() {
                     href: "/musics/religious",
                 },
                 {
-                    title: "Song Clips",
-                    href: "/musics/song_clips",
+                    title: "Miscellaneous",
+                    href: "/musics/miscellaneous",
                 },
             ],
         },

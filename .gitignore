@@ -131,3 +131,10 @@ dist
 .pnp.*
 pnpm-lock.yaml
 website
+
+
+.ropeproject
+.idea
+.vscode
+.env
+.DS_Store
