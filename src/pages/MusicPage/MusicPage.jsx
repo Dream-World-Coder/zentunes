@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import CategoryPage from "../../components/CategoryPage";
 import NotFoundPage from "../NotFound";
@@ -9,7 +10,26 @@ export default function MusicPage() {
     category = category.toLowerCase();
     const pageData = musicsPageData[category];
 
-    const { validPaths, musicsList, isPlaylistLoading } = useAudioPlayer();
+    const {
+        validPaths,
+        musicsList,
+        isPlaylistLoading,
+        loadPlaylists,
+        setCurrentAudio,
+    } = useAudioPlayer();
+
+    useEffect(() => {
+        if (category) {
+            loadPlaylists(category.toLowerCase());
+        }
+        setCurrentAudio({
+            index: null,
+            title: "",
+            duration: 0,
+            currentTime: 0,
+        });
+    }, [category]);
+
     if (!validPaths.includes(category)) return <NotFoundPage />;
 
     const helmetObj = {

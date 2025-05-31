@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { gsap } from "gsap";
@@ -250,7 +250,18 @@ export default function Home() {
         mainEntityType: "WebPage",
     };
     const pageHeading = "welcome to zentunes";
-    const { musicsList, isPlaylistLoading } = useAudioPlayer();
+    const { musicsList, isPlaylistLoading, loadPlaylists, setCurrentAudio } =
+        useAudioPlayer();
+
+    useEffect(() => {
+        loadPlaylists("home");
+        setCurrentAudio({
+            index: null,
+            title: "",
+            duration: 0,
+            currentTime: 0,
+        });
+    }, []);
 
     return (
         <HomePage

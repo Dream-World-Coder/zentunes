@@ -7,7 +7,6 @@ import {
     // useMemo,
 } from "react";
 import PropTypes from "prop-types";
-import { useParams } from "react-router-dom";
 import { capitalizeEachWord } from "../services/formatting";
 import fetchMusicsList from "../services/fetchAudioList";
 
@@ -35,37 +34,31 @@ export const AudioPlayerProvider = ({ children }) => {
     const [currentPlaylist, setCurrentPlaylist] = useState(null); //array, just {name, totalSongs} will work fine
     const [musicsList, setMusicsList] = useState([]); // the musics list array
     const [isPlaylistLoading, setIsPlaylistLoading] = useState(false);
-    let { category } = useParams();
-    category = category?.toLowerCase() || "";
 
-    useEffect(() => {
-        async function loadPlayLists() {
-            let cat = category;
-            if (!validPaths.includes(cat)) {
-                // handles home page
-                cat = "home";
-            }
-
-            let apiUrl = `${import.meta.env.VITE_BACKEND_URL}/audio/list/${cat}`;
-            let musicsData;
-
-            try {
-                setIsPlaylistLoading(true);
-                musicsData = await fetchMusicsList(apiUrl);
-                setMusicsList(musicsData);
-            } catch (e) {
-                console.log(e);
-            } finally {
-                setIsPlaylistLoading(false);
-            }
-
-            setCurrentPlaylist({
-                name: capitalizeEachWord(cat.replace("_", " ")),
-                totalSongs: musicsData.length,
-            });
+    const loadPlaylists = async (category) => {
+        if (!validPaths.includes(category)) {
+            setMusicsList([]);
+            return;
         }
-        loadPlayLists();
-    }, [category]);
+
+        let apiUrl = `${import.meta.env.VITE_BACKEND_URL}/audio/list/${category}`;
+        let musicsData;
+
+        try {
+            setIsPlaylistLoading(true);
+            musicsData = await fetchMusicsList(apiUrl);
+            setMusicsList(musicsData);
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setIsPlaylistLoading(false);
+        }
+
+        setCurrentPlaylist({
+            name: capitalizeEachWord(category.replace("_", " ")),
+            totalSongs: musicsData.length,
+        });
+    };
 
     /* ------ * play next options * -----------------------
     --------------------------------------- */
@@ -93,15 +86,6 @@ export const AudioPlayerProvider = ({ children }) => {
         duration: 0, //seconds
         currentTime: 0, //seconds
     });
-
-    useEffect(() => {
-        setCurrentAudio({
-            index: null,
-            title: "",
-            duration: 0,
-            currentTime: 0,
-        });
-    }, [category]);
 
     function onCurrentAudioEnd() {
         setTimeout(() => {
@@ -157,6 +141,7 @@ export const AudioPlayerProvider = ({ children }) => {
         validPaths,
         isPlaylistLoading,
         musicsList,
+        loadPlaylists,
     };
 
     return (
