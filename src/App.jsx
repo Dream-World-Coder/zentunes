@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 import Lenis from "lenis";
+import { Analytics } from "@vercel/analytics/react";
 
 import "./styles/style.css";
 import "./App.css";
@@ -34,6 +35,7 @@ export default function App() {
     return (
         <HelmetProvider>
             <AudioPlayerProvider>
+                <Analytics />
                 <Router>
                     <Routes>
                         <Route path="/" element={<Home />} />

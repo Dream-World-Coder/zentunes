@@ -14,3 +14,7 @@ current audio not changing on page change
 
   // fetch them -- no need, cuz as of now they should be fixed bcz of music-page-data, just songs inside will vary
             dropdownItems: [
+
+Frequent loading means its re-rendering and refetching -- to be fixed
+
+in mobiles audio is stopping automatically

@@ -34,7 +34,12 @@ VALID_CATEGORIES:list = [
 # --------------------
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": ["http://localhost:5173", "https://zentunes.netlify.app"]}})
+CORS(app, resources={r"/*": {"origins": [
+    "http://localhost:5173",
+    "https://zentunes.netlify.app",
+    "https://zentunes.vercel.app",
+    "https://zentunes.opencanvas.blog"
+]}})
 
 
 # ------------- * routes * ------
