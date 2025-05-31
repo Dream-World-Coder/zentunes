@@ -106,7 +106,7 @@ export const AudioPlayerProvider = ({ children }) => {
                     }));
                     break;
                 case "repeat":
-                    setCurrentAudio((prev) => ({ ...prev, currentTime: 0 }));
+                    setCurrentAudio((prev) => ({ ...prev }));
                     break;
                 case "false":
                     setCurrentAudio((prev) => ({

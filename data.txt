@@ -1,8 +1,10 @@
 
 
-Repeat not working
-Shuffle working from 
-Play next not becoming index 0 after last one
+only problems: Repeat not working + mobiles
+
+
+Shuffle working from 2nd time -- working fine now
+Play next not becoming index 0 after last one -- working fine now
 
 
 
