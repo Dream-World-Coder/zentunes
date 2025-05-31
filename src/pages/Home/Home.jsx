@@ -132,7 +132,7 @@ function HomePage({ helmetObj, pageHeading, musicsList = [], loading }) {
                 <meta property="og:url" content={`${helmetObj.currentUrl}`} />
                 <meta
                     property="og:image"
-                    content={`https://zentunes.netlify.app${helmetObj.previewImagePath}`}
+                    content={`https://zentunes.vercel.app${helmetObj.previewImagePath}`}
                 />
 
                 <meta name="twitter:card" content="summary_large_image" />
@@ -146,7 +146,7 @@ function HomePage({ helmetObj, pageHeading, musicsList = [], loading }) {
                 />
                 <meta
                     name="twitter:image"
-                    content={`https://zentunes.netlify.app${helmetObj.previewImagePath}`}
+                    content={`https://zentunes.vercel.app${helmetObj.previewImagePath}`}
                 />
 
                 <link rel="canonical" href={helmetObj.cannonicalUrl} />
@@ -175,10 +175,10 @@ function HomePage({ helmetObj, pageHeading, musicsList = [], loading }) {
             <section className="container">
                 <h2 className="heading isr">{pageHeading}</h2>
                 <p className="description">
-                    Here you will find a collection of beautiful musics of
-                    calmness and nostalgia. Enjoy them to the fullest.
+                    Here you will find a collection of beautiful music filled
+                    with calmness and nostalgia. Enjoy them to the fullest.
                     <br />
-                    There are multiple collections, like{" "}
+                    There are multiple collections, such as{" "}
                     <NavLink to="/musics/classical" className="home__link">
                         Classical
                     </NavLink>
@@ -188,7 +188,7 @@ function HomePage({ helmetObj, pageHeading, musicsList = [], loading }) {
                     </NavLink>
                     ,{" "}
                     <NavLink to="/musics/bangla_retro" className="home__link">
-                        Retro
+                        Bangla Retro
                     </NavLink>
                     ,{" "}
                     <NavLink
@@ -197,7 +197,7 @@ function HomePage({ helmetObj, pageHeading, musicsList = [], loading }) {
                     >
                         Rabindra Sangeet
                     </NavLink>{" "}
-                    etc many more... make sure to explore them all.
+                    among many others. Be sure to explore them all!
                     <br />
                     Below you will find one song from each of the collections.
                     <br />
@@ -241,10 +241,10 @@ HomePage.propTypes = {
 export default function Home() {
     const helmetObj = {
         title: "Home",
-        description: "Homepage of zentunes",
+        description: `Zentunes is a digital sanctuary of beautiful music filled with calmness and nostalgia. Escape the noise and enjoy peaceful tunes anytime, anywhere.`,
         robotsTxt: "index, follow",
-        currentUrl: "https://zentunes.netlify.app",
-        cannonical: "https://zentunes.netlify.app",
+        currentUrl: "https://zentunes.vercel.app",
+        cannonical: "https://zentunes.vercel.app",
         previewImagePath: "/preview-image.png",
         mainEntityType: "WebPage",
     };

@@ -135,7 +135,7 @@ export default function CategoryPage({
                 <meta property="og:url" content={`${helmetObj.currentUrl}`} />
                 <meta
                     property="og:image"
-                    content={`https://zentunes.netlify.app${helmetObj.previewImagePath}`}
+                    content={`https://zentunes.vercel.app${helmetObj.previewImagePath}`}
                 />
 
                 <meta name="twitter:card" content="summary_large_image" />
@@ -149,7 +149,7 @@ export default function CategoryPage({
                 />
                 <meta
                     name="twitter:image"
-                    content={`https://zentunes.netlify.app${helmetObj.previewImagePath}`}
+                    content={`https://zentunes.vercel.app${helmetObj.previewImagePath}`}
                 />
 
                 <link rel="canonical" href={helmetObj.cannonicalUrl} />
