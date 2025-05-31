@@ -1,17 +1,18 @@
-repeat fix,
-context fix, else index is coming same
-return 0 for playNext = true
-
-on page chnage the intented effects doesnot seem to work, i have to reload
-current audio not changing on page change
 
 
-  // fetch them -- no need, cuz as of now they should be fixed bcz of music-page-data, just songs inside will vary
-            dropdownItems: [
+Repeat not working
+Shuffle working from 
+Play next not becoming index 0 after last one
 
-Frequent loading means its re-rendering and refetching -- to be fixed
+
+
+fetch them -- no need, cuz as of now they should be fixed bcz of music-page-data, just songs inside will vary
+    dropdownItems: [
 
 in mobiles audio is stopping automatically
+
+
+
 
 ---- concept:
 

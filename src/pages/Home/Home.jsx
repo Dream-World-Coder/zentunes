@@ -212,7 +212,8 @@ function HomePage({ helmetObj, pageHeading, musicsList = [], loading }) {
                     {musicsList.length > 0 &&
                         musicsList.map((music, index) => (
                             <li
-                                key={index}
+                                // key={`home-${index}`} index not working
+                                key={`home-${music.src}`}
                                 ref={(el) => setMusicRef(el, index)}
                                 onMouseEnter={(e) => handleMouseEnter(e, index)}
                                 onMouseLeave={(e) => handleMouseLeave(e, index)}
