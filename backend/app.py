@@ -142,19 +142,13 @@ def list_audio_data(category):
     try:
         if category.lower() == 'home':
             audio_data=[
-                {
-                    "src": "https://raw.githubusercontent.com/Dream-World-Coder/Relaxing-Melody/main/deep_forest.mp3",
-                    "title": "deep forest",
-                },
-                {
-                    "src": "https://raw.githubusercontent.com/Dream-World-Coder/Relaxing-Melody/main/Piano.mp3",
-                    "title": "Alla Turka | Turkish March",
-                },
-                # aguner poroshmoni
-                # bojhena se bojhe na
-                # majhe majhe tobo
-                # ek radha ek mira
-                # agnipath
+                {"mediaType":"audio/mpeg","src":"https://subhajit3498.pythonanywhere.com/audios/nature/deep_forest.mp3","title":"Deep Forest"},
+                {"mediaType":"audio/mpeg","src":"https://subhajit3498.pythonanywhere.com/audios/classical/alla-turka-mozrat.mp3","title":"Alla Turka Mozrat"},
+                {"mediaType":"audio/mpeg","src":"https://subhajit3498.pythonanywhere.com/audios/bangla_retro/aguner-poroshmoni.mp3","title":"Aguner Poroshmoni"},
+                {"mediaType":"audio/mpeg","src":"https://subhajit3498.pythonanywhere.com/audios/rabindra_sangeet/majhe-majhe-tobo-dekha-pai-chirodin-keno-pai-na.mp3","title":"Majhe Majhe Tobo Dekha Pai Chirodin Keno Pai Na"},
+                {"mediaType":"audio/mpeg","src":"https://subhajit3498.pythonanywhere.com/audios/bangla_new/bojhena-se-bojhena.mp3","title":"Bojhena Se Bojhena"},
+                {"mediaType":"audio/mpeg","src":"https://subhajit3498.pythonanywhere.com/audios/religious/ek-radha-ek-mira.mp3","title":"Ek Radha Ek Mira"},
+                {"mediaType":"audio/mpeg","src":"https://subhajit3498.pythonanywhere.com/audios/miscellaneous/agnipath.mp3","title":"Agnipath"}
             ]
 
         else:
