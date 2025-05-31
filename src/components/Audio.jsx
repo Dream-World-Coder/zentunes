@@ -105,6 +105,7 @@ const AudioItem = memo(function AudioItem({
                 title: "",
                 duration: 0,
                 currentTime: 0,
+                audioRef: null,
             }));
         } else {
             // Set as current audio
@@ -114,6 +115,7 @@ const AudioItem = memo(function AudioItem({
                 title: title || "no title",
                 duration,
                 currentTime,
+                audioRef: audioRef.current,
             }));
 
             // Actually play the audio - THIS IS MISSING!

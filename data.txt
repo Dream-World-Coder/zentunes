@@ -1,11 +1,11 @@
 
 
-only problems: Repeat not working + mobiles
+only problems: mobiles
 
 
 Shuffle working from 2nd time -- working fine now
 Play next not becoming index 0 after last one -- working fine now
-
+repeat fixed
 
 
 fetch them -- no need, cuz as of now they should be fixed bcz of music-page-data, just songs inside will vary

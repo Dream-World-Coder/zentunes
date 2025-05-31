@@ -261,6 +261,7 @@ export default function Home() {
             title: "",
             duration: 0,
             currentTime: 0,
+            audioRef: null,
         });
     }, []);
 

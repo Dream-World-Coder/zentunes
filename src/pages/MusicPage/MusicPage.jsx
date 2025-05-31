@@ -27,6 +27,7 @@ export default function MusicPage() {
             title: "",
             duration: 0,
             currentTime: 0,
+            audioRef: null,
         });
     }, [category]);
 

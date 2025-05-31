@@ -85,6 +85,7 @@ export const AudioPlayerProvider = ({ children }) => {
         title: "",
         duration: 0, //seconds
         currentTime: 0, //seconds
+        audioRef: null,
     });
 
     function onCurrentAudioEnd() {
@@ -95,7 +96,7 @@ export const AudioPlayerProvider = ({ children }) => {
                         ...prev,
                         index: (prev.index + 1) % currentPlaylist.totalSongs,
                     }));
-                    console.log(`currentAudio [previous state]:`, currentAudio);
+                    // console.log(`currentAudio [previous state]:`, currentAudio);
                     break;
                 case "shuffle":
                     setCurrentAudio((prev) => ({
@@ -106,7 +107,8 @@ export const AudioPlayerProvider = ({ children }) => {
                     }));
                     break;
                 case "repeat":
-                    setCurrentAudio((prev) => ({ ...prev }));
+                    setCurrentAudio((prev) => ({ ...prev, currentTime: 0 }));
+                    currentAudio.audioRef && currentAudio.audioRef.play(); // audioRef = audioRef.current in Audio.jsx
                     break;
                 case "false":
                     setCurrentAudio((prev) => ({
