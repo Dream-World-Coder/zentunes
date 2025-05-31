@@ -25,6 +25,7 @@ export const AudioPlayerProvider = ({ children }) => {
         "bangla_new",
         "rabindra_sangeet",
         "hindi_retro",
+        "hindi_new",
         "religious",
         "miscellaneous",
     ];

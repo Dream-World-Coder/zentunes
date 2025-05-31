@@ -28,6 +28,7 @@ VALID_CATEGORIES:list = [
     "bangla_new",
     "rabindra_sangeet",
     "hindi_retro",
+    "hindi_new",
     "religious",
     "miscellaneous",
 ];
@@ -98,7 +99,7 @@ def add_audio():
 
     # Get the location of the file
     subdir_path = subdir_path.lower().replace('-', '_')
-    if subdir_path not in VALID_CATEGORIES: # only 8 categories as of now
+    if subdir_path not in VALID_CATEGORIES: # only 10 categories as of now
         return jsonify({
             'success': False,
             'error': 'Invalid Category',
@@ -178,6 +179,12 @@ def list_audio_data(category):
         return jsonify({'audio_data':audio_data}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
+
+@app.route('/storage-details')
+def storage_calc():
+    current_size = get_directory_size(AUDIO_DIR)
+    left = MAX_AUDIO_DIR_SIZE - current_size;
+    return jsonify({'current_size':current_size//(1024*1024), 'left':left//(1024*1024)})
 
 @app.route('/')
 def index():

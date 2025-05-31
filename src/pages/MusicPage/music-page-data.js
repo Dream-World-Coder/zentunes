@@ -53,10 +53,19 @@ const musicPageData = {
         previewImagePath: "/preview-image.png",
         mainEntityType: "MusicPlaylist",
     },
-    religious: {
-        title: "Sacred Harmonies: Music for Spiritual Solace",
+    hindi_new: {
+        title: "Coeval Hindi Soundtracks",
         description:
-            "Find peace and contemplation in these devotional and spiritual soundscapes. Gentle melodies to uplift the spirit and foster a sense of inner calm.",
+            "Some beautiful tracks, for you, matching the beauty of your innersense...",
+        robotsTxt: "index, follow",
+        currentUrl: "https://zentunes.vercel.app/musics/hindi_new",
+        previewImagePath: "/preview-image.png",
+        mainEntityType: "MusicPlaylist",
+    },
+    religious: {
+        title: "Sacred Harmonies and Spiritual Solace",
+        description:
+            "Devotional and spiritual soundscapes to uplift the spirit and foster a sense of inner calm.",
         robotsTxt: "index, follow",
         currentUrl: "https://zentunes.vercel.app/musics/religious",
         previewImagePath: "/preview-image.png",
@@ -65,7 +74,7 @@ const musicPageData = {
     miscellaneous: {
         title: "Nostalgic Song Clips",
         description:
-            "Sweet musical interludes to spark a memory or set a gentle mood. Perfect little escapes into moments of calm and nostalgia.",
+            "Sweet musical interludes to spark a memory or set a gentle mood, little escapes into moments of calm and nostalgia.",
         robotsTxt: "index, follow",
         currentUrl: "https://zentunes.vercel.app/musics/miscellaneous",
         previewImagePath: "/preview-image.png",

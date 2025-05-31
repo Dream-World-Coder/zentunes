@@ -64,7 +64,7 @@ export default function Header() {
                     href: "/musics/bangla_retro",
                 },
                 {
-                    title: "New Bangla",
+                    title: "Extant Bangla",
                     href: "/musics/bangla_new",
                 },
                 {
@@ -76,11 +76,15 @@ export default function Header() {
                     href: "/musics/hindi_retro",
                 },
                 {
-                    title: "Religious",
+                    title: "Contemporary Hindi",
+                    href: "/musics/hindi_new",
+                },
+                {
+                    title: "Devotional",
                     href: "/musics/religious",
                 },
                 {
-                    title: "Miscellaneous",
+                    title: "Tunes",
                     href: "/musics/miscellaneous",
                 },
             ],
