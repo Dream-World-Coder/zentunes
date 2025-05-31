@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, memo } from "react";
 import { Helmet } from "react-helmet-async";
 import { gsap } from "gsap";
 import PropTypes from "prop-types";
@@ -8,7 +8,7 @@ import Footer from "./Footer";
 import AudioItem from "./Audio";
 import PlayOptions from "./PlayOptions";
 
-export default function CategoryPage({
+const CategoryPage = memo(function CategoryPage({
     helmetObj,
     pageHeading,
     pageDescription,
@@ -207,7 +207,7 @@ export default function CategoryPage({
             <Footer />
         </>
     );
-}
+});
 CategoryPage.propTypes = {
     helmetObj: PropTypes.object,
     musicsList: PropTypes.array,
@@ -215,3 +215,5 @@ CategoryPage.propTypes = {
     pageDescription: PropTypes.string,
     loading: PropTypes.bool,
 };
+
+export default CategoryPage;

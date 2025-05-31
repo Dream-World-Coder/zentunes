@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, memo } from "react";
 import PropTypes from "prop-types";
 import { Music } from "lucide-react";
 
@@ -9,7 +9,7 @@ import "../styles/music.scss";
 import playBtn from "../assets/images/play.svg";
 import pauseBtn from "../assets/images/pause.svg";
 
-export default function AudioItem({
+const AudioItem = memo(function AudioItem({
     src,
     title,
     mediaType = "audio/mpeg",
@@ -212,10 +212,11 @@ export default function AudioItem({
             ></span>
         </div>
     );
-}
+});
 AudioItem.propTypes = {
     src: PropTypes.string,
     title: PropTypes.string,
     mediaType: PropTypes.string,
     index: PropTypes.number,
 };
+export default AudioItem;

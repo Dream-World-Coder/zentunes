@@ -8,6 +8,7 @@ import Header from "../../components/Header";
 import Footer from "../../components/Footer";
 import AudioItem from "../../components/Audio";
 import PlayOptions from "../../components/PlayOptions";
+import { useAudioPlayer } from "../../contexts/AudioPlayerContext";
 
 import "../../styles/home.scss";
 
@@ -249,40 +250,14 @@ export default function Home() {
         mainEntityType: "WebPage",
     };
     const pageHeading = "welcome to zentunes";
-    const [musicsList, setMusicsList] = useState([]);
-    const [loading, setLoading] = useState(true);
-
-    // fetch musicsList
-    useEffect(() => {
-        async function fetchMusicsList() {
-            const API_URL = `${import.meta.env.VITE_BACKEND_URL}/audio/list/home`;
-            setLoading(true);
-            try {
-                const res = await fetch(API_URL);
-                const data = await res.json();
-
-                if (data.audio_data) {
-                    setMusicsList(data.audio_data);
-                } else if (data.error) {
-                    console.log(`Error:`, data.error);
-                } else {
-                    console.log(`unknown response`);
-                }
-            } catch (e) {
-                console.log(e);
-            } finally {
-                setLoading(false);
-            }
-        }
-        fetchMusicsList();
-    }, []);
+    const { musicsList, isPlaylistLoading } = useAudioPlayer();
 
     return (
         <HomePage
             helmetObj={helmetObj}
             pageHeading={pageHeading}
             musicsList={musicsList}
-            loading={loading}
+            loading={isPlaylistLoading}
         />
     );
 }

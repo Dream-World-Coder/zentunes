@@ -1,9 +1,3 @@
-first fetch & download the complete music, after that play
-add good musics
--done play/pause/repeat/random fix
-homepage
--done --audio tracking context
-
 repeat fix,
 context fix, else index is coming same
 return 0 for playNext = true
@@ -18,3 +12,11 @@ current audio not changing on page change
 Frequent loading means its re-rendering and refetching -- to be fixed
 
 in mobiles audio is stopping automatically
+
+---- concept:
+
+why we shall not add a const/let/function vars/objs in a dependency array of useEffect or something else?
+cuz on every re-render the reference [mem location] of the variavle will change, [redefined in each render]
+and as the reference changes useEffect will run the code inside it again, if that results in a re-render [which happens most of the time] then it variable will be redefined again and thus creating an infinite loop.
+
+use useState or useMemo if it needs to be added in a dependency
