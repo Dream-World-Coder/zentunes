@@ -18,7 +18,7 @@ VALID_EXTENSIONS:set = {'.mp3', '.m4a', '.wav', '.ogg'}
 BACKEND_URL:str = 'https://subhajit3498.pythonanywhere.com'
 # BACKEND_URL: str = 'http://127.0.0.1:3000'
 
-MAX_AUDIO_DIR_SIZE:int = 256 * 1024 * 1024  # 256MB
+MAX_AUDIO_DIR_SIZE:int = 300 * 1024 * 1024  # 300MB
 
 VALID_CATEGORIES:list = [
     "home",
@@ -39,7 +39,9 @@ CORS(app, resources={r"/*": {"origins": [
     "http://localhost:5173",
     "https://zentunes.netlify.app",
     "https://zentunes.vercel.app",
-    "https://zentunes.opencanvas.blog"
+    "https://opencanvas.blog",
+    "https://myopencanvas.in",
+    "https://subhajit.pages.dev"
 ]}})
 
 
@@ -54,7 +56,8 @@ def serve_audio(subdir, filename):
     file_path = os.path.join(dir_path, safe_filename)
 
     if os.path.isfile(file_path):
-        return send_from_directory(dir_path, safe_filename), 200
+        mimetype = get_mediatype_from_filename(safe_filename)
+        return send_from_directory(dir_path, safe_filename, mimetype=mimetype)
     else:
         abort(404, description="File not found")
 

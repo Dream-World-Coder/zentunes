@@ -51,27 +51,8 @@ def make_title_from_filename(filename: str) -> str:
 
 
 def get_mediatype_from_filename(filename: str) -> str:
-    """
-    Guess the media MIME type based on the file extension.
-
-    This function uses the standard library mimetypes to guess the type.
-    If it cannot determine a type, it falls back to 'application/octet-stream'.
-
-    Args:
-        filename: The filename to inspect (e.g., 'track.mp3').
-
-    Returns:
-        A string representing the media type (e.g., 'audio/mpeg').
-    """
-    # Ensure mimetypes is initialized
-    mimetypes.init()
-    # Guess type; guess_type returns (type, encoding)
-    media_type, _ = mimetypes.guess_type(filename)
-    # Fallback if needed
-    if media_type:
-        return media_type
-    # Manual mapping for common audio extensions
     extension = os.path.splitext(filename)[1].lower().strip('.')
+
     custom_map = {
         'aac': 'audio/aac',
         'flac': 'audio/flac',
@@ -82,7 +63,18 @@ def get_mediatype_from_filename(filename: str) -> str:
         'mp4': 'audio/mp4',
         'wma': 'audio/x-ms-wma'
     }
-    return custom_map.get(extension, 'application/octet-stream')
+
+    if extension in custom_map:
+        return custom_map[extension]
+
+    # fallback if needed
+    # ----------------------
+    mimetypes.init()
+
+    # guess type; guess_type returns (type, encoding)
+    media_type, _ = mimetypes.guess_type(filename)
+
+    return media_type or 'application/octet-stream'
 
 def get_directory_size(directory):
     """Calculate total size of directory in bytes"""
@@ -93,3 +85,11 @@ def get_directory_size(directory):
             if os.path.isfile(filepath):
                 total_size += os.path.getsize(filepath)
     return total_size
+
+def main():
+    mtype1 = get_mediatype_from_filename('audio.m4a')
+    mtype2 = get_mediatype_from_filename('audio.mp3')
+    print(mtype1, mtype2)
+
+if __name__ == '__main__':
+    main()
