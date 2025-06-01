@@ -198,9 +198,8 @@ function HomePage({ helmetObj, pageHeading, musicsList = [], loading }) {
                     >
                         Rabindra Sangeet
                     </NavLink>{" "}
-                    among many others. Be sure to explore them all!
-                    <br />
-                    Below you will find one song from each of the collections.
+                    among many others. Be sure to explore them all! Below you
+                    will find one song from each of the collections.
                     <br />
                     <br />
                     Thank you for visiting!
