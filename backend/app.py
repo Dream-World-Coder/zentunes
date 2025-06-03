@@ -1,6 +1,6 @@
 import os
 import base64
-from flask import Flask, send_from_directory, jsonify, abort, request, render_template
+from flask import Flask, send_from_directory, jsonify, abort, request, render_template, Response
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
@@ -192,6 +192,11 @@ def storage_calc():
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/robots.txt')
+def robots_txt():
+    content = "User-agent: *\nDisallow: /"
+    return Response(content, mimetype='text/plain')
 
 if __name__ == '__main__':
     app.run(debug=False, port=3000)
