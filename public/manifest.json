@@ -12,8 +12,8 @@
     ],
     "display": "standalone",
     "orientation": "portrait",
-    "background_color": "#f6fcdf",
-    "theme_color": "#f6fcdf",
+    "background_color": "#31511e",
+    "theme_color": "#31511e",
     "lang": "en",
     "dir": "ltr",
     "icons": [
