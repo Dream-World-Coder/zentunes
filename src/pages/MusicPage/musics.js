@@ -1,182 +1,317 @@
-// mediaType: "audio/mpeg", is default in prop, so no need to specify it
-
 const musicsData = {
     nature: [
         {
-            src: "https://raw.githubusercontent.com/Dream-World-Coder/Relaxing-Melody/main/deep_forest.mp3",
-            title: "deep forest",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/nature/sea_beach.mp3",
+            title: "Sea Beach",
         },
         {
-            src: "https://raw.githubusercontent.com/Dream-World-Coder/Relaxing-Melody/main/rain.mp3",
-            title: "rain",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/nature/pastoral.mp3",
+            title: "Pastoral",
         },
         {
-            src: "https://raw.githubusercontent.com/Dream-World-Coder/Relaxing-Melody/main/sea_beach.mp3",
-            title: "sea beach",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/nature/rain.mp3",
+            title: "Rain",
         },
         {
-            src: "https://raw.githubusercontent.com/Dream-World-Coder/Relaxing-Melody/main/wind_chime.mp3",
-            title: "wind chime",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/nature/chime.mp3",
+            title: "Chime",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/nature/deep_forest.mp3",
+            title: "Deep Forest",
         },
     ],
     classical: [
         {
-            src: "https://raw.githubusercontent.com/Dream-World-Coder/Relaxing-Melody/main/Piano.mp3",
-            title: "Alla Turka | Turkish March",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/classical/Ludwig_Van_Beethoven_Symphony_No_5_Op_67_Classic_Flames.mp3",
+            title: "Ludwig Van Beethoven Symphony No 5 Op 67 Classic Flames",
         },
         {
-            src: "https://cdn.freesound.org/previews/714/714266_8432823-lq.mp3",
-            title: "Moonlight Sonata",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/classical/alla-turka-slowed.mp3",
+            title: "Alla Turka Slowed",
         },
         {
-            src: "https://cdn.freesound.org/previews/719/719388_8432823-lq.mp3",
-            title: "Symphony no. 5, Beethoven",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/classical/24-caprices.mp3",
+            title: "24 Caprices",
         },
         {
-            src: "https://cdn.freesound.org/previews/740/740597_8432823-lq.mp3",
-            title: "Lacrimosa",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/classical/fur-elise-beethoven.mp3",
+            title: "Fur Elise Beethoven",
         },
         {
-            src: "/audios/classical/fur-elise.mp3",
-            title: "fur elise",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/classical/Goetia.mp3",
+            title: "Goetia",
         },
         {
-            src: "/audios/classical/24-caprices.mp3",
-            title: "24 caprices",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/classical/Moonlight-Sonata-Ludwig-van-Beethoven.mp3",
+            title: "Moonlight Sonata Ludwig Van Beethoven",
         },
         {
-            src: "/audios/classical/paganini-caprice-no-5.mp3",
-            title: "paganini caprice no 5",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/classical/alla-turka-mozrat.mp3",
+            title: "Alla Turka Mozrat",
         },
         {
-            src: "https://cdn.freesound.org/previews/727/727792_8432823-lq.mp3",
-            title: "Piano classics collection",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/classical/lacrimosa-mozrat.mp3",
+            title: "Lacrimosa Mozrat",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/classical/paganini-caprice-no-5.mp3",
+            title: "Paganini Caprice No 5",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/classical/fur-elise-slowed.mp3",
+            title: "Fur Elise Slowed",
         },
     ],
     bangla_retro: [
         {
-            src: "/audios/bangla-retro/aguner-poroshmoni.mp3",
-            title: "aguner poroshmoni",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/bangla_retro/chanchal-mon-anmona-hoi.mp3",
+            title: "Chanchal Mon Anmona Hoi",
         },
         {
-            src: "/audios/bangla-retro/gram-chhara-oi.mp3",
-            title: "gram chhara oi ranga matir path",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/bangla_retro/aaj-noi-gun-gun-gunjan-prem-e.mp3",
+            title: "Aaj Noi Gun Gun Gunjan Prem E",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/bangla_retro/gram-chhara-oi-ranga-matir-path.mp3",
+            title: "Gram Chhara Oi Ranga Matir Path",
+        },
+        {
+            mediaType: "audio/mp4",
+            src: "https://subhajit3498.pythonanywhere.com/audios/bangla_retro/Hoyto_Tomari_Jannya_Manna_Dey.m4a",
+            title: "Hoyto Tomari Jannya Manna Dey",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/bangla_retro/aguner-poroshmoni.mp3",
+            title: "Aguner Poroshmoni",
         },
     ],
     bangla_new: [
         {
-            src: "/audios/bangla-new/bojhena-se-bojhena.mp3",
-            title: "Bojhena Shey Bojhena",
+            mediaType: "audio/mp4",
+            src: "https://subhajit3498.pythonanywhere.com/audios/bangla_new/Asadoma_Sadgamayo.m4a",
+            title: "Asadoma Sadgamayo",
         },
         {
-            src: "/audios/bangla-new/ke-tui-bol.mp3",
-            title: "ke tui bol",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/bangla_new/ke-tui-bol.mp3",
+            title: "Ke Tui Bol",
         },
         {
-            src: "/audios/bangla-new/mon-majhi-re.mp3",
-            title: "mon majhi re",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/bangla_new/mon-majhi-re.mp3",
+            title: "Mon Majhi Re",
         },
         {
-            src: "/audios/rabindra-sangeet/majhe-majhe-tobo.mp3",
-            title: "majhe majhe tobo dekha pai chirodin keno pai na",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/bangla_new/bojhena-se-bojhena.mp3",
+            title: "Bojhena Se Bojhena",
         },
     ],
     rabindra_sangeet: [
         {
-            src: "/audios/rabindra-sangeet/majhe-majhe-tobo.mp3",
-            title: "majhe majhe tobo dekha pai chirodin keno pai na",
-        },
-        {
-            src: "/audios/bangla-retro/aguner-poroshmoni.mp3",
-            title: "aguner poroshmoni",
-        },
-        {
-            src: "/audios/bangla-retro/gram-chhara-oi.mp3",
-            title: "gram chhara oi ranga matir path",
-        },
-        {
-            src: "/audios/rabindra-sangeet/ami-chini-go-chini.m4a",
-            title: "Ami Chini Go Chini Tomare",
             mediaType: "audio/mp4",
+            src: "https://subhajit3498.pythonanywhere.com/audios/rabindra_sangeet/Ore_Grihobasi.m4a",
+            title: "Ore Grihobasi",
         },
         {
-            src: "/audios/rabindra-sangeet/amaro-parano-jaha-chay.m4a",
-            title: "Amaro Porano Jaha Chai",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/rabindra_sangeet/purano-sei-diner-kotha-hemanta-mukherjee.mp3",
+            title: "Purano Sei Diner Kotha Hemanta Mukherjee",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/rabindra_sangeet/majhe-majhe-tobo-dekha-pai-chirodin-keno-pai-na.mp3",
+            title: "Majhe Majhe Tobo Dekha Pai Chirodin Keno Pai Na",
+        },
+        {
             mediaType: "audio/mp4",
+            src: "https://subhajit3498.pythonanywhere.com/audios/rabindra_sangeet/Amar_Sonar_Horin_Chai_-_Arijit_Chakraborty.m4a",
+            title: "Amar Sonar Horin Chai Arijit Chakraborty",
         },
         {
-            src: "https://pagalworldmusic.com/download.php?title=Tumi+Robe+Nirobe-320kbps&path=downloads%2Fhigh%2FOD5eUyJgYX4%2FOD5eUyJgYX4.mp3",
-            title: "Tumi Robey Nirobe",
+            mediaType: "audio/mp4",
+            src: "https://subhajit3498.pythonanywhere.com/audios/rabindra_sangeet/Ekla_Cholo_Re_Anupom_Roy.m4a",
+            title: "Ekla Cholo Re Anupom Roy",
         },
         {
-            src: "https://pagalworldmusic.com/download.php?title=Purano+Sei-320kbps&path=downloads%2Fhigh%2FISAseSxiVnE%2FISAseSxiVnE.mp3",
-            title: "purano sei diner kotha",
+            mediaType: "audio/mp4",
+            src: "https://subhajit3498.pythonanywhere.com/audios/rabindra_sangeet/amaro-parano-jaha-chay.m4a",
+            title: "Amaro Parano Jaha Chay",
         },
         {
-            src: "https://pagalworldmusic.com/download.php?title=Mono+Chittae-320kbps&path=downloads%2Fhigh%2FPVg4XidmREY%2FPVg4XidmREY.mp3",
-            title: "momo chittye (music)",
+            mediaType: "audio/mp4",
+            src: "https://subhajit3498.pythonanywhere.com/audios/rabindra_sangeet/Tomay_Hrid_Majhare_Rakhbo_-_Borno_Chakroborty.m4a",
+            title: "Tomay Hrid Majhare Rakhbo Borno Chakroborty",
         },
         {
-            src: "https://pagalworldmusic.com/download.php?title=Bhenge+Mor+Ghorer+Chabi-320kbps&path=downloads%2Fhigh%2FGjk9dD5JBWY%2FGjk9dD5JBWY.mp3",
-            title: "Bhenge Mor Gharer Chabi (music)",
-        },
-        // {
-        //     src: "https://pagalworldmusic.com/download.php?title=Jodi+Tor+Dak-320kbps&path=downloads%2Fhigh%2FAiAFXEEIfV0%2FAiAFXEEIfV0.mp3",
-        //     title: "Ekla Chalo Re",
-        // },
-        {
-            src: "/audios/rabindra-sangeet/",
-            title: "Chokher Aloy Dekhechi",
+            mediaType: "audio/mp4",
+            src: "https://subhajit3498.pythonanywhere.com/audios/rabindra_sangeet/Premero_Joare_Bhasabe_-_Dwijen_Mukherjee.m4a",
+            title: "Premero Joare Bhasabe Dwijen Mukherjee",
         },
         {
-            src: "/audios/rabindra-sangeet/",
-            title: "Jodi Tare Nai Chinyo",
-        },
-        {
-            src: "/audios/rabindra-sangeet/",
-            title: "Jokhon Porbe Na Mor Payer Chinho",
-        },
-        {
-            src: "/audios/rabindra-sangeet/",
-            title: "bhalobeshe sokhi",
+            mediaType: "audio/mp4",
+            src: "https://subhajit3498.pythonanywhere.com/audios/rabindra_sangeet/ami-chini-go-chini-tomare-ogo-bidesini.m4a",
+            title: "Ami Chini Go Chini Tomare Ogo Bidesini",
         },
     ],
     hindi_retro: [
         {
-            src: "/audios/rabindra-sangeet/",
-            title: "bhalobeshe sokhi",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/hindi_retro/Mera_Dil_Ye_Pukare_Aaja_Vaijayanti_Mala_Lata_Mangeshkar.mp3",
+            title: "Mera Dil Ye Pukare Aaja Vaijayanti Mala Lata Mangeshkar",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/hindi_retro/gun-guna-rahe-hai-vramar.mp3",
+            title: "Gun Guna Rahe Hai Vramar",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/hindi_retro/Lag_Ja_Gale_Se_Phir_Lata_Mangeshkar.mp3",
+            title: "Lag Ja Gale Se Phir Lata Mangeshkar",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/hindi_retro/mere-mehboob-qyamat-hogi-kishore-kumar.mp3",
+            title: "Mere Mehboob Qyamat Hogi Kishore Kumar",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/hindi_retro/dilbar-mere-kabtak-mujhe.mp3",
+            title: "Dilbar Mere Kabtak Mujhe",
+        },
+        {
+            mediaType: "audio/mp4",
+            src: "https://subhajit3498.pythonanywhere.com/audios/hindi_retro/Jeena_Yahan_Marna_Yahan_From_Mera_Naam_Joker.m4a",
+            title: "Jeena Yahan Marna Yahan From Mera Naam Joker",
+        },
+    ],
+    hindi_new: [
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/hindi_new/Raabta_Kehte_Hain_Khuda_Ne.mp3",
+            title: "Raabta Kehte Hain Khuda Ne",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/hindi_new/Agar_Tum_Mil_Jao.mp3",
+            title: "Agar Tum Mil Jao",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/hindi_new/luka-chhupi.mp3",
+            title: "Luka Chhupi",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/hindi_new/AAP_KI_NAZRON_NE_SAMJHA_SANAM.mp3",
+            title: "Aap Ki Nazron Ne Samjha Sanam",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/hindi_new/Yeh_Raat_Bheegi_Bheegi.mp3",
+            title: "Yeh Raat Bheegi Bheegi",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/hindi_new/Yeh_Raaten_Yeh_Mausam_Kishore_Kumar_Asha_Bhosle_Sanam_Simra.mp3",
+            title: "Yeh Raaten Yeh Mausam Kishore Kumar Asha Bhosle Sanam Simra",
         },
     ],
     religious: [
         {
-            src: "/audios/religious/ek-radha-ek-mira.mp3",
-            title: "ek radha ek mira",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/religious/hari_haraye_namo_krishna_jadhav_bhai_namo.mp3",
+            title: "Hari Haraye Namo Krishna Jadhav Bhai Namo",
         },
         {
-            src: "/audios/religious/ek-radha-ek-mira.mp3",
-            title: "ek radha ek mira",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/religious/ek-radha-ek-mira.mp3",
+            title: "Ek Radha Ek Mira",
+        },
+        {
+            mediaType: "audio/mp4",
+            src: "https://subhajit3498.pythonanywhere.com/audios/religious/Achyutam_Keshavam_by_Alka_Yagnik_From_Achyuta.m4a",
+            title: "Achyutam Keshavam By Alka Yagnik From Achyuta",
         },
     ],
-    song_clips: [
+    miscellaneous: [
         {
-            src: "/audios/song-clips/agnipath.mp3",
-            title: "agnipath clip",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/miscellaneous/galliya.mp3",
+            title: "Galliya",
         },
         {
-            src: "/audios/song-clips/classic1.mp3",
-            title: "classical clip",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/miscellaneous/agnipath.mp3",
+            title: "Agnipath",
         },
         {
-            src: "/audios/song-clips/galliya.mp3",
-            title: "teri galliya clip",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/miscellaneous/light-no-theme.mp3",
+            title: "Light No Theme",
         },
         {
-            src: "https://cdn.freesound.org/previews/252/252800_108576-lq.mp3",
-            title: "movie score loop",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/miscellaneous/classic1.mp3",
+            title: "Classic1",
+        },
+    ],
+    homee: [
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/nature/deep_forest.mp3",
+            title: "Deep Forest",
         },
         {
-            src: "/audios/song-clips/light-no-theme.mp3",
-            title: "light's theme",
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/classical/alla-turka-mozrat.mp3",
+            title: "Alla Turka Mozrat",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/bangla_retro/aguner-poroshmoni.mp3",
+            title: "Aguner Poroshmoni",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/rabindra_sangeet/majhe-majhe-tobo-dekha-pai-chirodin-keno-pai-na.mp3",
+            title: "Majhe Majhe Tobo Dekha Pai Chirodin Keno Pai Na",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/bangla_new/bojhena-se-bojhena.mp3",
+            title: "Bojhena Se Bojhena",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/religious/ek-radha-ek-mira.mp3",
+            title: "Ek Radha Ek Mira",
+        },
+        {
+            mediaType: "audio/mpeg",
+            src: "https://subhajit3498.pythonanywhere.com/audios/miscellaneous/agnipath.mp3",
+            title: "Agnipath",
         },
     ],
     get home() {
@@ -186,7 +321,7 @@ const musicsData = {
             this.bangla_retro[0],
             this.bangla_new[0],
             this.rabindra_sangeet[0],
-            this.song_clips[0],
+            this.miscellaneous[0],
         ];
     },
 };

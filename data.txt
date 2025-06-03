@@ -5,3 +5,5 @@ cuz on every re-render the reference [mem location] of the variavle will change,
 and as the reference changes useEffect will run the code inside it again, if that results in a re-render [which happens most of the time] then it variable will be redefined again and thus creating an infinite loop.
 
 use useState or useMemo if it needs to be added in a dependency
+
+-- new branch: self use
