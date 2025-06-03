@@ -1,0 +1,12 @@
+[
+    {
+        "relation": ["delegate_permission/common.handle_all_urls"],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "app.vercel.zentunes.twa",
+            "sha256_cert_fingerprints": [
+                "AD:7C:9A:F1:ED:42:C9:60:6C:1D:6B:33:DC:DC:5C:75:B1:A3:74:9D:B9:CF:DD:4C:3D:CD:A0:CA:34:E6:BC:C8"
+            ]
+        }
+    }
+]
