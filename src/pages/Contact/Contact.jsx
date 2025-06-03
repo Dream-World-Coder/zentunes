@@ -5,8 +5,8 @@ export default function ContactPage() {
         title: "Contact",
         description: "Contact page of Zentunes",
         robotsTxt: "index, follow",
-        currentUrl: "https://zentunes.netlify.app/contact",
-        cannonical: "https://zentunes.netlify.app/contact",
+        currentUrl: "https://zentunes.vercel.app/contact",
+        cannonical: "https://zentunes.vercel.app/contact",
         previewImagePath: "/preview-image.png",
         mainEntityType: "ContactPage",
     };
@@ -20,9 +20,10 @@ export default function ContactPage() {
         <br/><br/>
         Here are my other socials:<br/><br/>
         <ul class="contact-ul">
-            <li><a target="_blank" href="https://subhajit.pages.dev">My Portfolio (https://subhajit.pages.dev)</a></li>
-            <li><a target="_blank" href="https://www.linkedin.com/in/subhajitgorai">LinkedIn (https://www.linkedin.com/in/subhajitgorai)</a></li>
-            <li><a target="_blank" href="https://opencanvas.blog/u/subhajit">My Blog (https://opencanvas.blog/u/subhajit)</a></li>
+            <li><a target="_blank" href="https://subhajit.pages.dev">My Portfolio (myopencanvas.in)</a></li>
+            <li><a target="_blank" href="https://github.com/Dream-World-Coder">GitHub (github.com/Dream-World-Coder)</a></li>
+            <li><a target="_blank" href="https://www.linkedin.com/in/subhajitgorai">LinkedIn (linkedin.com/in/subhajitgorai)</a></li>
+            <li><a target="_blank" href="https://opencanvas.blog/u/subhajit">My Blog (opencanvas.blog/u/subhajit)</a></li>
         </ul>
         <br/><br/>
         By the way, I'm always ready to build cool projects, so feel free to connect & collaborate.

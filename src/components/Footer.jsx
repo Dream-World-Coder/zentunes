@@ -1,43 +1,24 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { NavLink } from "react-router-dom";
+import { navItems } from "../assets/data/navItems";
 import "../styles/footer.scss";
 
 export default function Footer() {
-    const [year] = useState(new Date().getFullYear());
-
-    const navItems = [
-        { title: "Home", href: "/" },
-        {
-            title: "Categories",
-            href: "dropdown",
-            dropdownItems: [
-                { title: "Nature", href: "/musics/nature" },
-                { title: "Classical", href: "/musics/classical" },
-                { title: "Retro Bangla", href: "/musics/bangla_retro" },
-                { title: "Bangla", href: "/musics/bangla_new" },
-                {
-                    title: "Rabindra Sangeeet",
-                    href: "/musics/rabindra_sangeet",
-                },
-                { title: "Hindi Retro", href: "/musics/hindi_retro" },
-                { title: "Religious", href: "/musics/religious" },
-                { title: "Song Clips", href: "/musics/song_clips" },
-            ],
-        },
-        { title: "About", href: "/about" },
-        { title: "Contact", href: "/contact" },
-    ];
+    // const [year] = useState(new Date().getFullYear());
 
     return (
         <footer className="footer no-select">
             <div className="footer__inner">
                 <div className="footer__logo">
+                    <div className="footer__icon">
+                        <img src="/favicon.png" alt="logo" />
+                    </div>
                     <h2 className="footer__title ecr">Zentunes</h2>
                 </div>
 
                 <div className="footer__links">
                     <ul className="footer__list">
-                        <h3 className="footer__item">Navigation</h3>
+                        <h3 className="footer__item faded">Navigation</h3>
                         {navItems
                             .filter((item) => item.href !== "dropdown")
                             .map((i) => (
@@ -53,7 +34,7 @@ export default function Footer() {
                     </ul>
 
                     <ul className="footer__list">
-                        <h3 className="footer__item">Categories</h3>
+                        <h3 className="footer__item faded">Genres</h3>
                         {navItems
                             .find((item) => item.href === "dropdown")
                             ?.dropdownItems.map((i) => (
@@ -71,7 +52,7 @@ export default function Footer() {
             </div>
 
             <div className="footer__bottom">
-                <span>Copyright © {year} Zentunes</span>
+                {/* <span>Copyright © {year} Zentunes</span> */}
             </div>
         </footer>
     );

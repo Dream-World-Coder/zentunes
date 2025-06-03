@@ -28,20 +28,45 @@
     }
 
     &__logo {
-        margin-bottom: 1.5rem;
+        margin-bottom: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        gap: 10px;
+        padding-left: 2rem;
 
         @media (min-width: 768px) {
             margin-bottom: 0;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
         }
-    }
 
-    &__title {
-        font-size: 4rem;
-        margin: 0;
+        .footer__icon {
+            max-height: 28px;
+            max-width: 28px;
+            border-radius: 6px;
+            overflow: hidden;
 
-        @media screen and (max-width: 640px) {
-            font-size: 3rem;
-            padding-left: 2rem;
+            @media screen and (min-width: 640px) {
+                max-height: 38px;
+                max-width: 38px;
+            }
+
+            & img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+        .footer__title {
+            font-size: 2rem;
+            margin: 0;
+
+            @media screen and (min-width: 640px) {
+                font-size: 4rem;
+            }
         }
     }
 
@@ -102,4 +127,7 @@ h3.footer__item {
     margin-bottom: 1rem;
     font-size: 1.65rem;
     font-weight: 600;
+}
+.faded {
+    opacity: 60%;
 }

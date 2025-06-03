@@ -1,11 +1,16 @@
 import { useEffect, useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import { Sun, Orbit } from "lucide-react";
+import { Sun, Moon, Share2 } from "lucide-react";
 
+import { navItems } from "../assets/data/navItems";
+import ham from "../assets/images/ham.svg";
 import "../styles/header.scss";
 
-// import logo from "../assets/images/logo.svg";
-import ham from "../assets/images/ham.svg";
+function handleShare() {
+    const urlToShare = window.location.href;
+    navigator.clipboard.writeText(urlToShare);
+    alert("link copied to clipboard.");
+}
 
 export default function Header() {
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -40,72 +45,15 @@ export default function Header() {
         }
     };
 
-    const navItems = [
-        {
-            title: "Home",
-            href: "/",
-        },
-        {
-            title: "Categories",
-            href: "dropdown",
-
-            // fetch them -- no need, cuz as of now they should be fixed bcz of music-page-data, just songs inside will vary
-            dropdownItems: [
-                {
-                    title: "Nature",
-                    href: "/musics/nature",
-                },
-                {
-                    title: "Classical",
-                    href: "/musics/classical",
-                },
-                {
-                    title: "Retro Bangla",
-                    href: "/musics/bangla_retro",
-                },
-                {
-                    title: "Extant Bangla",
-                    href: "/musics/bangla_new",
-                },
-                {
-                    title: "Rabindra Sangeeet",
-                    href: "/musics/rabindra_sangeet",
-                },
-                {
-                    title: "Hindi Retro",
-                    href: "/musics/hindi_retro",
-                },
-                {
-                    title: "Contemporary Hindi",
-                    href: "/musics/hindi_new",
-                },
-                {
-                    title: "Devotional",
-                    href: "/musics/religious",
-                },
-                {
-                    title: "Tunes",
-                    href: "/musics/miscellaneous",
-                },
-            ],
-        },
-        {
-            title: "About",
-            href: "/about",
-        },
-        {
-            title: "Contact",
-            href: "/contact",
-        },
-    ];
-
     return (
         <header>
             <div className="wrapper">
-                <div className="logo">
-                    <div className="logoIcon ecr">Zs</div>
-                    <span className="">Zentunes</span>
-                </div>
+                <NavLink to="/" className="logo">
+                    <div className="logo__icon">
+                        <img src="/favicon.png" alt="logo" />
+                    </div>
+                    <span className="logo__text">Zentunes</span>
+                </NavLink>
                 <nav>
                     <ul>
                         {navItems.map((item, idx) =>
@@ -139,15 +87,16 @@ export default function Header() {
                 <div className="mobile-nav dropdown">
                     <img src={ham} alt="" />
                     <ul>
-                        <li>
-                            <NavLink to="/">Home</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/about">About</NavLink>
-                        </li>
-                        <li>
-                            <NavLink to="/contact">Contact</NavLink>
-                        </li>
+                        {navItems.map(
+                            (item, idx) =>
+                                item.href !== "dropdown" && (
+                                    <li key={idx}>
+                                        <NavLink to={item.href}>
+                                            {item.title}
+                                        </NavLink>
+                                    </li>
+                                ),
+                        )}
                     </ul>
                 </div>
                 <div className="options">
@@ -157,18 +106,10 @@ export default function Header() {
                         onClick={handleDarkModeToggle}
                         style={{ cursor: "pointer" }}
                     >
-                        {isDarkMode ? <Sun size={20} /> : <Orbit size={20} />}
+                        {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
                     </div>
-                    {/* <div className="download-button">
-                        <Download size={20} />
-                    </div> */}
-                    <div
-                        className="login-btn"
-                        onClick={() => {
-                            alert("not available now.");
-                        }}
-                    >
-                        Login
+                    <div className="login-btn" onClick={handleShare}>
+                        <Share2 size={18} />
                     </div>
                 </div>
             </div>

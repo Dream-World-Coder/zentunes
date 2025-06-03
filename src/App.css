@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Emilys+Candy&family=Instrument+Serif:ital@0;1&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap");
 
 *,
 *:before,
@@ -9,18 +9,17 @@
 }
 
 @font-face {
-    font-family: MatterBold;
-    font-weight: 500;
-    font-style: normal;
-    src: url("assets/fonts/matter-medium.woff2") format("woff2");
+    font-family: "pally";
+    src: url("./assets/fonts/Pally-Regular.woff2") format("woff2");
+    font-weight: 400;
     font-display: swap;
+    font-style: normal;
 }
-
 @font-face {
     font-family: Matter;
     font-weight: 300;
     font-style: normal;
-    src: url("assets/fonts/matter-light.woff2") format("woff2");
+    src: url("./assets/fonts/matter-light.woff2") format("woff2");
     font-display: swap;
 }
 
@@ -37,12 +36,12 @@
     font-weight: 400;
     font-style: italic;
 }
-.emilys-candy-regular,
+
 .ecr {
-    font-family: "Emilys Candy", serif;
-    font-weight: 400;
+    font-family: pally, serif;
     font-style: normal;
 }
+
 @keyframes spin {
     0% {
         transform: rotate(0deg);

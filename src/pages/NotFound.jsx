@@ -5,8 +5,8 @@ export default function NotFoundPage() {
         title: "Page not found",
         description: "404 zentunes",
         robotsTxt: "index, follow",
-        currentUrl: window.location.hostname + window.location.pathname,
-        cannonical: window.location.hostname + window.location.pathname,
+        currentUrl: window.location.href,
+        cannonical: window.location.href,
         previewImagePath: "/preview-image.png",
         mainEntityType: "WebPage",
     };
