@@ -1,1 +1,48 @@
-noindex, nofollow
+<?xml version="1.0" encoding="UTF-8" ?>
+<urlset
+    xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+    xmlns:xhtml="http://www.w3.org/1999/xhtml"
+>
+
+  <url>
+    <loc>https://zentunes.vercel.app/</loc>
+  </url>
+
+  <url>
+    <loc>https://zentunes.vercel.app/about</loc>
+  </url>
+
+  <url>
+    <loc>https://zentunes.vercel.app/contact</loc>
+  </url>
+
+  <!-- Genres -->
+  <url>
+    <loc>https://zentunes.vercel.app/musics/nature</loc>
+  </url>
+  <url>
+    <loc>https://zentunes.vercel.app/musics/classical</loc>
+  </url>
+  <url>
+    <loc>https://zentunes.vercel.app/musics/bangla_retro</loc>
+  </url>
+  <url>
+    <loc>https://zentunes.vercel.app/musics/bangla_new</loc>
+  </url>
+  <url>
+    <loc>https://zentunes.vercel.app/musics/rabindra_sangeet</loc>
+  </url>
+  <url>
+    <loc>https://zentunes.vercel.app/musics/hindi_retro</loc>
+  </url>
+  <url>
+    <loc>https://zentunes.vercel.app/musics/hindi_new</loc>
+  </url>
+  <url>
+    <loc>https://zentunes.vercel.app/musics/religious</loc>
+  </url>
+  <url>
+    <loc>https://zentunes.vercel.app/musics/miscellaneous</loc>
+  </url>
+
+</urlset>

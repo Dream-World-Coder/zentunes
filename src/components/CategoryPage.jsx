@@ -121,16 +121,13 @@ const CategoryPage = memo(function CategoryPage({
     return (
         <>
             <Helmet>
-                <title>{helmetObj.title} | Zentunes</title>
+                <title>{helmetObj.title}</title>
                 <meta name="description" content={helmetObj.description} />
                 <meta name="robots" content={helmetObj.robotsTxt} />
                 <meta name="author" content="Subhajit Gorai" />
 
                 <meta property="og:type" content="website" />
-                <meta
-                    property="og:title"
-                    content={`${helmetObj.title} | Zentunes`}
-                />
+                <meta property="og:title" content={`${helmetObj.title}`} />
                 <meta
                     property="og:description"
                     content={helmetObj.description}
@@ -142,10 +139,7 @@ const CategoryPage = memo(function CategoryPage({
                 />
 
                 <meta name="twitter:card" content="summary_large_image" />
-                <meta
-                    name="twitter:title"
-                    content={`${helmetObj.title} | Zentunes`}
-                />
+                <meta name="twitter:title" content={`${helmetObj.title}`} />
                 <meta
                     name="twitter:description"
                     content={helmetObj.description}
@@ -161,13 +155,14 @@ const CategoryPage = memo(function CategoryPage({
                     {JSON.stringify({
                         "@context": "https://schema.org",
                         "@type": "WebPage",
-                        name: `${helmetObj.title} | Zentunes`,
+                        name: `${helmetObj.title}`,
                         url: `${helmetObj.currentUrl}`,
                         description: `${helmetObj.description}`,
                         publisher: {
                             "@type": "Person",
                             name: "Subhajit Gorai",
-                            url: "https://opencanvas.blog/u/subhajit",
+                            // url: "https://opencanvas.blog/u/subhajit",
+                            url: "https://myopencanvas.in",
                         },
                         mainEntity: {
                             "@type": `${helmetObj.mainEntityType}`,
