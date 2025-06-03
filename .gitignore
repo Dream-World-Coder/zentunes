@@ -138,3 +138,5 @@ website
 .vscode
 .env
 .DS_Store
+
+**/assets/*.xml

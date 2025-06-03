@@ -243,7 +243,7 @@ export default function Home() {
     const helmetObj = {
         title: "Home",
         description: `Zentunes is a digital sanctuary of beautiful music filled with calmness and nostalgia. Escape the noise and enjoy peaceful tunes anytime, anywhere.`,
-        robotsTxt: "index, follow",
+        robotsTxt: "noindex, nofollow",
         currentUrl: "https://zentunes.vercel.app",
         cannonical: "https://zentunes.vercel.app",
         previewImagePath: "/preview-image.png",

@@ -27,7 +27,7 @@ export default function AboutPage() {
         Team Zentunes
         <br/>
         <br/>
-        ** The musics use here are not owned by me.`;
+        ** The music items used here are not owned by me.`;
 
     return (
         <CategoryPage
