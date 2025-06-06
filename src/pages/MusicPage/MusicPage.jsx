@@ -18,9 +18,9 @@ export default function MusicPage() {
         validPaths,
         musicsList,
         isPlaylistLoading,
+        setIsPlaylistLoading,
         loadPlaylists,
         setCurrentAudio,
-        localMusicsDataUri,
     } = useAudioPlayer();
 
     useEffect(() => {
@@ -34,17 +34,19 @@ export default function MusicPage() {
                 );
                 if (confirm) {
                     try {
-                        await downloadGenreSongs(genre, localMusicsDataUri);
-                        await loadPlaylists(genre); // Reload after download
+                        setIsPlaylistLoading(true);
+                        await downloadGenreSongs(genre);
+                        await loadPlaylists(genre);
                     } catch (e) {
                         console.error("Download failed:", e);
+                    } finally {
+                        setIsPlaylistLoading(false);
                     }
                 }
             } else {
                 loadPlaylists(genre);
             }
         };
-
         checkAndDownloadIfNeeded();
 
         setCurrentAudio({

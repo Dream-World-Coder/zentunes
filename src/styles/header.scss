@@ -28,6 +28,7 @@ $gapLen: 16px;
     width: 100%;
     height: env(safe-area-inset-top);
     background-color: #42622f;
+    z-index: 999999;
 }
 
 header {

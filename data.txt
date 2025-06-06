@@ -18,3 +18,14 @@ npx cap copy android
 
 
 npx cap open android
+[
+    "http://localhost:5173",
+    "https://zentunes.netlify.app",
+    "https://zentunes.vercel.app",
+    "https://opencanvas.blog",
+    "https://myopencanvas.in",
+    "https://subhajit.pages.dev",
+    "https://localhost:443",
+    "http://localhost:80",
+    "capacitor://localhost"
+]

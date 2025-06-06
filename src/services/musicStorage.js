@@ -1,4 +1,5 @@
 import { Filesystem, Directory } from "@capacitor/filesystem";
+import { Http } from "@capacitor-community/http";
 
 export async function genreExistsLocally(genre) {
     try {
@@ -13,6 +14,21 @@ export async function genreExistsLocally(genre) {
     }
 }
 
+async function ensureGenreDir(genre) {
+    try {
+        await Filesystem.mkdir({
+            path: `audios/${genre}`,
+            directory: Directory.Data,
+            recursive: true, //Important!
+        });
+    } catch (e) {
+        // Ignore error if already exists
+        if (e.message?.includes("Directory exists") === false) {
+            console.error("Failed to create genre directory:", e);
+        }
+    }
+}
+
 function songName(src) {
     if (!src) {
         alert("src not found for this song");
@@ -24,71 +40,55 @@ function songName(src) {
 }
 
 export async function downloadGenreSongs(genre) {
-    const res = await fetch(
-        `${import.meta.env.VITE_BACKEND_URL}/audio/list/${genre}`,
-    );
-    const data = await res.json();
-    const songs = data.audio_data;
-
-    // Read current localMusicsData
-    let localMusicsData = {};
-    try {
-        const { data: raw } = await Filesystem.readFile({
-            path: "localMusicsData.json",
-            directory: Directory.Data,
-        });
-        localMusicsData = JSON.parse(raw);
-    } catch (err) {
-        console.error("Could not read localMusicsData.json:", err);
-    }
-
-    for (const song of songs) {
-        const response = await fetch(song.src);
-        const blob = await response.blob();
-        const reader = new FileReader();
-
-        await new Promise((resolve, reject) => {
-            reader.onloadend = async () => {
-                const base64 = reader.result.split(",")[1];
-                try {
-                    const songPath = `audios/${genre}/${songName(song.src)}`;
-
-                    await Filesystem.writeFile({
-                        path: songPath,
-                        data: base64,
-                        directory: Directory.Data,
-                    });
-
-                    const { uri } = await Filesystem.getUri({
-                        directory: Directory.Data,
-                        path: songPath,
-                    });
-
-                    localMusicsData[genre] = [
-                        ...(localMusicsData[genre] || []),
-                        {
-                            title: song.title,
-                            src: uri,
-                            mediaType: song.mediaType,
-                        },
-                    ];
-
-                    resolve();
-                } catch (err) {
-                    console.error("Write failed:", err);
-                    reject(err);
-                }
-            };
-            reader.readAsDataURL(blob);
-        });
-    }
-
-    // Write updated localMusicsData back to file
-    await Filesystem.writeFile({
-        path: "localMusicsData.json",
-        data: JSON.stringify(localMusicsData),
-        directory: Directory.Data,
+    ensureGenreDir(genre);
+    // Fetch list of songs using Capacitor HTTP
+    const res = await Http.get({
+        url: `${import.meta.env.VITE_BACKEND_URL}/audio/list/${genre}`,
+        headers: {},
+        params: {},
+        responseType: "json",
     });
 
+    const songs = res.data.audio_data;
+
+    for (const song of songs) {
+        try {
+            const response = await Http.get({
+                url: song.src,
+                params: {},
+                headers: {},
+                responseType: "blob",
+            });
+
+            const blob = new Blob([new Uint8Array(response.data)], {
+                type: song.mediaType,
+            });
+
+            const reader = new FileReader();
+
+            await new Promise((resolve, reject) => {
+                reader.onloadend = async () => {
+                    const base64 = reader.result.split(",")[1];
+                    try {
+                        const songPath = `audios/${genre}/${songName(song.src)}`;
+
+                        await Filesystem.writeFile({
+                            path: songPath,
+                            data: base64,
+                            directory: Directory.Data,
+                        });
+
+                        resolve();
+                    } catch (err) {
+                        console.error("Write failed:", err);
+                        reject(err);
+                    }
+                };
+                reader.readAsDataURL(blob);
+            });
+        } catch (err) {
+            console.error(`Failed to download or write ${song.src}:`, err);
+        }
+    }
     return songs.length;
 }

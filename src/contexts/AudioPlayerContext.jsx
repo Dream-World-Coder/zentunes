@@ -7,16 +7,17 @@ import {
     // useMemo,
 } from "react";
 import PropTypes from "prop-types";
-import { capitalizeEachWord } from "../services/formatting";
+import {
+    capitalizeEachWord,
+    getFormattedTitle,
+    getMediaTypeFromFilename,
+} from "../services/formatting";
+import { Capacitor } from "@capacitor/core";
 import { Filesystem, Directory } from "@capacitor/filesystem";
 
 const AudioPlayerContext = createContext();
 
-export const AudioPlayerProvider = ({
-    children,
-    localMusicsDataUri,
-    setLocalMusicsDataUri,
-}) => {
+export const AudioPlayerProvider = ({ children }) => {
     /* ------ * valid paths * -----------------------
     --------------------------------------- */
     // const [validPaths, setValidPaths] = useState([]); useEffect(() => {}, []);
@@ -41,6 +42,14 @@ export const AudioPlayerProvider = ({
     // const [allMusicsList, setAllMusicsList] = useState([]); // cache to store data
     const [isPlaylistLoading, setIsPlaylistLoading] = useState(false);
 
+    // read `Directory.data/audios/${genre}`
+    // get songs, for song in songs prepare data:
+    // const { uri } = await Filesystem.getUri({
+    //     directory: Directory.Data,
+    //     path: songPath,
+    // });
+    // {src: uri, title: getTitleFromFilename(filename), mediaType: getMediaTypeFromFilename(filename)}
+    // append them, genreSongs = [ .... ]
     const loadPlaylists = async (genre) => {
         if (!validPaths.includes(genre)) {
             setMusicsList([]);
@@ -50,17 +59,30 @@ export const AudioPlayerProvider = ({
         try {
             setIsPlaylistLoading(true);
 
-            const { data } = await Filesystem.readFile({
-                path: "localMusicsData.json",
+            const genreSongs = [];
+
+            const result = await Filesystem.readdir({
+                path: `audios/${genre}`,
                 directory: Directory.Data,
             });
 
-            const parsed = JSON.parse(data);
-            const genreSongs = parsed[genre] || [];
-            // setAllMusicsList()
+            for (const file of result.files) {
+                const filename = file.name;
+                const songPath = `audios/${genre}/${filename}`;
+
+                const { uri } = await Filesystem.getUri({
+                    directory: Directory.Data,
+                    path: songPath,
+                });
+
+                genreSongs.push({
+                    src: Capacitor.convertFileSrc(uri),
+                    title: getFormattedTitle(filename),
+                    mediaType: getMediaTypeFromFilename(filename),
+                });
+            }
 
             setMusicsList(genreSongs);
-
             setCurrentPlaylist({
                 name: capitalizeEachWord(genre.replace("_", " ")),
                 totalSongs: genreSongs.length,
@@ -155,10 +177,9 @@ export const AudioPlayerProvider = ({
         pauseOthers,
         validPaths,
         isPlaylistLoading,
+        setIsPlaylistLoading,
         musicsList,
         loadPlaylists,
-        localMusicsDataUri,
-        setLocalMusicsDataUri,
     };
 
     return (
@@ -169,8 +190,6 @@ export const AudioPlayerProvider = ({
 };
 AudioPlayerProvider.propTypes = {
     children: PropTypes.node.isRequired,
-    localMusicsDataUri: PropTypes.any,
-    setLocalMusicsDataUri: PropTypes.func,
 };
 
 export const useAudioPlayer = () => {

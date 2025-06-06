@@ -9,6 +9,10 @@ import Footer from "../../components/Footer";
 import AudioItem from "../../components/Audio";
 import PlayOptions from "../../components/PlayOptions";
 import { useAudioPlayer } from "../../contexts/AudioPlayerContext";
+import {
+    genreExistsLocally,
+    downloadGenreSongs,
+} from "../../services/musicStorage";
 
 import "../../styles/home.scss";
 
@@ -244,11 +248,38 @@ export default function Home() {
         mainEntityType: "WebPage",
     };
     const pageHeading = "welcome to zentunes";
-    const { musicsList, isPlaylistLoading, loadPlaylists, setCurrentAudio } =
-        useAudioPlayer();
+    const {
+        musicsList,
+        isPlaylistLoading,
+        setIsPlaylistLoading,
+        loadPlaylists,
+        setCurrentAudio,
+    } = useAudioPlayer();
 
     useEffect(() => {
-        loadPlaylists("home");
+        const checkAndDownloadIfNeeded = async () => {
+            const exists = await genreExistsLocally("home");
+            if (!exists) {
+                const confirm = window.confirm(
+                    `Songs for "home" not found on device. Download now?`,
+                );
+                if (confirm) {
+                    try {
+                        setIsPlaylistLoading(true);
+                        await downloadGenreSongs("home");
+                        await loadPlaylists("home");
+                    } catch (e) {
+                        console.error("Download failed:", e);
+                    } finally {
+                        setIsPlaylistLoading(false);
+                    }
+                }
+            } else {
+                loadPlaylists("home");
+            }
+        };
+        checkAndDownloadIfNeeded();
+
         setCurrentAudio({
             index: null,
             title: "",
