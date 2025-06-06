@@ -18,7 +18,9 @@ export function capitalizeEachWord(str) {
 export function getFormattedTitle(filename) {
     const nameWithoutExt = filename
         ?.replace(/\.[^/.]+$/, "")
-        ?.replace(/_/g, " ");
+        ?.replace(/_/g, " ")
+        ?.replace(/-/g, " ")
+        ?.replace(/\+/g, " ");
     return capitalizeEachWord(nameWithoutExt);
 }
 
