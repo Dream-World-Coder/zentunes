@@ -7,9 +7,15 @@
         "dev": "vite --host",
         "build": "vite build",
         "lint": "eslint .",
-        "preview": "vite preview"
+        "preview": "vite preview",
+        "cap": "capacitor"
     },
     "dependencies": {
+        "@capacitor/android": "^7.2.0",
+        "@capacitor/cli": "^7.2.0",
+        "@capacitor/core": "^7.2.0",
+        "@capacitor/device": "^7.0.1",
+        "@capacitor/filesystem": "^7.1.1",
         "@vercel/analytics": "^1.5.0",
         "gsap": "^3.13.0",
         "lenis": "^1.3.4",

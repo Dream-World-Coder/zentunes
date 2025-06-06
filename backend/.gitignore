@@ -9,3 +9,4 @@ node_modules
 __pycache__
 v1
 static/audios
+o*.txt

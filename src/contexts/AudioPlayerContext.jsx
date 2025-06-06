@@ -36,13 +36,13 @@ export const AudioPlayerProvider = ({ children }) => {
     const [musicsList, setMusicsList] = useState([]); // the musics list array
     const [isPlaylistLoading, setIsPlaylistLoading] = useState(false);
 
-    const loadPlaylists = async (category) => {
-        if (!validPaths.includes(category)) {
+    const loadPlaylists = async (genre) => {
+        if (!validPaths.includes(genre)) {
             setMusicsList([]);
             return;
         }
 
-        let apiUrl = `${import.meta.env.VITE_BACKEND_URL}/audio/list/${category}`;
+        let apiUrl = `${import.meta.env.VITE_BACKEND_URL}/audio/list/${genre}`;
         let musicsData;
 
         try {
@@ -56,7 +56,7 @@ export const AudioPlayerProvider = ({ children }) => {
         }
 
         setCurrentPlaylist({
-            name: capitalizeEachWord(category.replace("_", " ")),
+            name: capitalizeEachWord(genre.replace("_", " ")),
             totalSongs: musicsData.length,
         });
     };
@@ -82,7 +82,7 @@ export const AudioPlayerProvider = ({ children }) => {
     /* ------ * current audio * -----------------------
     --------------------------------------- */
     const [currentAudio, setCurrentAudio] = useState({
-        index: null, // on music category change[route change] it will be set to null again and everything will be reseted
+        index: null, // on music genre change[route change] it will be set to null again and everything will be reseted
         title: "",
         duration: 0, //seconds
         currentTime: 0, //seconds

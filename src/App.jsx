@@ -40,10 +40,7 @@ export default function App() {
                     <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/home" element={<Home />} />
-                        <Route
-                            path="/musics/:category"
-                            element={<MusicPage />}
-                        />
+                        <Route path="/musics/:genre" element={<MusicPage />} />
                         <Route path="/about" element={<AboutPage />} />
                         <Route path="/contact" element={<ContactPage />} />
                         <Route path="*" element={<NotFoundPage />} />

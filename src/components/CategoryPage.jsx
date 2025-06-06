@@ -115,7 +115,7 @@ const CategoryPage = memo(function CategoryPage({
         musicItemsRef.current[index] = el;
     };
 
-    const category =
+    const genre =
         window.location.pathname.split("/").pop() || window.crypto.randomUUID();
 
     return (
@@ -186,7 +186,7 @@ const CategoryPage = memo(function CategoryPage({
                     {musicsList.length > 0 &&
                         musicsList.map((music, index) => (
                             <li
-                                key={`${category}-${music.src}`}
+                                key={`${genre}-${music.src}`}
                                 ref={(el) => setMusicRef(el, index)}
                                 onMouseEnter={(e) => handleMouseEnter(e, index)}
                                 onMouseLeave={(e) => handleMouseLeave(e, index)}

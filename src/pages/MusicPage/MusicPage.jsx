@@ -6,9 +6,9 @@ import { useAudioPlayer } from "../../contexts/AudioPlayerContext";
 import musicsPageData from "./music-page-data";
 
 export default function MusicPage() {
-    let { category } = useParams();
-    category = category.toLowerCase();
-    const pageData = musicsPageData[category];
+    let { genre } = useParams();
+    genre = genre.toLowerCase();
+    const pageData = musicsPageData[genre];
 
     const {
         validPaths,
@@ -19,8 +19,8 @@ export default function MusicPage() {
     } = useAudioPlayer();
 
     useEffect(() => {
-        if (category) {
-            loadPlaylists(category.toLowerCase());
+        if (genre) {
+            loadPlaylists(genre.toLowerCase());
         }
         setCurrentAudio({
             index: null,
@@ -29,9 +29,9 @@ export default function MusicPage() {
             currentTime: 0,
             audioRef: null,
         });
-    }, [category]);
+    }, [genre]);
 
-    if (!validPaths.includes(category)) return <NotFoundPage />;
+    if (!validPaths.includes(genre)) return <NotFoundPage />;
 
     const helmetObj = {
         title: pageData.title || "",
