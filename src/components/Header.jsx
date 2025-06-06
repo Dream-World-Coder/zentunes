@@ -1,16 +1,18 @@
 import { useEffect, useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import { Sun, Moon, Share2 } from "lucide-react";
+import { Sun, Moon } from "lucide-react"; // Share2
 
 import { navItems } from "../assets/data/navItems";
 import ham from "../assets/images/ham.svg";
 import "../styles/header.scss";
 
+/*
 function handleShare() {
     const urlToShare = window.location.href;
     navigator.clipboard.writeText(urlToShare);
     alert("link copied to clipboard.");
 }
+*/
 
 export default function Header() {
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -108,9 +110,9 @@ export default function Header() {
                     >
                         {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
                     </div>
-                    <div className="login-btn" onClick={handleShare}>
+                    {/* <div className="login-btn" onClick={handleShare}>
                         <Share2 size={18} />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </header>

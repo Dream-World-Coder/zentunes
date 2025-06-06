@@ -4,6 +4,10 @@ import CategoryPage from "../../components/CategoryPage";
 import NotFoundPage from "../NotFound";
 import { useAudioPlayer } from "../../contexts/AudioPlayerContext";
 import musicsPageData from "./music-page-data";
+import {
+    genreExistsLocally,
+    downloadGenreSongs,
+} from "../../services/musicStorage";
 
 export default function MusicPage() {
     let { genre } = useParams();
@@ -16,12 +20,33 @@ export default function MusicPage() {
         isPlaylistLoading,
         loadPlaylists,
         setCurrentAudio,
+        localMusicsDataUri,
     } = useAudioPlayer();
 
     useEffect(() => {
-        if (genre) {
-            loadPlaylists(genre.toLowerCase());
-        }
+        const checkAndDownloadIfNeeded = async () => {
+            if (!validPaths.includes(genre)) return;
+
+            const exists = await genreExistsLocally(genre);
+            if (!exists) {
+                const confirm = window.confirm(
+                    `Songs for "${genre}" not found on device. Download now?`,
+                );
+                if (confirm) {
+                    try {
+                        await downloadGenreSongs(genre, localMusicsDataUri);
+                        await loadPlaylists(genre); // Reload after download
+                    } catch (e) {
+                        console.error("Download failed:", e);
+                    }
+                }
+            } else {
+                loadPlaylists(genre);
+            }
+        };
+
+        checkAndDownloadIfNeeded();
+
         setCurrentAudio({
             index: null,
             title: "",

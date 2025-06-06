@@ -10,6 +10,7 @@ body {
     font-family: Matter, sans-serif;
     font-size: 1.6rem;
     font-weight: 300;
+    padding-top: env(safe-area-inset-top);
 }
 
 .container {

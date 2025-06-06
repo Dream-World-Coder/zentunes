@@ -8,11 +8,15 @@ import {
 } from "react";
 import PropTypes from "prop-types";
 import { capitalizeEachWord } from "../services/formatting";
-import fetchMusicsList from "../services/fetchAudioList";
+import { Filesystem, Directory } from "@capacitor/filesystem";
 
 const AudioPlayerContext = createContext();
 
-export const AudioPlayerProvider = ({ children }) => {
+export const AudioPlayerProvider = ({
+    children,
+    localMusicsDataUri,
+    setLocalMusicsDataUri,
+}) => {
     /* ------ * valid paths * -----------------------
     --------------------------------------- */
     // const [validPaths, setValidPaths] = useState([]); useEffect(() => {}, []);
@@ -34,6 +38,7 @@ export const AudioPlayerProvider = ({ children }) => {
     --------------------------------------- */
     const [currentPlaylist, setCurrentPlaylist] = useState(null); //array, just {name, totalSongs} will work fine
     const [musicsList, setMusicsList] = useState([]); // the musics list array
+    // const [allMusicsList, setAllMusicsList] = useState([]); // cache to store data
     const [isPlaylistLoading, setIsPlaylistLoading] = useState(false);
 
     const loadPlaylists = async (genre) => {
@@ -42,23 +47,30 @@ export const AudioPlayerProvider = ({ children }) => {
             return;
         }
 
-        let apiUrl = `${import.meta.env.VITE_BACKEND_URL}/audio/list/${genre}`;
-        let musicsData;
-
         try {
             setIsPlaylistLoading(true);
-            musicsData = await fetchMusicsList(apiUrl);
-            setMusicsList(musicsData);
-        } catch (e) {
-            console.log(e);
+
+            const { data } = await Filesystem.readFile({
+                path: "localMusicsData.json",
+                directory: Directory.Data,
+            });
+
+            const parsed = JSON.parse(data);
+            const genreSongs = parsed[genre] || [];
+            // setAllMusicsList()
+
+            setMusicsList(genreSongs);
+
+            setCurrentPlaylist({
+                name: capitalizeEachWord(genre.replace("_", " ")),
+                totalSongs: genreSongs.length,
+            });
+        } catch (err) {
+            console.error("Error loading playlist:", err);
+            setMusicsList([]);
         } finally {
             setIsPlaylistLoading(false);
         }
-
-        setCurrentPlaylist({
-            name: capitalizeEachWord(genre.replace("_", " ")),
-            totalSongs: musicsData.length,
-        });
     };
 
     /* ------ * play next options * -----------------------
@@ -145,6 +157,8 @@ export const AudioPlayerProvider = ({ children }) => {
         isPlaylistLoading,
         musicsList,
         loadPlaylists,
+        localMusicsDataUri,
+        setLocalMusicsDataUri,
     };
 
     return (
@@ -153,7 +167,11 @@ export const AudioPlayerProvider = ({ children }) => {
         </AudioPlayerContext.Provider>
     );
 };
-AudioPlayerProvider.propTypes = { children: PropTypes.node.isRequired };
+AudioPlayerProvider.propTypes = {
+    children: PropTypes.node.isRequired,
+    localMusicsDataUri: PropTypes.any,
+    setLocalMusicsDataUri: PropTypes.func,
+};
 
 export const useAudioPlayer = () => {
     return useContext(AudioPlayerContext);

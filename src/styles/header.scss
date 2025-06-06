@@ -19,11 +19,22 @@
 $iconLength: 24px;
 $gapLen: 16px;
 
+.status-bar-cover {
+    position: fixed;
+    top: 0;
+    bottom: env(safe-area-inset-top);
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: env(safe-area-inset-top);
+    background-color: #42622f;
+}
+
 header {
     @include flexed;
 
     position: fixed;
-    top: 0;
+    top: env(safe-area-inset-top);
     left: 0;
     width: 100%;
     height: fit-content;

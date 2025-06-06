@@ -7,3 +7,14 @@ and as the reference changes useEffect will run the code inside it again, if tha
 use useState or useMemo if it needs to be added in a dependency
 
 -- new branch: self use
+
+
+------
+pnpm build
+
+npx cap sync android
+or
+npx cap copy android
+
+
+npx cap open android

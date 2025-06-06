@@ -1,8 +1,7 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
-import Lenis from "lenis";
-import { Analytics } from "@vercel/analytics/react";
+import { Filesystem, Directory } from "@capacitor/filesystem";
 
 import "./styles/style.css";
 import "./App.css";
@@ -16,26 +15,48 @@ import NotFoundPage from "./pages/NotFound";
 import { AudioPlayerProvider } from "./contexts/AudioPlayerContext";
 
 export default function App() {
+    const [localMusicsDataUri, setLocalMusicsDataUri] = useState({});
+
     useEffect(() => {
-        const lenis = new Lenis({
-            duration: 0.1,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-            smooth: true,
-        });
-        function raf(time) {
-            lenis.raf(time);
-            requestAnimationFrame(raf);
-        }
-        requestAnimationFrame(raf);
-        return () => {
-            lenis.destroy();
+        const initLocalMusicsData = async () => {
+            try {
+                // Check if file exists
+                await Filesystem.readFile({
+                    path: "localMusicsData.json",
+                    directory: Directory.Data,
+                });
+                console.log("localMusicsData.json exists.");
+            } catch (error) {
+                // If not found, create empty file
+                if (error.message.includes("File does not exist")) {
+                    await Filesystem.writeFile({
+                        path: "localMusicsData.json",
+                        data: JSON.stringify({}),
+                        directory: Directory.Data,
+                    });
+                    console.log("Created empty localMusicsData.json.");
+                } else {
+                    console.error("Error reading localMusicsData.json", error);
+                }
+            }
+
+            // Get URI and pass to context
+            const { uri } = await Filesystem.getUri({
+                directory: Directory.Data,
+                path: "localMusicsData.json",
+            });
+            setLocalMusicsDataUri(uri);
         };
+
+        initLocalMusicsData();
     }, []);
 
     return (
         <HelmetProvider>
-            <AudioPlayerProvider>
-                <Analytics />
+            <AudioPlayerProvider
+                localMusicsDataUri={localMusicsDataUri}
+                setLocalMusicsDataUri={setLocalMusicsDataUri}
+            >
                 <Router>
                     <Routes>
                         <Route path="/" element={<Home />} />
@@ -45,6 +66,7 @@ export default function App() {
                         <Route path="/contact" element={<ContactPage />} />
                         <Route path="*" element={<NotFoundPage />} />
                     </Routes>
+                    <div className="status-bar-cover"></div>
                 </Router>
             </AudioPlayerProvider>
         </HelmetProvider>
