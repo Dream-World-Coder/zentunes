@@ -1,7 +1,23 @@
 import { Filesystem, Directory } from "@capacitor/filesystem";
 import { Http } from "@capacitor-community/http";
 
+async function ensureGenreDir(genre) {
+    try {
+        await Filesystem.mkdir({
+            path: `audios/${genre}`,
+            directory: Directory.Data,
+            recursive: true, //Important!
+        });
+    } catch (e) {
+        // Ignore error if already exists
+        if (e.message?.toLowerCase().includes("already exists") === false) {
+            console.error("Failed to create genre directory:", e);
+        }
+    }
+}
+
 export async function genreExistsLocally(genre) {
+    await ensureGenreDir(genre);
     try {
         const { files } = await Filesystem.readdir({
             path: `audios/${genre}`,
@@ -14,24 +30,9 @@ export async function genreExistsLocally(genre) {
     }
 }
 
-async function ensureGenreDir(genre) {
-    try {
-        await Filesystem.mkdir({
-            path: `audios/${genre}`,
-            directory: Directory.Data,
-            recursive: true, //Important!
-        });
-    } catch (e) {
-        // Ignore error if already exists
-        if (e.message?.includes("Directory exists") === false) {
-            console.error("Failed to create genre directory:", e);
-        }
-    }
-}
-
 function songName(src) {
     if (!src) {
-        alert("src not found for this song");
+        console.log("src not found for this song");
         return;
     }
     const splittedArr = src.split("/");
@@ -40,13 +41,11 @@ function songName(src) {
 }
 
 export async function downloadGenreSongs(genre) {
-    ensureGenreDir(genre);
-    // Fetch list of songs using Capacitor HTTP
     const res = await Http.get({
         url: `${import.meta.env.VITE_BACKEND_URL}/audio/list/${genre}`,
+        responseType: "json",
         headers: {},
         params: {},
-        responseType: "json",
     });
 
     const songs = res.data.audio_data;
@@ -55,12 +54,12 @@ export async function downloadGenreSongs(genre) {
         try {
             const response = await Http.get({
                 url: song.src,
-                params: {},
+                responseType: "arraybuffer",
                 headers: {},
-                responseType: "blob",
+                params: {},
             });
 
-            const blob = new Blob([new Uint8Array(response.data)], {
+            const blob = new Blob([response.data], {
                 type: song.mediaType,
             });
 
@@ -69,6 +68,7 @@ export async function downloadGenreSongs(genre) {
             await new Promise((resolve, reject) => {
                 reader.onloadend = async () => {
                     const base64 = reader.result.split(",")[1];
+                    console.log("Base64 length:", base64.length);
                     try {
                         const songPath = `audios/${genre}/${songName(song.src)}`;
 
@@ -84,11 +84,13 @@ export async function downloadGenreSongs(genre) {
                         reject(err);
                     }
                 };
+                reader.onerror = reject;
                 reader.readAsDataURL(blob);
             });
         } catch (err) {
             console.error(`Failed to download or write ${song.src}:`, err);
         }
     }
+
     return songs.length;
 }

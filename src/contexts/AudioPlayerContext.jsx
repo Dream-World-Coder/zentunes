@@ -67,19 +67,32 @@ export const AudioPlayerProvider = ({ children }) => {
             });
 
             for (const file of result.files) {
+                // console.log("file: " + JSON.stringify(file, null, 2));
                 const filename = file.name;
                 const songPath = `audios/${genre}/${filename}`;
 
                 const { uri } = await Filesystem.getUri({
-                    directory: Directory.Data,
                     path: songPath,
+                    directory: Directory.Data,
                 });
 
+                // Convert to browser-safe URL
+                // console.log("uri: " + JSON.stringify(uri, null, 2));
+                const fileUrl = Capacitor.convertFileSrc(uri);
+
+                // Fetch as blob
+                // const response = await fetch(fileUrl);
+                // const blob = await response.blob();
+
+                // // Create object URL from blob
+                // const blobUrl = URL.createObjectURL(blob);
+
                 genreSongs.push({
-                    src: Capacitor.convertFileSrc(uri),
+                    src: fileUrl,
                     title: getFormattedTitle(filename),
                     mediaType: getMediaTypeFromFilename(filename),
                 });
+                // console.log(`\n\nblobUrl=${blobUrl} fileUrl=${fileUrl}\n\n`);
             }
 
             setMusicsList(genreSongs);
