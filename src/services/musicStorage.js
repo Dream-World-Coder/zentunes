@@ -5,7 +5,7 @@ async function ensureGenreDir(genre) {
     try {
         await Filesystem.mkdir({
             path: `audios/${genre}`,
-            directory: Directory.Data,
+            directory: Directory.Documents,
             recursive: true, //Important!
         });
     } catch (e) {
@@ -21,7 +21,7 @@ export async function genreExistsLocally(genre) {
     try {
         const { files } = await Filesystem.readdir({
             path: `audios/${genre}`,
-            directory: Directory.Data,
+            directory: Directory.Documents,
         });
         return files.length > 0;
     } catch (err) {
@@ -47,11 +47,11 @@ export async function downloadGenreSongs(genre) {
         headers: {},
         params: {},
     });
-
     const songs = res.data.audio_data;
 
     for (const song of songs) {
         try {
+            console.log("Downloading:", song.src);
             const response = await Http.get({
                 url: song.src,
                 responseType: "arraybuffer",
@@ -59,38 +59,26 @@ export async function downloadGenreSongs(genre) {
                 params: {},
             });
 
-            const blob = new Blob([response.data], {
-                type: song.mediaType,
+            console.log("Response size:", response.data.byteLength);
+            console.log("Media type:", song.mediaType);
+
+            // Check if we actually got audio data
+            if (response.data.byteLength === 0) {
+                console.error("Empty response for:", song.src);
+                continue;
+            }
+
+            const songPath = `audios/${genre}/${songName(song.src)}`;
+            await Filesystem.writeFile({
+                path: songPath,
+                data: response.data, // Use binary data
+                directory: Directory.Documents,
             });
 
-            const reader = new FileReader();
-
-            await new Promise((resolve, reject) => {
-                reader.onloadend = async () => {
-                    const base64 = reader.result.split(",")[1];
-                    console.log("Base64 length:", base64.length);
-                    try {
-                        const songPath = `audios/${genre}/${songName(song.src)}`;
-
-                        await Filesystem.writeFile({
-                            path: songPath,
-                            data: base64,
-                            directory: Directory.Data,
-                        });
-
-                        resolve();
-                    } catch (err) {
-                        console.error("Write failed:", err);
-                        reject(err);
-                    }
-                };
-                reader.onerror = reject;
-                reader.readAsDataURL(blob);
-            });
+            console.log("Successfully wrote:", songPath);
         } catch (err) {
             console.error(`Failed to download or write ${song.src}:`, err);
         }
     }
-
     return songs.length;
 }

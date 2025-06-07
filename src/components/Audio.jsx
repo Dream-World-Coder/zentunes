@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback, memo } from "react";
+// import { Capacitor } from "@capacitor/core";
 import PropTypes from "prop-types";
 import { Music } from "lucide-react";
 
@@ -118,8 +119,6 @@ const AudioItem = memo(function AudioItem({
                 audioRef: audioRef.current,
             }));
 
-            // Actually play the audio - THIS IS MISSING!
-            // may add useEffect
             audio.play();
             setIsPlaying(true);
         }
@@ -156,8 +155,6 @@ const AudioItem = memo(function AudioItem({
                             ref={audioRef}
                             className="audio"
                             preload="metadata"
-                            // the play-pause is controlled manually now, with audio.play() & audio.pause()
-                            // should add an useEffect for automation
                         >
                             <source src={src} type={mediaType} />
                             This audio is not supported by your browser.
