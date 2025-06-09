@@ -259,6 +259,7 @@ export default function Home() {
     useEffect(() => {
         const checkAndDownloadIfNeeded = async () => {
             const exists = await genreExistsLocally("home");
+            console.error(exists ? "exists" : "not exists");
             if (!exists) {
                 const confirm = window.confirm(
                     `Songs for "home" not found on device. Download now?`,

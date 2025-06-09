@@ -3,13 +3,16 @@ import { Dialog } from "@capacitor/dialog";
 import { FilePicker } from "@capawesome/capacitor-file-picker";
 import { Http } from "@capacitor-community/http";
 import { getFormattedTitle as pretty } from "./formatting";
+// import { safeReadDir } from "./permissions";
+
+const DIR = Directory.Data;
 
 async function ensureGenreDir(genre) {
     try {
         await Filesystem.mkdir({
             path: `audios/${genre}`,
-            directory: Directory.Documents,
-            recursive: true, //Important!
+            directory: DIR,
+            recursive: true,
         });
     } catch (e) {
         // Ignore error if already exists
@@ -23,9 +26,10 @@ export async function genreExistsLocally(genre) {
     try {
         const { files } = await Filesystem.readdir({
             path: `audios/${genre}`,
-            directory: Directory.Documents,
+            directory: DIR,
         });
-        return files.length > 0;
+        // console.error(JSON.stringify(files));
+        return files?.length > 0;
     } catch (err) {
         console.error(err);
         return false;
@@ -76,7 +80,7 @@ export async function downloadGenreSongs(genre) {
             await Filesystem.writeFile({
                 path: songPath,
                 data: response.data, // Use bin data
-                directory: Directory.Documents,
+                directory: DIR,
             });
 
             // console.log("Successfully wrote:", songPath);
@@ -104,6 +108,7 @@ export async function handleAddSong(validPaths) {
             alert("Invalid choice.");
             return;
         }
+
         const selectedGenre = validPaths[index];
 
         // Step 2: Pick audio file
@@ -122,24 +127,43 @@ export async function handleAddSong(validPaths) {
 
         const file = result.files[0];
         const filename = file.name;
-        const fileBlob = file.blob;
 
-        if (!fileBlob) {
+        // Step 3: Get file data - try multiple approaches
+        let fileData;
+        let buffer;
+
+        // Try to get data from the file object
+        if (file.data) {
+            // If file.data exists (base64), use it directly
+            fileData = file.data;
+        } else if (file.blob) {
+            // Convert blob to base64
+            buffer = await file.blob.arrayBuffer();
+            const uint8Array = new Uint8Array(buffer);
+            fileData = btoa(String.fromCharCode.apply(null, uint8Array));
+        } else if (file.path) {
+            // Read from file path if available
+            const readResult = await Filesystem.readFile({
+                path: file.path,
+            });
+            fileData = readResult.data;
+        } else {
+            throw new Error("Could not access file data");
+        }
+
+        if (!fileData) {
             await Dialog.alert({
                 title: "Error",
-                message: "Could not read selected file as blob.",
+                message: "Could not read file data.",
             });
             return;
         }
 
-        // Step 3: Convert blob to ArrayBuffer
-        const buffer = await fileBlob.arrayBuffer();
-
-        // Step 4: Write binary file
+        // Step 4: Write binary file as base64
         await Filesystem.writeFile({
             path: `audios/${selectedGenre}/${filename}`,
-            data: buffer,
-            directory: Directory.Documents,
+            data: fileData,
+            directory: DIR,
             recursive: true,
         });
 
@@ -148,7 +172,7 @@ export async function handleAddSong(validPaths) {
             message: `Saved: audios/${selectedGenre}/${filename}`,
         });
     } catch (err) {
-        console.error(err);
+        console.error("Error in handleAddSong:", err);
         await Dialog.alert({
             title: "Error",
             message: err.message || "An unexpected error occurred.",

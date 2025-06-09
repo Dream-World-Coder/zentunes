@@ -8,7 +8,6 @@ import {
 } from "react";
 import PropTypes from "prop-types";
 import {
-    capitalizeEachWord,
     getFormattedTitle,
     getMediaTypeFromFilename,
 } from "../services/formatting";
@@ -42,14 +41,9 @@ export const AudioPlayerProvider = ({ children }) => {
     // const [allMusicsList, setAllMusicsList] = useState([]); // cache to store data
     const [isPlaylistLoading, setIsPlaylistLoading] = useState(false);
 
-    // read `Directory.Documents/audios/${genre}`
-    // get songs, for song in songs prepare data:
-    // const { uri } = await Filesystem.getUri({
-    //     directory: Directory.Documents,
-    //     path: songPath,
-    // });
-    // {src: uri, title: getTitleFromFilename(filename), mediaType: getMediaTypeFromFilename(filename)}
-    // append them, genreSongs = [ .... ]
+    /*
+     * always loads from local files
+     */
     const loadPlaylists = async (genre) => {
         if (!validPaths.includes(genre)) {
             setMusicsList([]);
@@ -63,7 +57,7 @@ export const AudioPlayerProvider = ({ children }) => {
 
             const result = await Filesystem.readdir({
                 path: `audios/${genre}`,
-                directory: Directory.Documents,
+                directory: Directory.Data,
             });
 
             for (const file of result.files) {
@@ -74,31 +68,17 @@ export const AudioPlayerProvider = ({ children }) => {
                 // console.log("uri: " + JSON.stringify(file.uri, null, 2));
                 const fileUrl = Capacitor.convertFileSrc(file.uri);
 
-                // const contents = await Filesystem.readFile({
-                //     path: songPath,
-                //     directory: Directory.Documents,
-                // });
-                // const base64 = contents.data;
-                // const base64url = `data:${getMediaTypeFromFilename(filename)};base64,${base64}`;
-
-                // Fetch as blob
-                // const response = await fetch(base64url);
-                // const audioBlob = await response.blob();
-                // const blobUrl = URL.createObjectURL(audioBlob);
-
                 genreSongs.push({
                     src: fileUrl,
                     title: getFormattedTitle(filename),
                     mediaType: getMediaTypeFromFilename(filename),
                 });
-                // console.log(
-                //     `\n\nblobUrl={blobUrl} fileUrl={fileUrl} base64={base64}\n\n`,
-                // );
+                // console.log(`\n\nblobUrl={blobUrl} fileUrl={fileUrl} base64={base64}\n\n`);
             }
 
             setMusicsList(genreSongs);
             setCurrentPlaylist({
-                name: capitalizeEachWord(genre.replace("_", " ")),
+                name: getFormattedTitle(genre),
                 totalSongs: genreSongs.length,
             });
         } catch (err) {

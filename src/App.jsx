@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { HelmetProvider } from "react-helmet-async";
 
@@ -11,8 +12,16 @@ import ContactPage from "./pages/Contact/Contact";
 import NotFoundPage from "./pages/NotFound";
 
 import { AudioPlayerProvider } from "./contexts/AudioPlayerContext";
+// import { requestFilePermissions } from "./services/permissions";
 
 export default function App() {
+    // useEffect(() => {
+    //     async function initializeApp() {
+    //         await requestFilePermissions();
+    //     }
+    //     initializeApp();
+    // }, []);
+
     return (
         <HelmetProvider>
             <AudioPlayerProvider>

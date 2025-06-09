@@ -14,6 +14,7 @@ import { handleAddSong } from "../services/musicStorage";
 import { navItems } from "../assets/data/navItems";
 import ham from "../assets/images/ham.svg";
 import "../styles/header.scss";
+// import { debugFilesystem } from "../test/fileSys";
 
 function handleShare() {
     const urlToShare = window.location.href;
@@ -64,6 +65,17 @@ export default function Header() {
                     </div>
                     <span className="logo__text">Zentunes</span>
                 </NavLink>
+                {/* <div
+                    className="logo"
+                    onClick={async () => {
+                        await debugFilesystem(Directory.Documents);
+                    }}
+                >
+                    <div className="logo__icon">
+                        <img src="/favicon.png" alt="logo" />
+                    </div>
+                    <span className="logo__text">Zentunes</span>
+                </div> */}
                 <nav>
                     <ul>
                         {navItems.map((item, idx) =>
