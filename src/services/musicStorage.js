@@ -128,6 +128,19 @@ export async function handleAddSong(validPaths) {
         const file = result.files[0];
         const filename = file.name;
 
+        try {
+            const validExts = ["mp3", "m4a", "ogg", "wav"];
+            const sp = filename.split(".");
+            const fExt = sp[sp.length - 1];
+
+            if (!filename || !validExts.includes(fExt)) {
+                alert("wrong file type");
+                return;
+            }
+        } catch (e) {
+            console.log(e);
+        }
+
         // Step 3: Get file data - try multiple approaches
         let fileData;
         let buffer;
