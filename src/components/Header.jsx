@@ -1,22 +1,30 @@
 import { useEffect, useState, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import { Sun, Moon } from "lucide-react"; // Share2
+import {
+    Sun,
+    Moon,
+    CirclePlus,
+    RotateCw,
+    Share2,
+    MessageCirclePlus,
+} from "lucide-react";
+import { useAudioPlayer } from "../contexts/AudioPlayerContext";
+import { handleAddSong } from "../services/musicStorage";
 
 import { navItems } from "../assets/data/navItems";
 import ham from "../assets/images/ham.svg";
 import "../styles/header.scss";
 
-/*
 function handleShare() {
     const urlToShare = window.location.href;
     navigator.clipboard.writeText(urlToShare);
     alert("link copied to clipboard.");
 }
-*/
 
 export default function Header() {
     const [isDarkMode, setIsDarkMode] = useState(false);
     const darkModeButtonRef = useRef(null);
+    const { validPaths } = useAudioPlayer();
 
     // Initialize dark mode from localStorage
     useEffect(() => {
@@ -86,9 +94,21 @@ export default function Header() {
                     </ul>
                 </nav>
 
-                <div className="mobile-nav dropdown">
+                <div className="options">
+                    <div
+                        className="dark-mode-button"
+                        ref={darkModeButtonRef}
+                        onClick={handleDarkModeToggle}
+                        style={{ cursor: "pointer" }}
+                    >
+                        {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+                    </div>
+                </div>
+
+                <div className="mobile__nav dropdown">
                     <img src={ham} alt="" />
                     <ul>
+                        <h2 className="mobile__nav__header">Navigation</h2>
                         {navItems.map(
                             (item, idx) =>
                                 item.href !== "dropdown" && (
@@ -99,20 +119,29 @@ export default function Header() {
                                     </li>
                                 ),
                         )}
+                        <div className="mobile__nav__header">Actions</div>
+                        <div
+                            className="mobile__nav__btn"
+                            onClick={() => handleAddSong(validPaths)}
+                        >
+                            <CirclePlus size={16} /> Add Songs
+                        </div>
+                        <div
+                            className="mobile__nav__btn"
+                            onClick={() => window.location.reload()}
+                        >
+                            <RotateCw size={16} /> Reload Page
+                        </div>
+                        <div className="mobile__nav__btn" onClick={handleShare}>
+                            <Share2 size={16} /> Share
+                        </div>
+                        <div
+                            className="mobile__nav__btn"
+                            onClick={() => alert("Will be available soon")}
+                        >
+                            <MessageCirclePlus size={16} /> Feedback
+                        </div>
                     </ul>
-                </div>
-                <div className="options">
-                    <div
-                        className="dark-mode-button"
-                        ref={darkModeButtonRef}
-                        onClick={handleDarkModeToggle}
-                        style={{ cursor: "pointer" }}
-                    >
-                        {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-                    </div>
-                    {/* <div className="login-btn" onClick={handleShare}>
-                        <Share2 size={18} />
-                    </div> */}
                 </div>
             </div>
         </header>

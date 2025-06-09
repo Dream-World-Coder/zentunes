@@ -160,7 +160,7 @@ header {
                             height: auto;
                             background-color: color.adjust(
                                 $headerBgClr,
-                                $lightness: 10%
+                                $lightness: -5%
                             );
                             color: $headerClr;
                             padding: 15px;
@@ -177,11 +177,6 @@ header {
                                 @include flexed;
                                 height: fit-content;
                                 padding: 5px 0;
-
-                                -webkit-user-select: none; /* Safari */
-                                -moz-user-select: none; /* Firefox */
-                                -ms-user-select: none; /* Internet Explorer/Edge */
-                                user-select: none; /* Standard syntax */
                             }
                         }
 
@@ -205,70 +200,83 @@ header {
             }
         }
 
-        .mobile-nav {
-            display: none;
-            width: 20px;
-            height: 20px;
-            margin: 0 7px;
-
-            ul {
-                flex-direction: column;
-                position: absolute;
-                top: 40px;
-                left: 0%;
-                width: 100%;
-                height: auto;
-                background-color: $headerBgClr;
-                color: $headerClr;
-                padding: calc($gapLen/2) 0;
-                overflow: hidden;
-                transform: scaleY(0);
-                opacity: 0;
-                transform-origin: top center;
-                transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
-                li {
-                    @include flexed;
-                    height: auto;
-                    padding: 5px 0;
-
-                    -webkit-user-select: none; /* Safari */
-                    -moz-user-select: none; /* Firefox */
-                    -ms-user-select: none; /* Internet Explorer/Edge */
-                    user-select: none; /* Standard syntax */
-                }
-            }
-
-            &:hover {
-                ul {
-                    transform: scaleY(1);
-                    opacity: 1;
-                }
-            }
-
-            @media screen and (max-width: 640px) {
-                display: flex;
-            }
-        }
-
         .options {
             @include flexed;
             /* border: 1px solid red; */
 
             height: 100%;
-            margin-left: 15px;
+            margin: 0 0 0 10px;
             gap: 30px;
             cursor: pointer;
             pointer-events: all;
 
             @media screen and (max-width: 640px) {
-                margin-left: 5px;
+                margin: 0 10px;
                 gap: 15px;
             }
 
             .dark-mode-button,
             .download-button {
                 @include flexed;
+            }
+        }
+
+        .mobile__nav {
+            display: none;
+            width: 20px;
+            height: 20px;
+            /* position: relative; */
+
+            ul {
+                flex-direction: column;
+                align-items: start;
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: 60%;
+                height: 100dvh;
+                background-color: color.adjust($headerBgClr, $lightness: -5%);
+                color: $headerClr;
+                padding: 10px 30px 15px;
+                overflow: hidden;
+                transform: scaleX(0);
+                opacity: 0;
+                transition: all 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+                transform-origin: top right;
+                list-style-type: none;
+
+                li {
+                    padding: 6px 4px;
+                    border-bottom: 1px solid $headerBgClr;
+                }
+            }
+
+            &__header {
+                font-size: larger;
+                font-weight: bold;
+                opacity: 65%;
+                padding: 30px 4px 15px;
+            }
+
+            &__btn {
+                padding: 6px 4px;
+                border-bottom: 1px solid $headerBgClr;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                gap: 8px;
+            }
+
+            &:hover {
+                ul {
+                    transform: scaleX(1);
+                    opacity: 1;
+                    transform-origin: top right;
+                }
+            }
+
+            @media screen and (max-width: 640px) {
+                display: flex;
             }
         }
     }

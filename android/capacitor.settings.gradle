@@ -8,5 +8,11 @@ project(':capacitor-community-http').projectDir = new File('../node_modules/.pnp
 include ':capacitor-device'
 project(':capacitor-device').projectDir = new File('../node_modules/.pnpm/@capacitor+device@7.0.1_@capacitor+core@7.2.0/node_modules/@capacitor/device/android')
 
+include ':capacitor-dialog'
+project(':capacitor-dialog').projectDir = new File('../node_modules/.pnpm/@capacitor+dialog@7.0.1_@capacitor+core@7.2.0/node_modules/@capacitor/dialog/android')
+
 include ':capacitor-filesystem'
 project(':capacitor-filesystem').projectDir = new File('../node_modules/.pnpm/@capacitor+filesystem@7.1.1_@capacitor+core@7.2.0/node_modules/@capacitor/filesystem/android')
+
+include ':capawesome-capacitor-file-picker'
+project(':capawesome-capacitor-file-picker').projectDir = new File('../node_modules/.pnpm/@capawesome+capacitor-file-picker@7.1.0_@capacitor+core@7.2.0/node_modules/@capawesome/capacitor-file-picker/android')
