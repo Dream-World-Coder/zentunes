@@ -140,3 +140,5 @@ website
 .DS_Store
 
 **/assets/*.xml
+*6854*
+*-ignore
