@@ -3,7 +3,7 @@ import { Helmet } from "react-helmet-async";
 import { gsap } from "gsap";
 import PropTypes from "prop-types";
 
-import Header from "./Header";
+import useHeader from "./Header";
 import Footer from "./Footer";
 import AudioItem from "./Audio";
 import PlayOptions from "./PlayOptions";
@@ -118,6 +118,8 @@ const CategoryPage = memo(function CategoryPage({
     const genre =
         window.location.pathname.split("/").pop() || window.crypto.randomUUID();
 
+    const { Header, selectWindowOpen, setAudiosToDelete } = useHeader();
+
     return (
         <>
             <Helmet>
@@ -196,6 +198,8 @@ const CategoryPage = memo(function CategoryPage({
                                     title={music.title}
                                     mediaType={music.mediaType}
                                     index={index}
+                                    selectWindowOpen={selectWindowOpen}
+                                    setAudiosToDelete={setAudiosToDelete}
                                 />
                             </li>
                         ))}

@@ -4,7 +4,7 @@ import { Helmet } from "react-helmet-async";
 import { gsap } from "gsap";
 import PropTypes from "prop-types";
 
-import Header from "../../components/Header";
+import useHeader from "../../components/Header";
 import Footer from "../../components/Footer";
 import AudioItem from "../../components/Audio";
 import PlayOptions from "../../components/PlayOptions";
@@ -117,6 +117,8 @@ function HomePage({ helmetObj, pageHeading, musicsList = [], loading }) {
         musicItemsRef.current[index] = el;
     };
 
+    const { Header, selectWindowOpen, setAudiosToDelete } = useHeader();
+
     return (
         <>
             <Helmet>
@@ -220,6 +222,8 @@ function HomePage({ helmetObj, pageHeading, musicsList = [], loading }) {
                                     title={music.title}
                                     mediaType={music.mediaType}
                                     index={index}
+                                    selectWindowOpen={selectWindowOpen}
+                                    setAudiosToDelete={setAudiosToDelete}
                                 />
                             </li>
                         ))}
@@ -259,7 +263,7 @@ export default function Home() {
     useEffect(() => {
         const checkAndDownloadIfNeeded = async () => {
             const exists = await genreExistsLocally("home");
-            console.error(exists ? "exists" : "not exists");
+            // console.log(exists ? "exists" : "not exists");
             if (!exists) {
                 const confirm = window.confirm(
                     `Songs for "home" not found on device. Download now?`,

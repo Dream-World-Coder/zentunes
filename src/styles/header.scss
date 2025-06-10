@@ -244,6 +244,7 @@ header {
                 transition: all 0.4s cubic-bezier(0.86, 0, 0.07, 1);
                 transform-origin: top right;
                 list-style-type: none;
+                box-shadow: -10px 0 15px -5px rgba(0, 0, 0, 0.4);
 
                 li {
                     padding: 6px 4px;

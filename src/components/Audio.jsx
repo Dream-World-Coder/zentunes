@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback, memo } from "react";
 // import { Capacitor } from "@capacitor/core";
 import PropTypes from "prop-types";
-import { Music } from "lucide-react";
+import { Music, BoxSelect } from "lucide-react";
 
 import { useAudioPlayer } from "../contexts/AudioPlayerContext";
 
@@ -15,11 +15,15 @@ const AudioItem = memo(function AudioItem({
     title,
     mediaType = "audio/mpeg",
     index,
+    selectWindowOpen = false,
+    setAudiosToDelete = () => {},
 }) {
     const { currentAudio, setCurrentAudio, onAudioEnd } = useAudioPlayer();
 
     const audioRef = useRef(null);
     const progressBarRef = useRef(null);
+
+    const [isSelected, setIsSelected] = useState(false);
 
     const [isPlaying, setIsPlaying] = useState(
         currentAudio.index === index ? true : false,
@@ -135,7 +139,20 @@ const AudioItem = memo(function AudioItem({
     };
 
     return (
-        <div className="music no-select">
+        <div
+            className={`music no-select ${isSelected ? "selected" : ""}`}
+            onClick={() => {
+                if (selectWindowOpen) {
+                    setIsSelected(!isSelected);
+                    setAudiosToDelete((prev) => [
+                        ...prev.filter((i) => i.src !== src),
+                        { src, title, index },
+                    ]);
+                } else {
+                    return;
+                }
+            }}
+        >
             <div
                 className="audio-player link"
                 style={{
@@ -147,56 +164,70 @@ const AudioItem = memo(function AudioItem({
             >
                 <figure>
                     <figcaption>
-                        <Music className="ms" />
+                        {selectWindowOpen ? (
+                            <BoxSelect
+                                size={18}
+                                className="box-select"
+                                style={{
+                                    backgroundColor: isSelected
+                                        ? "#31511e"
+                                        : "transparent",
+                                }}
+                            />
+                        ) : (
+                            <Music className="ms" />
+                        )}
                         <span>{title || "no title"}</span>
                     </figcaption>
-                    <div className="audio-controls">
-                        <audio
-                            ref={audioRef}
-                            className="audio"
-                            preload="metadata"
-                        >
-                            <source src={src} type={mediaType} />
-                            This audio is not supported by your browser.
-                        </audio>
-                        <div
-                            className="playPauseBtn"
-                            onClick={handlePlayPause}
-                            style={{ cursor: "pointer" }}
-                        >
-                            <img
-                                src={playBtn}
-                                alt="play music"
-                                className="playIcon"
-                                style={{
-                                    display: isPlaying ? "none" : "block",
-                                }}
+                    {!selectWindowOpen && (
+                        <div className="audio-controls">
+                            <audio
+                                ref={audioRef}
+                                className="audio"
+                                preload="metadata"
+                            >
+                                <source src={src} type={mediaType} />
+                                This audio is not supported by your browser.
+                            </audio>
+                            <div
+                                className="playPauseBtn"
+                                onClick={handlePlayPause}
+                                style={{ cursor: "pointer" }}
+                            >
+                                <img
+                                    src={playBtn}
+                                    alt="play music"
+                                    className="playIcon"
+                                    style={{
+                                        display: isPlaying ? "none" : "block",
+                                    }}
+                                />
+                                <img
+                                    src={pauseBtn}
+                                    alt="pause music"
+                                    className="pauseIcon"
+                                    style={{
+                                        display: isPlaying ? "block" : "none",
+                                    }}
+                                />
+                            </div>
+                            <input
+                                ref={progressBarRef}
+                                className={`progressBar ${isPlaying ? "player-is-active" : ""}`}
+                                type="range"
+                                min="0"
+                                max={duration || 0}
+                                value={currentTime}
+                                step="0.1"
+                                onChange={handleProgressChange}
                             />
-                            <img
-                                src={pauseBtn}
-                                alt="pause music"
-                                className="pauseIcon"
-                                style={{
-                                    display: isPlaying ? "block" : "none",
-                                }}
-                            />
+                            <div
+                                className={`timeDisplay ${isPlaying ? "player-is-active" : ""}`}
+                            >
+                                {timeDisplay}
+                            </div>
                         </div>
-                        <input
-                            ref={progressBarRef}
-                            className={`progressBar ${isPlaying ? "player-is-active" : ""}`}
-                            type="range"
-                            min="0"
-                            max={duration || 0}
-                            value={currentTime}
-                            step="0.1"
-                            onChange={handleProgressChange}
-                        />
-                        <div
-                            className={`timeDisplay ${isPlaying ? "player-is-active" : ""}`}
-                        >
-                            {timeDisplay}
-                        </div>
-                    </div>
+                    )}
                 </figure>
             </div>
             <span
@@ -217,5 +248,7 @@ AudioItem.propTypes = {
     title: PropTypes.string,
     mediaType: PropTypes.string,
     index: PropTypes.number,
+    selectWindowOpen: PropTypes.bool,
+    setAudiosToDelete: PropTypes.func,
 };
 export default AudioItem;

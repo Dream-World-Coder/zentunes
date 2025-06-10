@@ -1,3 +1,5 @@
+@use "sass:color";
+
 .musics {
     margin: 0;
     padding: 0;
@@ -67,6 +69,10 @@ body.dark .musics::after {
         &:after {
             color: black;
         }
+    }
+
+    &.selected {
+        background: color.adjust(#f6fcdf, $lightness: -15%);
     }
 
     img {

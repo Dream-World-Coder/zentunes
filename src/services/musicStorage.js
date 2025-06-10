@@ -55,7 +55,7 @@ export async function downloadGenreSongs(genre) {
         headers: {},
         params: {},
     });
-    const songs = res.data.audio_data;
+    const songs = res.data.audio_data || [];
 
     for (const song of songs) {
         try {
@@ -190,5 +190,126 @@ export async function handleAddSong(validPaths) {
             title: "Error",
             message: err.message || "An unexpected error occurred.",
         });
+    } finally {
+        window.location.reload();
+    }
+}
+
+export function extractFilePathFromCapacitorUri(src) {
+    try {
+        // Remove the Capacitor prefix
+        const withoutPrefix = src.replace(
+            "https://localhost/_capacitor_file_",
+            "",
+        );
+
+        // Decode URI components
+        const decoded = decodeURIComponent(withoutPrefix);
+
+        // For Directory.Data, we need just the relative path after /files/
+        // Pattern: /data/user/0/com.subhajit.zentunes/files/audios/home/test.txt
+        // We want: audios/home/test.txt
+
+        const filesIndex = decoded.indexOf("/files/");
+
+        if (filesIndex === -1) {
+            throw new Error("/files/ directory not found in path");
+        }
+
+        // Extract everything after /files/
+        const relativePath = decoded.substring(filesIndex + "/files/".length);
+
+        return relativePath;
+    } catch (error) {
+        console.error("Path extraction error:", error);
+        throw new Error(`Failed to extract path from: ${src}`);
+    }
+}
+
+// Alternative approach using URL parsing
+export function extractFilePathFromCapacitorUriV2(src) {
+    try {
+        // Parse the URL to handle encoding properly
+        const url = new URL(src);
+
+        // Get the pathname and decode it
+        const pathname = decodeURIComponent(url.pathname);
+
+        // Remove the _capacitor_file_ prefix if present
+        const cleanPath = pathname.replace("/_capacitor_file_", "");
+
+        // For Directory.Data, extract just the relative path after /files/
+        const filesIndex = cleanPath.indexOf("/files/");
+
+        if (filesIndex === -1) {
+            throw new Error("/files/ directory not found in path");
+        }
+
+        // Return just the relative path after /files/
+        return cleanPath.substring(filesIndex + "/files/".length);
+    } catch (error) {
+        console.error("Path extraction error:", error);
+        throw new Error(`Failed to extract path from: ${src}`);
+    }
+}
+
+export async function handleRemoveSong(audiosToDelete) {
+    try {
+        const confirmResult = await Dialog.confirm({
+            title: "Confirm Delete",
+            message:
+                "This action will permanently delete the selected songs. Are you sure?",
+            okButtonTitle: "Yes",
+            cancelButtonTitle: "No",
+        });
+
+        if (!confirmResult.value) {
+            alert("Cancelled");
+            return;
+        }
+
+        let deletedCount = 0;
+        const errors = [];
+
+        for (const audio of audiosToDelete) {
+            try {
+                const fileUri = extractFilePathFromCapacitorUriV2(audio.src);
+                console.log(`Attempting to delete: ${fileUri}`);
+
+                await Filesystem.deleteFile({
+                    path: fileUri,
+                    directory: DIR,
+                });
+
+                console.log(`Successfully deleted: ${fileUri}`);
+                deletedCount += 1;
+            } catch (fileErr) {
+                const errorMsg = `Failed to delete ${audio.title}: ${fileErr.message}`;
+                console.error("Audio Delete Error:", errorMsg);
+                errors.push(errorMsg);
+                continue;
+            }
+        }
+
+        // Provide detailed feedback
+        if (deletedCount > 0) {
+            alert(
+                `${deletedCount} song(s) deleted successfully.${errors.length > 0 ? ` ${errors.length} failed.` : ""}`,
+            );
+        } else {
+            alert("No songs were deleted. Check console for errors.");
+        }
+
+        // Log errors for debugging
+        if (errors.length > 0) {
+            console.error("Deletion errors:", errors);
+        }
+    } catch (error) {
+        console.error("handleRemoveSong Error:", error);
+        alert(
+            "An error occurred while deleting songs. Check console for details.",
+        );
+    } finally {
+        window.location.reload();
     }
 }
