@@ -19,4 +19,4 @@ npx cap open android
 ./gradlew assembleDebug -> android/app/build/outputs/apk/debug/app-debug.apk
 ------
 
-reload btn, add songs, sheet nav, drawr
+memory leak issue maybe -- why sudden stop
