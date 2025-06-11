@@ -16,6 +16,7 @@ const CategoryPage = memo(function CategoryPage({
   pageHeading,
   pageDescription,
   musicsList = [],
+  reloadPresent = false,
 }) {
   const musicItemsRef = useRef([]);
 
@@ -216,7 +217,7 @@ const CategoryPage = memo(function CategoryPage({
                 />
               </li>
             ))}
-          {musicsList.length === 0 && (
+          {musicsList.length === 0 && reloadPresent && (
             <div>
               No songs found{" "}
               <button
@@ -240,6 +241,7 @@ CategoryPage.propTypes = {
   musicsList: PropTypes.array,
   pageHeading: PropTypes.string,
   pageDescription: PropTypes.string,
+  reloadPresent: PropTypes.bool,
 };
 
 export default CategoryPage;

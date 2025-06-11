@@ -63,6 +63,7 @@ export default function MusicPage() {
       pageHeading={pageHeading}
       pageDescription={pageDescription}
       musicsList={musicsList}
+      reloadPresent={true}
     />
   );
 }
