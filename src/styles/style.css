@@ -44,16 +44,6 @@ h2.heading {
   }
 }
 
-h2.heading__home {
-  font-size: 4.2rem;
-  margin-top: 2rem;
-  margin-bottom: 1.5rem;
-
-  @media (max-width: 640px) {
-    font-size: 3rem;
-  }
-}
-
 p.description {
   margin-bottom: 10rem;
   max-width: 100ch;

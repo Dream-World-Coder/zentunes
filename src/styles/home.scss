@@ -1,5 +1,14 @@
 .home__link {
-    text-decoration: underline;
-    text-underline-offset: 2px;
-    text-decoration-thickness: 1px;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-thickness: 1px;
+}
+h2.heading__home {
+  font-size: 4.2rem;
+  margin-top: 2rem;
+  margin-bottom: 1.5rem;
+
+  @media (max-width: 640px) {
+    font-size: 3rem;
+  }
 }
