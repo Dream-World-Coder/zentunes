@@ -21,7 +21,7 @@ const CategoryPage = memo(function CategoryPage({
   reloadPresent = false,
 }) {
   let { genre } = useParams();
-  genre = genre.toLowerCase();
+  genre = genre?.toLowerCase() || "invalid";
 
   const { Header, selectWindowOpen, setAudiosToDelete } = useHeader();
   const {
