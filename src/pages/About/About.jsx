@@ -1,17 +1,17 @@
 import CategoryPage from "../../components/CategoryPage";
 
 export default function AboutPage() {
-    const helmetObj = {
-        title: "About",
-        description: "About zentunes",
-        robotsTxt: "index, follow",
-        currentUrl: "https://zentunes.vercel.app/about",
-        cannonical: "https://zentunes.vercel.app/about",
-        previewImagePath: "/preview-image.png",
-        mainEntityType: "AboutPage",
-    };
-    const pageHeading = helmetObj.title;
-    const pageDescription = `
+  const helmetObj = {
+    title: "About",
+    description: "About zentunes",
+    robotsTxt: "index, follow",
+    currentUrl: "https://zentunes.vercel.app/about",
+    cannonical: "https://zentunes.vercel.app/about",
+    previewImagePath: "/preview-image.png",
+    mainEntityType: "AboutPage",
+  };
+  const pageHeading = helmetObj.title;
+  const pageDescription = `
         Welcome.<br/><br/>
         I&apos;am glad you&apos;ve found your way here.<br/>
         Zentunes is a digital sanctuary where sound could be a source of peace and gentle reflection,
@@ -24,16 +24,16 @@ export default function AboutPage() {
         May you find stillness, comfort, and perhaps a few beautiful memories along the way.<br/><br/>
 
         Warmly,<br/>
-        Team Zentunes
+        Team Zentunes(only me rn :|)
         <br/>
         <br/>
         ** The music items used here are not owned by me. This is a personal project and will be disabled in some months.`;
 
-    return (
-        <CategoryPage
-            helmetObj={helmetObj}
-            pageHeading={pageHeading}
-            pageDescription={pageDescription}
-        />
-    );
+  return (
+    <CategoryPage
+      helmetObj={helmetObj}
+      pageHeading={pageHeading}
+      pageDescription={pageDescription}
+    />
+  );
 }

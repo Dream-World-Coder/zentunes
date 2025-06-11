@@ -207,7 +207,7 @@ function HomePage({ helmetObj, pageHeading, musicsList = [] }) {
           <NavLink to="/musics/rabindra_sangeet" className="home__link">
             Rabindra Sangeet
           </NavLink>{" "}
-          among many others. Be sure to explore them all!
+          etc, be sure to explore them all!
           <br /> Below you will find one song from each of the collections.
           <br />
           <br />
