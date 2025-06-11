@@ -48,11 +48,6 @@ header {
   color: $headerClr;
   z-index: 999999;
 
-  -webkit-user-select: none; /* Safari */
-  -moz-user-select: none; /* Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Standard syntax */
-
   .wrapper {
     width: 100%;
     max-width: 1500px;
@@ -134,11 +129,6 @@ header {
           font-size: 1.75rem;
           padding: 4px 0;
 
-          -webkit-user-select: none; /* Safari */
-          -moz-user-select: none; /* Firefox */
-          -ms-user-select: none; /* Internet Explorer/Edge */
-          user-select: none; /* Standard syntax */
-
           @media screen and (max-width: 640px) {
             font-size: 1.5rem;
             padding: 4px 0;
@@ -166,7 +156,7 @@ header {
               transform: scaleY(0);
               opacity: 0;
               transform-origin: top center;
-              transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+              transition: all 0.4s cubic-bezier(0.86, 0, 0.07, 1);
               gap: 0px;
               box-shadow: -10px 10px 15px -5px rgba(0, 0, 0, 0.4);
 
