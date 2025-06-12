@@ -1,15 +1,13 @@
 import { useEffect, useRef, useState, useCallback, memo } from "react";
-// import { Capacitor } from "@capacitor/core";
 import PropTypes from "prop-types";
 import { Music, BoxSelect } from "lucide-react";
-
 import { useAudioPlayer } from "../contexts/AudioPlayerContext";
-import { CapacitorMusicControls } from "capacitor-music-controls-plugin";
-
-import "../styles/music.scss";
 
 import playBtn from "../assets/images/play.svg";
 import pauseBtn from "../assets/images/pause.svg";
+
+import "../styles/music.scss";
+import { CapacitorMusicControls } from "capacitor-music-controls-plugin";
 
 const AudioItem = memo(function AudioItem({
   src,
@@ -19,13 +17,7 @@ const AudioItem = memo(function AudioItem({
   selectWindowOpen = false,
   setAudiosToDelete = () => {},
 }) {
-  const {
-    currentAudio,
-    setCurrentAudio,
-    // currentAudioControl,
-    // setCurrentAudioControl,
-    onAudioEnd,
-  } = useAudioPlayer();
+  const { currentAudio, setCurrentAudio, onAudioEnd } = useAudioPlayer();
 
   const audioRef = useRef(null);
   const progressBarRef = useRef(null);
@@ -48,6 +40,21 @@ const AudioItem = memo(function AudioItem({
     }${seconds}`;
   }, []);
 
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    const handleLoadedMetadata = () => {
+      setDuration(audio.duration);
+    };
+
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+
+    return () => {
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+    };
+  }, []);
+
   // handle time updates
   useEffect(() => {
     const audio = audioRef.current;
@@ -56,21 +63,21 @@ const AudioItem = memo(function AudioItem({
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime);
       setTimeDisplay(formatTime(audio.currentTime));
+      CapacitorMusicControls.updateElapsed({
+        elapsed: Math.floor(audio.currentTime),
+        isPlaying: !audio.paused,
+      });
     };
 
-    const handleLoadedMetadata = () => {
-      setDuration(audio.duration);
-    };
+    const interval = setInterval(() => {
+      if (audio?.currentTime) {
+        handleTimeUpdate();
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-    audio.addEventListener("timeupdate", handleTimeUpdate);
-    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
-
-    return () => {
-      audio.removeEventListener("timeupdate", handleTimeUpdate);
-      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-    };
-  }, [formatTime]);
-
+  // important
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -112,23 +119,19 @@ const AudioItem = memo(function AudioItem({
 
     if (isPlaying) {
       audio.pause();
-      CapacitorMusicControls.updateIsPlaying({ isPlaying: false });
 
       setIsPlaying(false);
-      setCurrentAudio((prev) => ({
-        ...prev,
+      setCurrentAudio({
         index: null,
-        title: "",
-        duration: 0,
-        currentTime: 0,
+        title: null,
+        duration: null,
+        currentTime: null,
         audioRef: null,
-      }));
-      // setCurrentAudioControl(null);
+      });
     } else {
-      // CASE: any play pause including first time play
+      // CASE: any play including first time play
       // -----------------------------------------------
       audio.play();
-      // currentAudioControl.updateIsPlaying({ isPlaying: true }); // null now
 
       setIsPlaying(true);
       setCurrentAudio((prev) => ({
@@ -139,29 +142,6 @@ const AudioItem = memo(function AudioItem({
         currentTime,
         audioRef: audioRef.current,
       }));
-      try {
-        // const capMC =
-        await CapacitorMusicControls.create({
-          track: title || "no title",
-          // author: "unknown",
-
-          isPlaying: true,
-          dismissable: false,
-
-          hasPrev: false,
-          hasNext: true,
-          hasClose: true,
-
-          duration,
-          elapsed: currentTime,
-          ticker: "Now playing",
-        });
-      } catch (error) {
-        console.error("Failed to create music controls:", error);
-      }
-      // capMC.updateIsPlaying({ isPlaying: true }); // or
-      CapacitorMusicControls.updateIsPlaying({ isPlaying: true });
-      // setCurrentAudioControl(capMC);
     }
   };
 
@@ -172,6 +152,7 @@ const AudioItem = memo(function AudioItem({
       const newTime = parseFloat(e.target.value);
       audio.currentTime = newTime;
       setCurrentTime(newTime);
+      setCurrentAudio((prev) => ({ ...prev, currentTime: newTime }));
     }
   };
 
@@ -248,7 +229,7 @@ const AudioItem = memo(function AudioItem({
                 className={`progressBar ${isPlaying ? "player-is-active" : ""}`}
                 type="range"
                 min="0"
-                max={duration || 0}
+                max={duration || 2}
                 value={currentTime}
                 step="0.1"
                 onChange={handleProgressChange}

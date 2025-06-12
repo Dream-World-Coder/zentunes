@@ -24,7 +24,6 @@ function HomePage({ helmetObj, pageHeading }) {
     musicsList,
     setMusicsList,
     setCurrentAudio,
-    // setCurrentAudioControl,
   } = useAudioPlayer();
 
   async function fetchSongs() {

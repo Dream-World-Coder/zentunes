@@ -31,7 +31,6 @@ const CategoryPage = memo(function CategoryPage({
     musicsList,
     setMusicsList,
     setCurrentAudio,
-    // setCurrentAudioControl,
     validPaths,
   } = useAudioPlayer();
 
