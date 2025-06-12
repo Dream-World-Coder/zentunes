@@ -21,8 +21,8 @@
         "@capacitor/dialog": "^7.0.1",
         "@capacitor/filesystem": "^7.1.1",
         "@capawesome/capacitor-file-picker": "^7.1.0",
+        "jsmediatags": "^3.9.7",
         "lucide-react": "^0.511.0",
-        "music-metadata-browser": "^2.5.11",
         "prop-types": "^15.8.1",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",
@@ -41,6 +41,7 @@
         "eslint-plugin-react-refresh": "^0.4.20",
         "globals": "^15.15.0",
         "sass": "^1.89.1",
-        "vite": "^5.4.19"
+        "vite": "^5.4.19",
+        "vite-plugin-commonjs-externals": "^0.1.4"
     }
 }
