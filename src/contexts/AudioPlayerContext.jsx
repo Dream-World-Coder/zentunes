@@ -7,10 +7,13 @@ import {
   // useMemo,
 } from "react";
 import PropTypes from "prop-types";
+
 import {
   getFormattedTitle,
   getMediaTypeFromFilename,
 } from "../services/formatting";
+import { getAudioTitleFromFile } from "../services/audioMeta";
+
 import { Capacitor } from "@capacitor/core";
 import { Filesystem, Directory } from "@capacitor/filesystem";
 
@@ -57,20 +60,18 @@ export const AudioPlayerProvider = ({ children }) => {
 
       const result = await Filesystem.readdir({
         path: `audios/${genre}`,
-        directory: Directory.Data,
+        directory: Directory[import.meta.env.VITE_DIR],
       });
 
       for (const file of result.files) {
         // console.log("file: " + JSON.stringify(file, null, 2));
         const filename = file.name;
-        // const songPath = `audios/${genre}/${filename}`;
-
-        // console.log("uri: " + JSON.stringify(file.uri, null, 2));
         const fileUrl = Capacitor.convertFileSrc(file.uri);
+        const title = await getAudioTitleFromFile(fileUrl, file.name);
 
         genreSongs.push({
+          title: title || getFormattedTitle(filename),
           src: fileUrl,
-          title: getFormattedTitle(filename),
           mediaType: getMediaTypeFromFilename(filename),
         });
         // console.log(`\n\nblobUrl={blobUrl} fileUrl={fileUrl} base64={base64}\n\n`);

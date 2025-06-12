@@ -5,7 +5,7 @@ import { Http } from "@capacitor-community/http";
 import { getFormattedTitle as pretty } from "./formatting";
 // import { safeReadDir } from "./permissions";
 
-const DIR = Directory.Data;
+const DIR = Directory[import.meta.env.VITE_DIR];
 
 async function ensureGenreDir(genre) {
   try {
