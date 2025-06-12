@@ -21,6 +21,7 @@
         "@capacitor/dialog": "^7.0.1",
         "@capacitor/filesystem": "^7.1.1",
         "@capawesome/capacitor-file-picker": "^7.1.0",
+        "capacitor-music-controls-plugin": "^6.1.0",
         "lucide-react": "^0.511.0",
         "music-metadata": "^11.2.3",
         "prop-types": "^15.8.1",

@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import { Music, BoxSelect } from "lucide-react";
 
 import { useAudioPlayer } from "../contexts/AudioPlayerContext";
+import { CapacitorMusicControls } from "capacitor-music-controls-plugin";
 
 import "../styles/music.scss";
 
@@ -18,7 +19,13 @@ const AudioItem = memo(function AudioItem({
   selectWindowOpen = false,
   setAudiosToDelete = () => {},
 }) {
-  const { currentAudio, setCurrentAudio, onAudioEnd } = useAudioPlayer();
+  const {
+    currentAudio,
+    setCurrentAudio,
+    // currentAudioControl,
+    // setCurrentAudioControl,
+    onAudioEnd,
+  } = useAudioPlayer();
 
   const audioRef = useRef(null);
   const progressBarRef = useRef(null);
@@ -32,7 +39,7 @@ const AudioItem = memo(function AudioItem({
   const [duration, setDuration] = useState(0);
   const [timeDisplay, setTimeDisplay] = useState("00:00");
 
-  // format time helper, int -> str
+  // format time helper, sec:int -> str
   const formatTime = useCallback((time) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
@@ -99,12 +106,14 @@ const AudioItem = memo(function AudioItem({
 
   // handle play/pause & first click
   // onclick pause others & set currentAudio
-  const handlePlayPause = () => {
+  const handlePlayPause = async () => {
     const audio = audioRef.current;
     if (!audio) return;
 
     if (isPlaying) {
       audio.pause();
+      CapacitorMusicControls.updateIsPlaying({ isPlaying: false });
+
       setIsPlaying(false);
       setCurrentAudio((prev) => ({
         ...prev,
@@ -114,8 +123,14 @@ const AudioItem = memo(function AudioItem({
         currentTime: 0,
         audioRef: null,
       }));
+      // setCurrentAudioControl(null);
     } else {
-      // Set as current audio
+      // CASE: any play pause including first time play
+      // -----------------------------------------------
+      audio.play();
+      // currentAudioControl.updateIsPlaying({ isPlaying: true }); // null now
+
+      setIsPlaying(true);
       setCurrentAudio((prev) => ({
         ...prev,
         index: index,
@@ -124,9 +139,29 @@ const AudioItem = memo(function AudioItem({
         currentTime,
         audioRef: audioRef.current,
       }));
+      try {
+        // const capMC =
+        await CapacitorMusicControls.create({
+          track: title || "no title",
+          // author: "unknown",
 
-      audio.play();
-      setIsPlaying(true);
+          isPlaying: true,
+          dismissable: false,
+
+          hasPrev: false,
+          hasNext: true,
+          hasClose: true,
+
+          duration,
+          elapsed: currentTime,
+          ticker: "Now playing",
+        });
+      } catch (error) {
+        console.error("Failed to create music controls:", error);
+      }
+      // capMC.updateIsPlaying({ isPlaying: true }); // or
+      CapacitorMusicControls.updateIsPlaying({ isPlaying: true });
+      // setCurrentAudioControl(capMC);
     }
   };
 
