@@ -125,10 +125,11 @@ const CategoryPage = memo(function CategoryPage({
           dangerouslySetInnerHTML={{ __html: pageDescription || "" }}
         ></p>
 
-        {musicsList.length > 0 && <PlayOptions />}
+        {musicsList.length > 0 && reloadPresent && <PlayOptions />}
 
         <ul className={`musics ${loading ? "loading" : ""}`}>
           {musicsList.length > 0 &&
+            reloadPresent &&
             musicsList.map((music, index) => (
               <li key={`${genre}-${music.src}`}>
                 <AudioItem
