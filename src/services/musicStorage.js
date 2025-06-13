@@ -140,7 +140,7 @@ export async function handleAddSong(validPaths) {
         return;
       }
     } catch (e) {
-      console.log(e);
+      console.log("handle add song error:", e);
     }
 
     // Step 3: Get file data - try multiple approaches

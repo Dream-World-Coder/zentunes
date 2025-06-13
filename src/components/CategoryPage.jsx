@@ -66,6 +66,7 @@ const CategoryPage = memo(function CategoryPage({
       duration: 0,
       currentTime: 0,
       audioRef: null,
+      audioId: null,
     });
   }, [genre]);
 
@@ -133,6 +134,7 @@ const CategoryPage = memo(function CategoryPage({
             musicsList.map((music, index) => (
               <li key={`${genre}-${music.src}`}>
                 <AudioItem
+                  audioId={music.audioId}
                   src={music.src}
                   title={music.title}
                   mediaType={music.mediaType}

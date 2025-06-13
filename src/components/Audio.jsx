@@ -10,6 +10,7 @@ import "../styles/music.scss";
 import { CapacitorMusicControls } from "capacitor-music-controls-plugin";
 
 const AudioItem = memo(function AudioItem({
+  audioId,
   src,
   title,
   mediaType = "audio/mpeg",
@@ -40,62 +41,71 @@ const AudioItem = memo(function AudioItem({
     }${seconds}`;
   }, []);
 
+  // handle time updates
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     const handleLoadedMetadata = () => {
       setDuration(audio.duration);
+
+      // if (currentAudio.index === index) {
+      //   setCurrentAudio((prev) => ({ ...prev, duration: audio.duration }));
+      // }
+      // --> no need, implicit duration assign is handled from the musicsList in the context, it will just un-necesserily re-render things
     };
-
-    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
-
-    return () => {
-      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-    };
-  }, []);
-
-  // handle time updates
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
 
     const handleTimeUpdate = () => {
       setCurrentTime(audio.currentTime);
       setTimeDisplay(formatTime(audio.currentTime));
+      // if (currentAudio.index === index) {
+      // 'if' is not needed as only currentAudio plays at a time
+
+      // setCurrentAudio((prev) => ({
+      //   ...prev,
+      //   currentTime: audio.currentTime,
+      // })); --> if currentAudio is updated the music control obj will also be re-created, thats why avoiding it now.
+
       CapacitorMusicControls.updateElapsed({
         elapsed: Math.floor(audio.currentTime),
         isPlaying: !audio.paused,
       });
+      // }
     };
+
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
 
     const interval = setInterval(() => {
       if (audio?.currentTime) {
         handleTimeUpdate();
       }
     }, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
-  // important
+    return () => {
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
+      clearInterval(interval);
+    };
+  }, [formatTime]); // ,currentAudio.index, index]);
+
+  // important cuz props are staying same i.guess, so multiple playing at once
+  // --------------------------------------------------------------------------
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
 
     if (currentAudio.index === index) {
-      // This is the current audio - play this
+      // && !currentAudio.isPaused
       if (!isPlaying) {
         audio.play();
         setIsPlaying(true);
       }
     } else {
-      // This is not the current audio - pause this
       if (isPlaying) {
         audio.pause();
         setIsPlaying(false);
       }
     }
-  }, [currentAudio.index, index, isPlaying]);
+  }, [currentAudio.index, index, isPlaying]); //currentAudio.isPaused
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -123,24 +133,27 @@ const AudioItem = memo(function AudioItem({
       setIsPlaying(false);
       setCurrentAudio({
         index: null,
-        title: null,
-        duration: null,
-        currentTime: null,
+        title: "",
+        duration: 0,
+        currentTime: 0,
         audioRef: null,
+        audioId: null,
+        isPaused: true,
       });
     } else {
-      // CASE: any play including first time play
+      // CASE: any audio play including first time play
       // -----------------------------------------------
       audio.play();
 
       setIsPlaying(true);
-      setCurrentAudio((prev) => ({
-        ...prev,
+      setCurrentAudio(() => ({
         index: index,
         title: title || "no title",
         duration,
         currentTime,
+        audioId,
         audioRef: audioRef.current,
+        isPaused: false,
       }));
     }
   };
@@ -152,7 +165,7 @@ const AudioItem = memo(function AudioItem({
       const newTime = parseFloat(e.target.value);
       audio.currentTime = newTime;
       setCurrentTime(newTime);
-      setCurrentAudio((prev) => ({ ...prev, currentTime: newTime }));
+      // setCurrentAudio((prev) => ({ ...prev, currentTime: newTime }));
     }
   };
 
@@ -198,7 +211,12 @@ const AudioItem = memo(function AudioItem({
           </figcaption>
           {!selectWindowOpen && (
             <div className="audio-controls">
-              <audio ref={audioRef} className="audio" preload="metadata">
+              <audio
+                id={audioId}
+                ref={audioRef}
+                className="audio"
+                preload="metadata"
+              >
                 <source src={src} type={mediaType} />
                 This audio is not supported by your browser.
               </audio>
@@ -257,6 +275,7 @@ const AudioItem = memo(function AudioItem({
   );
 });
 AudioItem.propTypes = {
+  audioId: PropTypes.string,
   src: PropTypes.string,
   title: PropTypes.string,
   mediaType: PropTypes.string,

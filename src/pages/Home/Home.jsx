@@ -58,6 +58,7 @@ function HomePage({ helmetObj, pageHeading }) {
       duration: 0,
       currentTime: 0,
       audioRef: null,
+      audioId: null,
     });
   }, []);
 
@@ -145,6 +146,7 @@ function HomePage({ helmetObj, pageHeading }) {
             musicsList.map((music, index) => (
               <li key={`home-${music.src}`}>
                 <AudioItem
+                  audioId={music.audioId}
                   src={music.src}
                   title={music.title}
                   mediaType={music.mediaType}

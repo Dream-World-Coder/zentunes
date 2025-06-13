@@ -55,34 +55,41 @@ if (typeof Buffer === "undefined") {
   };
 }
 
-export async function getAudioTitleFromFile(fileUrl, filename) {
+export async function getAudioMetadataFromURI1(fileUrl, filename) {
+  let res = {
+    title: null,
+    artist: null,
+    album: null,
+    duration: null,
+    bitrate: null,
+    sampleRate: null,
+  };
+
+  if (!fileUrl || !filename) {
+    console.warn("Invalid fileUrl or filename provided");
+    return res;
+  }
+
   try {
-    // Ensure we have valid inputs
-    if (!fileUrl || !filename) {
-      console.warn("Invalid fileUrl or filename provided");
-      return null;
-    }
     const filePath = extractFilePathFromCapacitorUriV2(fileUrl);
     if (!filePath) {
       console.warn("Could not extract file path from URL:", fileUrl);
-      return null;
+      return res;
     }
-    // Get the directory enum value safely
-    const directoryKey = import.meta.env.VITE_DIR;
-    const directory = Directory[directoryKey];
-    if (!directory) {
-      console.warn("Invalid directory key:", directoryKey);
-      return null;
-    }
+
+    // const directory = Directory.Data;
+    const directory = Directory[import.meta.env.VITE_DIR];
+
     const { data } = await Filesystem.readFile({
       path: filePath,
       directory: directory,
     });
-    // Validate that we got data
+
     if (!data) {
       console.warn("No data received from file read");
-      return null;
+      return res;
     }
+
     // Convert base64 to Uint8Array more efficiently
     const binaryString = atob(data);
     const len = binaryString.length;
@@ -90,32 +97,65 @@ export async function getAudioTitleFromFile(fileUrl, filename) {
     for (let i = 0; i < len; i++) {
       bytes[i] = binaryString.charCodeAt(i);
     }
-    // Get media type and create blob
+
+    // get media type and make blob
     const mediaType = getMediaTypeFromFilename(filename);
     const blob = new Blob([bytes], {
-      type: mediaType || "audio/mpeg", // fallback to common audio type
+      type: mediaType || "audio/mpeg", // fallback
     });
-    // Validate blob size
+
     if (blob.size === 0) {
       console.warn("Created blob has zero size");
-      return null;
+      return res;
     }
+
     const metadata = await parseBlob(blob);
-    console.log(JSON.stringify(metadata, null, 2));
-    // Safely access nested properties
+
+    // access properties now
     const title = metadata?.common?.title;
-    if (title) {
-      console.log("Extracted title:", JSON.stringify(title));
-    } else {
-      console.log("No title found in metadata");
-    }
-    return title || null;
+    const artist = metadata?.common?.artist;
+    const album = metadata?.common?.album;
+    const duration = metadata?.format?.duration;
+    const bitrate = metadata?.format?.bitrate;
+    const sampleRate = metadata?.format?.sampleRate;
+
+    res.title = title;
+    res.artist = artist;
+    res.album = album;
+    res.duration = duration;
+    res.bitrate = bitrate;
+    res.sampleRate = sampleRate;
+
+    return res;
   } catch (error) {
-    console.warn(
+    console.error(
       "Failed to read metadata for file:",
       fileUrl,
       error.message || error
     );
+    return res;
+  }
+}
+
+export async function getAudioDurationFromURI(fileUri) {
+  try {
+    const duration = await new Promise((resolve, reject) => {
+      const audio = new Audio();
+      audio.src = fileUri;
+      audio.preload = "metadata";
+
+      audio.addEventListener("loadedmetadata", () => {
+        resolve(audio.duration);
+      });
+
+      audio.addEventListener("error", (e) => {
+        reject(new Error(`Failed to load audio metadata: ${e.message || e}`));
+      });
+    });
+
+    return duration;
+  } catch (err) {
+    console.error("Error loading audio duration:", err);
     return null;
   }
 }

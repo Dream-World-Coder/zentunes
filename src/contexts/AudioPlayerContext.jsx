@@ -12,7 +12,10 @@ import {
   getFormattedTitle,
   getMediaTypeFromFilename,
 } from "../services/formatting";
-import { getAudioTitleFromFile } from "../services/audioMeta";
+import {
+  getAudioMetadataFromURI1,
+  getAudioDurationFromURI,
+} from "../services/audioMeta";
 
 import { Capacitor } from "@capacitor/core";
 import { Filesystem, Directory } from "@capacitor/filesystem";
@@ -42,7 +45,6 @@ export const AudioPlayerProvider = ({ children }) => {
     --------------------------------------- */
   const [currentPlaylist, setCurrentPlaylist] = useState(null); //array, just {name, totalSongs} will work fine
   const [musicsList, setMusicsList] = useState([]); // the musics list array
-  // const [allMusicsList, setAllMusicsList] = useState([]); // cache to store data
   const [isPlaylistLoading, setIsPlaylistLoading] = useState(false);
 
   /**
@@ -61,22 +63,31 @@ export const AudioPlayerProvider = ({ children }) => {
 
       const result = await Filesystem.readdir({
         path: `audios/${genre}`,
-        directory: Directory[import.meta.env.VITE_DIR],
+        // directory: Directory[import.meta.env.VITE_DIR],
+        directory: Directory.Data,
       });
 
       for (const file of result.files) {
-        // console.log("file: " + JSON.stringify(file, null, 2));
         const filename = file.name;
         const fileUrl = Capacitor.convertFileSrc(file.uri);
-        const title = await getAudioTitleFromFile(fileUrl, file.name);
+
+        const metaObj1 = await getAudioMetadataFromURI1(fileUrl, file.name);
+        const dur = await getAudioDurationFromURI(fileUrl);
+
+        const duration = dur
+          ? Math.floor(dur)
+          : Math.floor(metaObj1.duration || 1);
 
         genreSongs.push({
-          title: title || getFormattedTitle(filename),
+          title: metaObj1.title || getFormattedTitle(filename),
           src: fileUrl,
           mediaType: getMediaTypeFromFilename(filename),
+          duration,
+          audioId: window.crypto.randomUUID(),
         });
-        // console.log(`\n\nblobUrl={blobUrl} fileUrl={fileUrl} base64={base64}\n\n`);
       }
+
+      console.log(`genreSongs: ${JSON.stringify(genreSongs, null, 2)}`);
 
       setMusicsList(genreSongs);
       setCurrentPlaylist({
@@ -116,35 +127,70 @@ export const AudioPlayerProvider = ({ children }) => {
     title: "",
     duration: 0, //seconds
     currentTime: 0,
-    audioRef: null,
+    audioRef: null, // for repeat only
+    audioId: null,
+    isPaused: true,
   });
 
   async function onCurrentAudioEnd() {
     setTimeout(() => {
       switch (activeOption) {
         case "true":
-          setCurrentAudio((prev) => ({
-            ...prev,
-            index: (prev.index + 1) % currentPlaylist.totalSongs,
-          }));
+          setCurrentAudio((prev) => {
+            const nextIndex = (prev.index + 1) % currentPlaylist.totalSongs;
+            const nextSong = musicsList[nextIndex];
+            return {
+              index: nextIndex,
+              title: nextSong.title,
+              currentTime: 0,
+              duration: nextSong.duration,
+              audioId: nextSong.audioId,
+              audioRef: null,
+              isPaused: false,
+            };
+          });
           break;
+
         case "shuffle":
-          setCurrentAudio((prev) => ({
-            ...prev,
-            index: Math.floor(Math.random() * currentPlaylist.totalSongs),
-          }));
+          setCurrentAudio(() => {
+            const nextIndex = Math.floor(
+              Math.random() * currentPlaylist.totalSongs
+            );
+            const nextSong = musicsList[nextIndex];
+            return {
+              index: nextIndex,
+              title: nextSong.title,
+              currentTime: 0,
+              duration: nextSong.duration,
+              audioId: nextSong.audioId,
+              audioRef: null,
+              isPaused: false,
+            };
+          });
           break;
+
         case "repeat":
-          currentAudio.audioRef && currentAudio.audioRef.play(); // audioRef = audioRef.current in Audio.jsx
+          // audioRef = audioRef.current in Audio.jsx
+          currentAudio.audioRef
+            ? currentAudio.audioRef.play()
+            : document
+                .getElementById(currentAudio?.audioId || "null__audio")
+                ?.play();
           break;
+
         case "false":
           setCurrentAudio({
             index: null,
-            title: null,
-            duration: null,
-            currentTime: null,
+            title: "",
+            currentTime: 0,
+            duration: 0,
             audioRef: null,
+            audioId: null,
+            isPaused: false,
           });
+          break;
+
+        default:
           break;
       }
     }, 250);
@@ -153,6 +199,7 @@ export const AudioPlayerProvider = ({ children }) => {
     currentAudio,
     activeOption,
     currentPlaylist,
+    musicsList,
   ]);
 
   // update CapacitorMusicControls as soon as currentAudio newly renders
@@ -160,7 +207,7 @@ export const AudioPlayerProvider = ({ children }) => {
     (async function () {
       // old destroy
       CapacitorMusicControls.updateIsPlaying({ isPlaying: false });
-      // await CapacitorMusicControls.destroy();
+      await CapacitorMusicControls.destroy();
 
       if (!currentAudio?.title?.trim()) return;
 
@@ -174,19 +221,14 @@ export const AudioPlayerProvider = ({ children }) => {
           isPlaying: true,
           dismissable: true,
 
-          hasPrev: currentAudio.index > 0,
-          hasNext: true,
+          hasPrev: false,
+          hasNext: false,
           hasClose: true,
 
           duration: Math.floor(currentAudio.duration) || 240,
-          elapsed: Math.floor(currentAudio.currentTime) || 0,
+          elapsed: 0,
           ticker: "Now playing",
 
-          playIcon: "media_play",
-          pauseIcon: "media_pause",
-          prevIcon: "media_prev",
-          nextIcon: "media_next",
-          closeIcon: "media_close",
           notificationIcon: "notification",
         });
         CapacitorMusicControls.updateIsPlaying({ isPlaying: true });
@@ -196,49 +238,54 @@ export const AudioPlayerProvider = ({ children }) => {
     })();
   }, [currentAudio]);
 
-  const [prevPlaying, setPrevPlaying] = useState(null);
-
   useEffect(() => {
-    const listener = CapacitorMusicControls.addListener(
-      "musicControlsEvent",
-      async (data) => {
-        const action = data?.action;
+    async function handleControlsEvent(action) {
+      const message = action?.message;
+      console.log("message: " + message);
 
-        switch (action) {
-          case "music-controls-pause":
-            setPrevPlaying(currentAudio);
-            setCurrentAudio({
-              index: null,
-              title: null,
-              duration: null,
-              currentTime: null,
-              audioRef: null,
-            });
-            CapacitorMusicControls.updateIsPlaying({ isPlaying: false });
-            break;
+      // no actions now ***
+      switch (message) {
+        case "music-controls-pause":
+          // currentAudio?.audioRef?.pause();
+          // setCurrentAudio((prev) => ({ ...prev, isPaused: true }));
+          CapacitorMusicControls.updateIsPlaying({ isPlaying: false });
+          break;
 
-          case "music-controls-play":
-            setCurrentAudio(prevPlaying);
-            CapacitorMusicControls.updateIsPlaying({ isPlaying: true });
-            break;
+        case "music-controls-play":
+          // currentAudio?.audioRef?.play();
+          // setCurrentAudio((prev) => ({ ...prev, isPaused: false }));
+          CapacitorMusicControls.updateIsPlaying({ isPlaying: true });
+          break;
 
-          case "music-controls-destroy":
-            setPrevPlaying(currentAudio);
-            setCurrentAudio({
-              index: null,
-              title: null,
-              duration: null,
-              currentTime: null,
-              audioRef: null,
-            });
-            await CapacitorMusicControls.destroy();
-            break;
-        }
+        case "music-controls-destroy":
+          currentAudio?.audioRef?.pause();
+          setCurrentAudio({
+            index: null,
+            title: "",
+            duration: 0,
+            currentTime: 0,
+            audioRef: null,
+            isPaused: true,
+          });
+          await CapacitorMusicControls.destroy();
+          break;
+
+        default:
+          break;
       }
-    );
+    }
+
+    const handler = (event) => {
+      console.log("controlsNotification was fired");
+      console.log("event:", JSON.stringify(event, null, 2));
+      const info = { message: event.message, position: 0 };
+      handleControlsEvent(info);
+    };
+
+    document.addEventListener("controlsNotification", handler);
 
     return () => {
-      listener?.remove?.();
+      document.removeEventListener("controlsNotification", handler);
     };
   }, []);
 
