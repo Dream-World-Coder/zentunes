@@ -7,7 +7,7 @@ import playBtn from "../assets/images/play.svg";
 import pauseBtn from "../assets/images/pause.svg";
 
 import "../styles/music.scss";
-import { CapacitorMusicControls } from "capacitor-music-controls-plugin";
+// import { CapacitorMusicControls } from "capacitor-music-controls-plugin";
 
 const AudioItem = memo(function AudioItem({
   audioId,
@@ -66,10 +66,10 @@ const AudioItem = memo(function AudioItem({
       //   currentTime: audio.currentTime,
       // })); --> if currentAudio is updated the music control obj will also be re-created, thats why avoiding it now.
 
-      CapacitorMusicControls.updateElapsed({
-        elapsed: Math.floor(audio.currentTime),
-        isPlaying: !audio.paused,
-      });
+      // CapacitorMusicControls.updateElapsed({
+      //   elapsed: Math.floor(audio.currentTime),
+      //   isPlaying: !audio.paused,
+      // });
       // }
     };
 

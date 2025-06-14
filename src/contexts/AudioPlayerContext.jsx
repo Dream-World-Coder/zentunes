@@ -71,15 +71,15 @@ export const AudioPlayerProvider = ({ children }) => {
         const filename = file.name;
         const fileUrl = Capacitor.convertFileSrc(file.uri);
 
-        const metaObj1 = await getAudioMetadataFromURI1(fileUrl, file.name);
+        const metaObj = await getAudioMetadataFromURI1(fileUrl, file.name);
         const dur = await getAudioDurationFromURI(fileUrl);
 
         const duration = dur
           ? Math.floor(dur)
-          : Math.floor(metaObj1.duration || 1);
+          : Math.floor(metaObj.duration || 1);
 
         genreSongs.push({
-          title: metaObj1.title || getFormattedTitle(filename),
+          title: metaObj.title || getFormattedTitle(filename),
           src: fileUrl,
           mediaType: getMediaTypeFromFilename(filename),
           duration,
@@ -87,7 +87,7 @@ export const AudioPlayerProvider = ({ children }) => {
         });
       }
 
-      console.log(`genreSongs: ${JSON.stringify(genreSongs, null, 2)}`);
+      // console.log(`genreSongs: ${JSON.stringify(genreSongs, null, 2)}`);
 
       setMusicsList(genreSongs);
       setCurrentPlaylist({
@@ -132,26 +132,57 @@ export const AudioPlayerProvider = ({ children }) => {
     isPaused: true,
   });
 
-  async function onCurrentAudioEnd() {
-    setTimeout(() => {
-      switch (activeOption) {
-        case "true":
-          setCurrentAudio((prev) => {
-            const nextIndex = (prev.index + 1) % currentPlaylist.totalSongs;
-            const nextSong = musicsList[nextIndex];
-            return {
-              index: nextIndex,
-              title: nextSong.title,
-              currentTime: 0,
-              duration: nextSong.duration,
-              audioId: nextSong.audioId,
-              audioRef: null,
-              isPaused: false,
-            };
-          });
-          break;
+  function handlePlayNext() {
+    setCurrentAudio((prev) => {
+      const nextIndex = (prev.index + 1) % currentPlaylist.totalSongs;
+      const nextSong = musicsList[nextIndex];
+      return {
+        index: nextIndex,
+        title: nextSong.title,
+        currentTime: 0,
+        duration: nextSong.duration,
+        audioId: nextSong.audioId,
+        audioRef: null,
+        isPaused: false,
+      };
+    });
+  }
 
-        case "shuffle":
+  function handlePlayPrev() {
+    setCurrentAudio((prev) => {
+      const nextIndex =
+        (prev.index - 1 + currentPlaylist.totalSongs) %
+        currentPlaylist.totalSongs;
+      const nextSong = musicsList[nextIndex];
+      return {
+        index: nextIndex,
+        title: nextSong.title,
+        currentTime: 0,
+        duration: nextSong.duration,
+        audioId: nextSong.audioId,
+        audioRef: null,
+        isPaused: false,
+      };
+    });
+  }
+
+  async function onCurrentAudioEnd() {
+    const nextPlayDelay = 1 * 1000;
+    switch (activeOption) {
+      case "true":
+        setTimeout(() => {
+          handlePlayNext();
+        }, nextPlayDelay);
+        break;
+
+      case "reverse":
+        setTimeout(() => {
+          handlePlayPrev();
+        }, nextPlayDelay);
+        break;
+
+      case "shuffle":
+        setTimeout(() => {
           setCurrentAudio(() => {
             const nextIndex = Math.floor(
               Math.random() * currentPlaylist.totalSongs
@@ -167,36 +198,44 @@ export const AudioPlayerProvider = ({ children }) => {
               isPaused: false,
             };
           });
-          break;
+        }, nextPlayDelay);
+        break;
 
-        case "repeat":
-          // audioRef = audioRef.current in Audio.jsx
-          currentAudio.audioRef
-            ? currentAudio.audioRef.play()
-            : document
-                .getElementById(currentAudio?.audioId || "null__audio")
-                ?.play();
-          break;
+      case "repeat":
+        // audioRef = audioRef.current in Audio.jsx
+        setTimeout(() => {
+          if (currentAudio.audioRef) {
+            currentAudio.audioRef.currentTime = 0;
+            currentAudio.audioRef.play();
+          } else {
+            const audioElement = document.getElementById(
+              currentAudio?.audioId || "null__audio"
+            );
+            if (audioElement) {
+              audioElement.currentTime = 0;
+              audioElement.play();
+            }
+          }
+        }, nextPlayDelay);
+        break;
 
-        case "false":
-          setCurrentAudio({
-            index: null,
-            title: "",
-            currentTime: 0,
-            duration: 0,
-            audioRef: null,
-            audioId: null,
-            isPaused: false,
-          });
-          break;
+      case "false":
+        setCurrentAudio({
+          index: null,
+          title: "",
+          currentTime: 0,
+          duration: 0,
+          audioRef: null,
+          audioId: null,
+          isPaused: false,
+        });
+        break;
 
-        default:
-          break;
-      }
-    }, 250);
+      default:
+        break;
+    }
   }
   const onAudioEnd = useCallback(onCurrentAudioEnd, [
-    currentAudio,
     activeOption,
     currentPlaylist,
     musicsList,
@@ -205,9 +244,12 @@ export const AudioPlayerProvider = ({ children }) => {
   // update CapacitorMusicControls as soon as currentAudio newly renders
   useEffect(() => {
     (async function () {
-      // old destroy
-      CapacitorMusicControls.updateIsPlaying({ isPlaying: false });
-      await CapacitorMusicControls.destroy();
+      console.log(
+        "detected change in currentAudio, re creating: CapacitorMusicControls."
+      );
+
+      // old stop
+      // CapacitorMusicControls.updateIsPlaying({ isPlaying: false });
 
       if (!currentAudio?.title?.trim()) return;
 
@@ -219,7 +261,7 @@ export const AudioPlayerProvider = ({ children }) => {
           cover: "file:///android_asset/public/favicon.png",
 
           isPlaying: true,
-          dismissable: true,
+          dismissable: false,
 
           hasPrev: false,
           hasNext: false,
@@ -231,34 +273,25 @@ export const AudioPlayerProvider = ({ children }) => {
 
           notificationIcon: "notification",
         });
-        CapacitorMusicControls.updateIsPlaying({ isPlaying: true });
+
+        console.log("created new CapacitorMusicControls");
       } catch (error) {
         console.error("Failed to create music controls:", error);
       }
     })();
   }, [currentAudio]);
 
+  // const [oldCurrentAudio, setOldCurrentAudio] = useState(null);
+
   useEffect(() => {
     async function handleControlsEvent(action) {
       const message = action?.message;
       console.log("message: " + message);
 
-      // no actions now ***
       switch (message) {
         case "music-controls-pause":
-          // currentAudio?.audioRef?.pause();
-          // setCurrentAudio((prev) => ({ ...prev, isPaused: true }));
-          CapacitorMusicControls.updateIsPlaying({ isPlaying: false });
-          break;
-
-        case "music-controls-play":
-          // currentAudio?.audioRef?.play();
-          // setCurrentAudio((prev) => ({ ...prev, isPaused: false }));
-          CapacitorMusicControls.updateIsPlaying({ isPlaying: true });
-          break;
-
-        case "music-controls-destroy":
-          currentAudio?.audioRef?.pause();
+          // setCurrentAudio((prev) => ({ ...prev, isPaused: true })); // i dont have intermediate paused state now. play or stop
+          // setOldCurrentAudio({ ...currentAudio }); // currentTime = 0 though, so will start from beginning
           setCurrentAudio({
             index: null,
             title: "",
@@ -267,6 +300,46 @@ export const AudioPlayerProvider = ({ children }) => {
             audioRef: null,
             isPaused: true,
           });
+          CapacitorMusicControls.updateIsPlaying({ isPlaying: false });
+          await CapacitorMusicControls.destroy(); // stop it entirely as i cannot play from paused state
+          break;
+
+        case "music-controls-play":
+          // setCurrentAudio((prev) => ({ ...prev, isPaused: false }));
+          // setCurrentAudio({ ...oldCurrentAudio });
+          /*
+          if (oldCurrentAudio?.audioRef) {
+            await oldCurrentAudio.audioRef.play();
+          } else {
+            const audioElement = document.getElementById(
+              oldCurrentAudio?.audioId || "null__audio"
+            );
+            if (audioElement) await audioElement.play();
+          }//*/
+
+          // CapacitorMusicControls.updateIsPlaying({ isPlaying: true });
+          // first let current Audio update, this will be dobe automatically in useeffect
+          break;
+
+        case "music-controls-next":
+          /** error, currentPlaylist is null due to some reason */
+          // handlePlayNext();
+          break;
+
+        case "music-controls-previous":
+          // handlePlayPrev();
+          break;
+
+        case "music-controls-destroy":
+          setCurrentAudio({
+            index: null,
+            title: "",
+            duration: 0,
+            currentTime: 0,
+            audioRef: null,
+            isPaused: true,
+          });
+          CapacitorMusicControls.updateIsPlaying({ isPlaying: false });
           await CapacitorMusicControls.destroy();
           break;
 
