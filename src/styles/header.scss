@@ -283,7 +283,7 @@ header {
   z-index: 9999999999;
   padding: 30px 30px 45px;
 
-  background-color: white;
+  background-color: #f6fcdf;
   color: black;
 
   @include flexed;
@@ -300,7 +300,6 @@ header {
     &__title {
       font-size: xx-large;
       font-weight: 700;
-      /* font-family: pally; */
     }
 
     &__close {
@@ -332,7 +331,6 @@ header {
       border-radius: 99999px;
 
       &.selected {
-        /* background-color: #565656; */
         background-color: #31511e;
         color: white;
       }
