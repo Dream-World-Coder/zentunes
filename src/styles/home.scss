@@ -45,7 +45,7 @@ h2.heading__home {
       & .circ {
         border-radius: 50%;
         overflow: hidden;
-        background-color: color.adjust(#f6fcdf, $lightness: -25%);
+        /* background-color: color.adjust(#f6fcdf, $lightness: -25%); */
       }
     }
   }
