@@ -271,3 +271,81 @@ header {
     }
   }
 }
+
+.genreDialog {
+  position: fixed;
+  width: 100%;
+  height: 100dvh;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999999999;
+  padding: 30px 30px 45px;
+
+  background-color: white;
+  color: black;
+
+  @include flexed;
+  flex-direction: column;
+
+  &__header {
+    @include flexed;
+    width: 100%;
+    padding: 5px 0px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__title {
+      font-size: xx-large;
+      font-weight: 700;
+      /* font-family: pally; */
+    }
+
+    &__close {
+      @include flexed;
+      padding: 6px 10px;
+      gap: 5px;
+      background-color: black;
+      color: white;
+      border-radius: 99999px;
+      cursor: pointer;
+    }
+  }
+
+  &__options {
+    @include flexed;
+    flex-direction: column;
+    flex: 1 1 auto;
+
+    &__radio {
+      display: flex;
+      align-items: center;
+      justify-content: start;
+
+      width: 100%;
+      gap: 20px;
+      padding: 15px 25px;
+      font-size: large;
+      cursor: pointer;
+      border-radius: 99999px;
+
+      &.selected {
+        /* background-color: #565656; */
+        background-color: #31511e;
+        color: white;
+      }
+    }
+  }
+
+  &__submit {
+    @include flexed;
+    padding: 10px 55px;
+    border-radius: 99999px;
+    background-color: black;
+    color: white;
+    font-size: large;
+    cursor: pointer;
+  }
+}

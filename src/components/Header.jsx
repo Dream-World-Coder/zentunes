@@ -6,6 +6,7 @@ import {
   Moon,
   Trash,
   Share2,
+  Circle,
   RotateCw,
   CirclePlus,
   CircleMinus,
@@ -13,6 +14,7 @@ import {
 } from "lucide-react";
 import { useAudioPlayer } from "../contexts/AudioPlayerContext";
 import { handleAddSong, handleRemoveSong } from "../services/musicStorage";
+import { getFormattedTitle as pretty } from "../services/formatting";
 
 import { navItems } from "../assets/data/navItems";
 import ham from "../assets/images/ham.svg";
@@ -36,6 +38,9 @@ export default function useHeader() {
 
   function Header() {
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [genreDialogOpen, setGenreDialogOpen] = useState(false);
+    const [selectedGenre, setSelectedGenre] = useState("");
+
     const darkModeButtonRef = useRef(null);
     const { validPaths, currentAudio } = useAudioPlayer();
 
@@ -138,12 +143,27 @@ export default function useHeader() {
                   )
               )}
               <div className="mobile__nav__header">Actions</div>
-              <div
-                className="mobile__nav__btn"
-                onClick={() => handleAddSong(validPaths)}
-              >
-                <CirclePlus size={16} /> Add Songs
-              </div>
+
+              {genreDialogOpen ? (
+                <div
+                  className="mobile__nav__btn"
+                  onClick={() => {
+                    setGenreDialogOpen(false);
+                  }}
+                >
+                  <X size={16} /> Cancel
+                </div>
+              ) : (
+                <div
+                  className="mobile__nav__btn"
+                  onClick={() => {
+                    setGenreDialogOpen(true);
+                  }}
+                >
+                  <CirclePlus size={16} /> Add Songs
+                </div>
+              )}
+
               {selectWindowOpen ? (
                 <div
                   className="mobile__nav__btn"
@@ -165,15 +185,18 @@ export default function useHeader() {
                   <CircleMinus size={16} /> Remove Songs
                 </div>
               )}
+
               <div
                 className="mobile__nav__btn"
                 onClick={() => window.location.reload()}
               >
                 <RotateCw size={16} /> Reload Page
               </div>
+
               <div className="mobile__nav__btn" onClick={handleShare}>
                 <Share2 size={16} /> Share
               </div>
+
               <div
                 className="mobile__nav__btn"
                 onClick={() => alert("Will be available soon")}
@@ -183,6 +206,54 @@ export default function useHeader() {
             </ul>
           </div>
         </div>
+        {genreDialogOpen && (
+          <div className="genreDialog">
+            <div className="genreDialog__header">
+              <div className="genreDialog__header__title">Select Genre</div>
+              <div
+                className="genreDialog__header__close"
+                onClick={() => {
+                  setGenreDialogOpen(false);
+                }}
+              >
+                <X size={16} /> Cancel
+              </div>
+            </div>
+            <div className="genreDialog__options">
+              {validPaths
+                ?.filter((i) => i.toLowerCase() !== "home")
+                .map((genre) => (
+                  <div
+                    key={genre}
+                    className={`genreDialog__options__radio ${
+                      selectedGenre === genre ? "selected" : ""
+                    }`}
+                    onClick={() => {
+                      setSelectedGenre(genre);
+                    }}
+                  >
+                    <Circle
+                      size={16}
+                      fill={selectedGenre === genre ? "#f6fcdf" : "white"}
+                    />
+                    {genre === "miscellaneous" ? "Song Clips" : pretty(genre)}
+                  </div>
+                ))}
+            </div>
+            <div
+              className="genreDialog__submit"
+              onClick={async () => {
+                if (!selectedGenre) {
+                  return;
+                }
+                await handleAddSong(selectedGenre);
+                setGenreDialogOpen(false);
+              }}
+            >
+              submit
+            </div>
+          </div>
+        )}
       </header>
     );
   }

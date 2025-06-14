@@ -6,7 +6,6 @@ and as the reference changes useEffect will run the code inside it again, if tha
 
 use useState or useMemo if it needs to be added in a dependency
 
--- new branch: self use
 
 
 ------
@@ -19,4 +18,8 @@ npx cap open android
 ./gradlew assembleDebug -> android/app/build/outputs/apk/debug/app-debug.apk
 ------
 
-memory leak issue maybe -- why sudden stop
+to do: recently visited genre quick link in homw page
+add somg -> radio btn, multiple files at once
+
+
+why do i need to expand the objects in useState? arn't they already structred like an object? so no ref change

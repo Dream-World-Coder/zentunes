@@ -2,7 +2,6 @@ import { Filesystem, Directory } from "@capacitor/filesystem";
 import { Dialog } from "@capacitor/dialog";
 import { FilePicker } from "@capawesome/capacitor-file-picker";
 import { Http } from "@capacitor-community/http";
-import { getFormattedTitle as pretty } from "./formatting";
 // import { safeReadDir } from "./permissions";
 
 const DIR = Directory[import.meta.env.VITE_DIR];
@@ -93,27 +92,9 @@ export async function downloadGenreSongs(genre) {
   return songs.length;
 }
 
-export async function handleAddSong(validPaths) {
-  // removing "home"
-  validPaths = validPaths?.filter((i) => i.toLowerCase() !== "home");
-
+export async function handleAddSong(selectedGenre) {
   try {
-    // Step 1: Prompt for genre
-    let genreIndex = window.prompt(
-      "Choose a genre:\n" +
-        validPaths.map((g, i) => `${i + 1}. ${pretty(g)}`).join("\n") +
-        "\n\nEnter number:"
-    );
-
-    const index = parseInt(genreIndex.trim()) - 1;
-    if (index < 0 || index > validPaths.length - 1) {
-      alert("Invalid choice.");
-      return;
-    }
-
-    const selectedGenre = validPaths[index];
-
-    // Step 2: Pick audio file
+    // Pick audio file
     const result = await FilePicker.pickFiles({
       types: ["audio/*"],
       multiple: false,
@@ -143,7 +124,7 @@ export async function handleAddSong(validPaths) {
       console.log("handle add song error:", e);
     }
 
-    // Step 3: Get file data - try multiple approaches
+    // Get file data - try multiple approaches
     let fileData;
     let buffer;
 
@@ -174,7 +155,7 @@ export async function handleAddSong(validPaths) {
       return;
     }
 
-    // Step 4: Write binary file as base64
+    // Write binary file as base64
     await Filesystem.writeFile({
       path: `audios/${selectedGenre}/${filename}`,
       data: fileData,
