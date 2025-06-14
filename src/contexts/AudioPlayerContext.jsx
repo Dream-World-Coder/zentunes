@@ -13,7 +13,7 @@ import {
   getMediaTypeFromFilename,
 } from "../services/formatting";
 import {
-  getAudioMetadataFromURI1,
+  // getAudioMetadata,
   getAudioDurationFromURI,
 } from "../services/audioMeta";
 
@@ -50,7 +50,7 @@ export const AudioPlayerProvider = ({ children }) => {
   /**
    * it always loads from local files
    */
-  const loadPlaylists = async (genre) => {
+  async function loadPlaylists(genre) {
     if (!validPaths.includes(genre)) {
       setMusicsList([]);
       return;
@@ -63,31 +63,31 @@ export const AudioPlayerProvider = ({ children }) => {
 
       const result = await Filesystem.readdir({
         path: `audios/${genre}`,
-        // directory: Directory[import.meta.env.VITE_DIR],
-        directory: Directory.Data,
+        // directory: Directory.Data,
+        directory: Directory[import.meta.env.VITE_DIR],
       });
 
       for (const file of result.files) {
         const filename = file.name;
         const fileUrl = Capacitor.convertFileSrc(file.uri);
 
-        const metaObj = await getAudioMetadataFromURI1(fileUrl, file.name);
+        // const metaObj = await getAudioMetadata(fileUrl, file.name); // slowing a lot, so removing
         const dur = await getAudioDurationFromURI(fileUrl);
 
-        const duration = dur
-          ? Math.floor(dur)
-          : Math.floor(metaObj.duration || 1);
+        // const duration = dur
+        //   ? Math.floor(dur)
+        //   : Math.floor(metaObj.duration || 1);
+        const duration = Math.floor(dur || 1);
 
         genreSongs.push({
-          title: metaObj.title || getFormattedTitle(filename),
+          // title: metaObj.title || getFormattedTitle(filename),
+          title: getFormattedTitle(filename),
           src: fileUrl,
           mediaType: getMediaTypeFromFilename(filename),
           duration,
           audioId: window.crypto.randomUUID(),
         });
       }
-
-      // console.log(`genreSongs: ${JSON.stringify(genreSongs, null, 2)}`);
 
       setMusicsList(genreSongs);
       setCurrentPlaylist({
@@ -100,11 +100,11 @@ export const AudioPlayerProvider = ({ children }) => {
     } finally {
       setIsPlaylistLoading(false);
     }
-  };
+  }
 
   /** ------ * play next options * -----------------------
     --------------------------------------- */
-  const [activeOption, setActiveOption] = useState("false"); // [true, false, shuffle, repeat]
+  const [activeOption, setActiveOption] = useState("false"); // [true, false, shuffle, repeat, reverse]
   useEffect(() => {
     const playNextValue = localStorage.getItem("playNext");
     if (playNextValue) {
@@ -115,10 +115,11 @@ export const AudioPlayerProvider = ({ children }) => {
       localStorage.setItem("playNext", "false");
     }
   }, []);
-  const handleOptionClick = (option) => {
+
+  function handleOptionClick(option) {
     setActiveOption(option);
     localStorage.setItem("playNext", option);
-  };
+  }
 
   /** ------ * current audio * -----------------------
     --------------------------------------- */

@@ -2,26 +2,33 @@ export function capitalizeFirstLetter(str) {
   if (!str) {
     return str;
   }
-  return str.charAt(0).toUpperCase() + str.slice(1);
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-export function capitalizeEachWord(str) {
-  if (!str) {
-    return str;
+export function capitalizeEachWord(sentence) {
+  if (!sentence) {
+    return sentence;
   }
-  return str
+  return sentence
     .split(" ")
     .map((word) => capitalizeFirstLetter(word))
     .join(" ");
 }
 
 export function getFormattedTitle(filename) {
-  const nameWithoutExt = filename
-    ?.replace(/\.[^/.]+$/, "")
-    ?.replace(/_/g, " ")
-    ?.replace(/-/g, " ")
-    ?.replace(/\+/g, " ");
-  return capitalizeEachWord(nameWithoutExt);
+  try {
+    const nameWithoutExt = filename
+      ?.replace(/\.[^/.]+$/, "") // remove file extension
+      ?.replace(/[_\-+]/g, " ") // replace _, -, + with space
+      ?.replace(/\d{3,}/g, "hash"); // replace 3+ consecutive digits with "hash"
+
+    if (!nameWithoutExt?.trim()) return "Unknown Track";
+
+    return capitalizeEachWord(nameWithoutExt.trim());
+  } catch (e) {
+    console.log("Title extraction error:", e);
+    return "Unknown Track";
+  }
 }
 
 export function getMediaTypeFromFilename(filename) {

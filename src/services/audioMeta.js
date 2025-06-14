@@ -1,7 +1,11 @@
+/**
+// pnpm add music-metadata
+
 import { Filesystem, Directory } from "@capacitor/filesystem";
 import { parseBlob } from "music-metadata";
 import { extractFilePathFromCapacitorUriV2 } from "./musicStorage";
 import { getMediaTypeFromFilename } from "./formatting";
+
 
 // Polyfill Buffer for music-metadata
 if (typeof global === "undefined") {
@@ -55,7 +59,11 @@ if (typeof Buffer === "undefined") {
   };
 }
 
-export async function getAudioMetadataFromURI1(fileUrl, filename) {
+/**
+ * @param fileUri: URI,
+ * @param filename: string
+ * _/
+export async function getAudioMetadata(fileUrl, filename) {
   let res = {
     title: null,
     artist: null,
@@ -136,6 +144,7 @@ export async function getAudioMetadataFromURI1(fileUrl, filename) {
     return res;
   }
 }
+*/
 
 export async function getAudioDurationFromURI(fileUri) {
   try {
