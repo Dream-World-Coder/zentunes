@@ -236,7 +236,7 @@ export default function useHeader() {
                       size={16}
                       fill={selectedGenre === genre ? "#f6fcdf" : "white"}
                     />
-                    {genre === "miscellaneous" ? "Song Clips" : pretty(genre)}
+                    {genre === "miscellaneous" ? "Gentle Tunes" : pretty(genre)}
                   </div>
                 ))}
             </div>

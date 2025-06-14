@@ -259,6 +259,145 @@ export async function handleAddSong(selectedGenre) {
   }
 }
 
+export async function handleAddSongV2(selectedGenre) {
+  const results = {
+    successful: [],
+    failed: [],
+    skipped: [],
+  };
+
+  try {
+    // Pick multiple audio files
+    const result = await FilePicker.pickFiles({
+      types: ["audio/*"],
+      multiple: true,
+    });
+
+    if (!result?.files?.length) {
+      await Dialog.alert({
+        title: "Cancelled",
+        message: "No files selected.",
+      });
+      return;
+    }
+
+    const files = result.files;
+    const validExts = ["mp3", "m4a", "ogg", "wav"];
+
+    // Process each file individually
+    for (const file of files) {
+      const filename = file.name;
+
+      try {
+        // Validate file extension
+        const sp = filename.split(".");
+        const fExt = sp[sp.length - 1];
+
+        if (!filename || !validExts.includes(fExt)) {
+          results.skipped.push({
+            filename,
+            reason: `Invalid file type: .${fExt}. Supported: ${validExts.join(
+              ", "
+            )}`,
+          });
+          continue;
+        }
+
+        // Get file data - try multiple approaches
+        let fileData;
+        let buffer;
+
+        if (file.data) {
+          // If file.data exists (base64), use it directly
+          fileData = file.data;
+        } else if (file.blob) {
+          // Convert blob to base64
+          buffer = await file.blob.arrayBuffer();
+          const uint8Array = new Uint8Array(buffer);
+          fileData = btoa(String.fromCharCode.apply(null, uint8Array));
+        } else if (file.path) {
+          // Read from file path if available
+          const readResult = await Filesystem.readFile({
+            path: file.path,
+          });
+          fileData = readResult.data;
+        } else {
+          throw new Error("Could not access file data");
+        }
+
+        if (!fileData) {
+          throw new Error("Could not read file data");
+        }
+
+        // Write binary file as base64
+        await Filesystem.writeFile({
+          path: `audios/${selectedGenre}/${filename}`,
+          data: fileData,
+          directory: DIR,
+          recursive: true,
+        });
+
+        results.successful.push({
+          filename,
+          path: `audios/${selectedGenre}/${filename}`,
+        });
+      } catch (fileError) {
+        console.error(`Error processing file ${filename}:`, fileError);
+        results.failed.push({
+          filename,
+          error: fileError.message || "Unknown error occurred",
+        });
+      }
+    }
+
+    // Show summary dialog
+    const totalFiles = files.length;
+    const successCount = results.successful.length;
+    const failedCount = results.failed.length;
+    const skippedCount = results.skipped.length;
+
+    let message = `Processed ${totalFiles} file(s):\n`;
+    message += `✓ ${successCount} successful\n`;
+
+    if (failedCount > 0) {
+      message += `✗ ${failedCount} failed\n`;
+    }
+
+    if (skippedCount > 0) {
+      message += `⚠ ${skippedCount} skipped (invalid format)\n`;
+    }
+
+    // Add details for failed/skipped files
+    if (failedCount > 0 || skippedCount > 0) {
+      message += `\nDetails:\n`;
+
+      results.failed.forEach((item) => {
+        message += `Failed: ${item.filename} - ${item.error}\n`;
+      });
+
+      results.skipped.forEach((item) => {
+        message += `Skipped: ${item.filename} - ${item.reason}\n`;
+      });
+    }
+
+    await Dialog.alert({
+      title: successCount > 0 ? "Processing Complete" : "No Files Processed",
+      message: message.trim(),
+    });
+  } catch (err) {
+    console.error("Error in handleAddSong:", err);
+    await Dialog.alert({
+      title: "Error",
+      message: err.message || "An unexpected error occurred.",
+    });
+  } finally {
+    // Only reload if at least one file was successfully processed
+    if (results.successful.length > 0) {
+      window.location.reload();
+    }
+  }
+}
+
 export function extractFilePathFromCapacitorUri(src) {
   try {
     // Remove the Capacitor prefix

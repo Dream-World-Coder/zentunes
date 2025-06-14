@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import PropTypes from "prop-types";
+import { History, ChevronRight } from "lucide-react";
 
 import useHeader from "../../components/Header";
 import Footer from "../../components/Footer";
@@ -12,6 +13,8 @@ import {
   genreExistsLocally,
   downloadGenreSongs,
 } from "../../services/musicStorage";
+import { getLastRoutes } from "../../services/historyTracker";
+import { getFormattedTitle as pretty } from "../../services/formatting";
 
 import "../../styles/home.scss";
 
@@ -61,6 +64,10 @@ function HomePage({ helmetObj, pageHeading }) {
       audioId: null,
     });
   }, []);
+
+  const lastPages = getLastRoutes()
+    ?.filter((i) => i?.includes("music"))
+    .slice(0, 3);
 
   return (
     <>
@@ -138,6 +145,25 @@ function HomePage({ helmetObj, pageHeading }) {
           <br />
           Thank you for visiting!
         </p>
+
+        {lastPages?.length > 0 && (
+          <div className="lastViewedPages">
+            <h2 className="isri">Recently Played</h2>
+            <div className="pages">
+              {lastPages.map((i, j) => (
+                <NavLink to={i} key={j} className="pages__child">
+                  <History className="circ" size={16} />
+
+                  {i !== "miscellaneous"
+                    ? pretty(i.split("/").pop())
+                    : "Gentle Tunes"}
+
+                  <ChevronRight size={16} />
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        )}
 
         {musicsList.length > 0 && <PlayOptions />}
 

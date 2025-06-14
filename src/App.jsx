@@ -10,6 +10,7 @@ import MusicPage from "./pages/MusicPage/MusicPage";
 import AboutPage from "./pages/About/About";
 import ContactPage from "./pages/Contact/Contact";
 import NotFoundPage from "./pages/NotFound";
+import { RouteTracker } from "./components/routeTracker";
 
 import { AudioPlayerProvider } from "./contexts/AudioPlayerContext";
 import { requestFilePermissions } from "./services/permissions";
@@ -26,6 +27,7 @@ export default function App() {
     <HelmetProvider>
       <AudioPlayerProvider>
         <Router>
+          <RouteTracker />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
