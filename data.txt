@@ -18,8 +18,7 @@ npx cap open android
 ./gradlew assembleDebug -> android/app/build/outputs/apk/debug/app-debug.apk
 ------
 
-to do: recently visited genre quick link in homw page
-add somg -> radio btn, multiple files at once
+to do: recently visited genre quick link in home page
 
 
 why do i need to expand the objects in useState? arn't they already structred like an object? so no ref change

@@ -92,7 +92,7 @@ export async function downloadGenreSongs(genre) {
   return songs.length;
 }
 
-export async function handleAddSong(selectedGenre) {
+export async function handleAddSingleSong(selectedGenre) {
   try {
     // Pick audio file
     const result = await FilePicker.pickFiles({
@@ -166,6 +166,87 @@ export async function handleAddSong(selectedGenre) {
     await Dialog.alert({
       title: "Success",
       message: `Saved: audios/${selectedGenre}/${filename}`,
+    });
+  } catch (err) {
+    console.error("Error in handleAddSong:", err);
+    await Dialog.alert({
+      title: "Error",
+      message: err.message || "An unexpected error occurred.",
+    });
+  } finally {
+    window.location.reload();
+  }
+}
+
+export async function handleAddSong(selectedGenre) {
+  try {
+    // Pick multiple audio files
+    const result = await FilePicker.pickFiles({
+      types: ["audio/*"],
+      multiple: true,
+    });
+
+    if (!result?.files?.length) {
+      await Dialog.alert({
+        title: "Cancelled",
+        message: "No file selected.",
+      });
+      return;
+    }
+
+    const validExts = ["mp3", "m4a", "ogg", "wav"];
+    const errors = [];
+
+    for (const file of result.files) {
+      const filename = file.name;
+      const sp = filename.split(".");
+      const fExt = sp[sp.length - 1].toLowerCase();
+
+      if (!filename || !validExts.includes(fExt)) {
+        errors.push(`Skipped ${filename}: Invalid file type.`);
+        continue;
+      }
+
+      let fileData;
+      try {
+        if (file.data) {
+          fileData = file.data;
+        } else if (file.blob) {
+          const buffer = await file.blob.arrayBuffer();
+          const uint8Array = new Uint8Array(buffer);
+          fileData = btoa(String.fromCharCode(...uint8Array));
+        } else if (file.path) {
+          const readResult = await Filesystem.readFile({ path: file.path });
+          fileData = readResult.data;
+        } else {
+          throw new Error("Could not access file data.");
+        }
+
+        if (!fileData) {
+          errors.push(`Failed ${filename}: No data read.`);
+          continue;
+        }
+
+        await Filesystem.writeFile({
+          path: `audios/${selectedGenre}/${filename}`,
+          data: fileData,
+          directory: DIR,
+          recursive: true,
+        });
+      } catch (e) {
+        console.error(`Error processing ${filename}:`, e);
+        errors.push(`Failed ${filename}: ${e.message}`);
+        continue;
+      }
+    }
+
+    // Summary dialog
+    const successCount = result.files.length - errors.length;
+    const errorMsg = errors.length ? "\n\nErrors:\n" + errors.join("\n") : "";
+
+    await Dialog.alert({
+      title: "Finished",
+      message: `Successfully processed ${successCount} out of ${result.files.length} files.${errorMsg}`,
     });
   } catch (err) {
     console.error("Error in handleAddSong:", err);
