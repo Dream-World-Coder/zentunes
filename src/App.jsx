@@ -11,6 +11,7 @@ import AboutPage from "./pages/About/About";
 import ContactPage from "./pages/Contact/Contact";
 import NotFoundPage from "./pages/NotFound";
 import { RouteTracker } from "./components/routeTracker";
+import BackButtonHandler from "./components/backBtn";
 
 import { AudioPlayerProvider } from "./contexts/AudioPlayerContext";
 import { requestFilePermissions } from "./services/permissions";
@@ -28,6 +29,7 @@ export default function App() {
       <AudioPlayerProvider>
         <Router>
           <RouteTracker />
+          <BackButtonHandler />
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/home" element={<Home />} />
