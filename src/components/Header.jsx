@@ -39,6 +39,7 @@ export default function useHeader() {
   function Header() {
     const [isDarkMode, setIsDarkMode] = useState(false);
     const [genreDialogOpen, setGenreDialogOpen] = useState(false);
+    const [inProgress, setInProgress] = useState(false);
     const [selectedGenre, setSelectedGenre] = useState("");
 
     const darkModeButtonRef = useRef(null);
@@ -58,7 +59,6 @@ export default function useHeader() {
       }
     }, []);
 
-    // Handle dark mode toggle
     const handleDarkModeToggle = () => {
       const newDarkMode = !isDarkMode;
       setIsDarkMode(newDarkMode);
@@ -210,14 +210,16 @@ export default function useHeader() {
           <div className="genreDialog">
             <div className="genreDialog__header">
               <div className="genreDialog__header__title">Select Genre</div>
-              <div
-                className="genreDialog__header__close"
-                onClick={() => {
-                  setGenreDialogOpen(false);
-                }}
-              >
-                <X size={16} /> Cancel
-              </div>
+              {!inProgress && (
+                <div
+                  className="genreDialog__header__close"
+                  onClick={() => {
+                    setGenreDialogOpen(false);
+                  }}
+                >
+                  <X size={16} /> Cancel
+                </div>
+              )}
             </div>
             <div className="genreDialog__options">
               {validPaths
@@ -243,14 +245,22 @@ export default function useHeader() {
             <div
               className="genreDialog__submit"
               onClick={async () => {
-                if (!selectedGenre) {
+                if (!selectedGenre || inProgress) {
                   return;
                 }
-                await handleAddSong(selectedGenre);
-                setGenreDialogOpen(false);
+                try {
+                  setInProgress(true);
+                  await handleAddSong(selectedGenre);
+                } catch (e) {
+                  console.error(`Error in adding song, [header.jsx]: ${e}`);
+                  alert(e);
+                } finally {
+                  setInProgress(false);
+                  setGenreDialogOpen(false);
+                }
               }}
             >
-              submit
+              {inProgress ? "in progress..." : "submit"}
             </div>
           </div>
         )}

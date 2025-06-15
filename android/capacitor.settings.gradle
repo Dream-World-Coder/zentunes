@@ -8,6 +8,9 @@ project(':capacitor-community-http').projectDir = new File('../node_modules/.pnp
 include ':capacitor-community-media'
 project(':capacitor-community-media').projectDir = new File('../node_modules/.pnpm/@capacitor-community+media@8.0.1_@capacitor+core@7.2.0/node_modules/@capacitor-community/media/android')
 
+include ':capacitor-app'
+project(':capacitor-app').projectDir = new File('../node_modules/.pnpm/@capacitor+app@7.0.1_@capacitor+core@7.2.0/node_modules/@capacitor/app/android')
+
 include ':capacitor-device'
 project(':capacitor-device').projectDir = new File('../node_modules/.pnpm/@capacitor+device@7.0.1_@capacitor+core@7.2.0/node_modules/@capacitor/device/android')
 
