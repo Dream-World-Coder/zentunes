@@ -148,7 +148,7 @@ function HomePage({ helmetObj, pageHeading }) {
 
         {lastPages?.length > 0 && (
           <div className="lastViewedPages">
-            <h2 className="isri">Recently Played</h2>
+            <h2 className="isri">Recently Visited</h2>
             <div className="pages">
               {lastPages.map((i, j) => (
                 <NavLink to={i} key={j} className="pages__child">
