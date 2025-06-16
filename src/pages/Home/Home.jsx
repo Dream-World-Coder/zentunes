@@ -6,54 +6,18 @@ import { History, ChevronRight } from "lucide-react";
 
 import useHeader from "../../components/Header";
 import Footer from "../../components/Footer";
-import AudioItem from "../../components/Audio";
-import PlayOptions from "../../components/PlayOptions";
 import { useAudioPlayer } from "../../contexts/AudioPlayerContext";
-import {
-  genreExistsLocally,
-  downloadGenreSongs,
-} from "../../services/musicStorage";
 import { getLastRoutes } from "../../services/historyTracker";
 import { getFormattedTitle as pretty } from "../../services/formatting";
 
 import "../../styles/home.scss";
+import { navItems } from "../../assets/data/navItems";
 
 function HomePage({ helmetObj, pageHeading }) {
-  const { Header, selectWindowOpen, setAudiosToDelete } = useHeader();
-  const {
-    setIsPlaylistLoading,
-    loadPlaylists,
-    isPlaylistLoading: loading,
-    musicsList,
-    setMusicsList,
-    setCurrentAudio,
-  } = useAudioPlayer();
-
-  async function fetchSongs() {
-    try {
-      setIsPlaylistLoading(true);
-      await downloadGenreSongs("home");
-      await loadPlaylists("home");
-    } catch (e) {
-      console.error("Download failed:", e);
-    } finally {
-      setIsPlaylistLoading(false);
-    }
-  }
+  const { Header } = useHeader();
+  const { setCurrentAudio } = useAudioPlayer();
 
   useEffect(() => {
-    const checkAndDownloadIfNeeded = async () => {
-      const exists = await genreExistsLocally("home");
-
-      if (exists) {
-        await loadPlaylists("home");
-      } else {
-        await setMusicsList([]);
-        return;
-      }
-    };
-    checkAndDownloadIfNeeded();
-
     // stopping audio if playing [with page change]
     setCurrentAudio({
       index: null,
@@ -69,6 +33,8 @@ function HomePage({ helmetObj, pageHeading }) {
     ?.filter((i) => i?.includes("music"))
     .slice(0, 3);
 
+  const allGenres = navItems.find((i) => i.href === "dropdown")?.dropdownItems;
+
   return (
     <>
       <Helmet>
@@ -83,14 +49,6 @@ function HomePage({ helmetObj, pageHeading }) {
         <meta property="og:url" content={`${helmetObj.currentUrl}`} />
         <meta
           property="og:image"
-          content={`https://zentunes.vercel.app${helmetObj.previewImagePath}`}
-        />
-
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content={`${helmetObj.title}`} />
-        <meta name="twitter:description" content={helmetObj.description} />
-        <meta
-          name="twitter:image"
           content={`https://zentunes.vercel.app${helmetObj.previewImagePath}`}
         />
 
@@ -119,32 +77,7 @@ function HomePage({ helmetObj, pageHeading }) {
 
       <section className="container">
         <h2 className="heading__home isr">{pageHeading}</h2>
-        <p className="description">
-          Here you will find a collection of beautiful music filled with
-          calmness and nostalgia. Enjoy them to the fullest.
-          <br />
-          There are multiple collections, such as{" "}
-          <NavLink to="/musics/classical" className="home__link">
-            Classical
-          </NavLink>
-          ,{" "}
-          <NavLink to="/musics/nature" className="home__link">
-            Nature
-          </NavLink>
-          ,{" "}
-          <NavLink to="/musics/bangla_retro" className="home__link">
-            Bangla Retro
-          </NavLink>
-          ,{" "}
-          <NavLink to="/musics/rabindra_sangeet" className="home__link">
-            Rabindra Sangeet
-          </NavLink>{" "}
-          etc, be sure to explore them all!
-          <br /> Below you will find one song from each of the collections.
-          <br />
-          <br />
-          Thank you for visiting!
-        </p>
+        <p className="description">Welcome &apos;Miss. Nomi&apos;</p>
 
         {lastPages?.length > 0 && (
           <div className="lastViewedPages">
@@ -153,41 +86,24 @@ function HomePage({ helmetObj, pageHeading }) {
               {lastPages.map((i, j) => (
                 <NavLink to={i} key={j} className="pages__child">
                   <History className="circ" size={16} />
-
-                  {i !== "miscellaneous"
-                    ? pretty(i.split("/").pop())
-                    : "Gentle Tunes"}
-
-                  <ChevronRight size={16} />
+                  {pretty(i.split("/").pop())}
                 </NavLink>
               ))}
             </div>
           </div>
         )}
 
-        {musicsList.length > 0 && <PlayOptions />}
-
-        <ul className={`musics ${loading ? "loading" : ""}`}>
-          {musicsList.length > 0 &&
-            musicsList.map((music, index) => (
-              <li key={`home-${music.src}`}>
-                <AudioItem
-                  audioId={music.audioId}
-                  src={music.src}
-                  title={music.title}
-                  mediaType={music.mediaType}
-                  index={index}
-                  selectWindowOpen={selectWindowOpen}
-                  setAudiosToDelete={setAudiosToDelete}
-                />
-              </li>
+        <div className="allGenres">
+          <h2 className="isri">All genres</h2>
+          <div className="pages">
+            {allGenres?.map((item) => (
+              <NavLink to={item.href} key={item.href} className="pages__child">
+                {item.title}
+                <ChevronRight size={16} />
+              </NavLink>
             ))}
-          {musicsList.length === 0 && (
-            <div>
-              No songs found <button onClick={fetchSongs}>Reload</button>
-            </div>
-          )}
-        </ul>
+          </div>
+        </div>
       </section>
 
       <Footer />
@@ -209,7 +125,7 @@ export default function Home() {
     previewImagePath: "/preview-image.png",
     mainEntityType: "WebPage",
   };
-  const pageHeading = "Welcome to Zentunes";
+  const pageHeading = "Zentunes";
 
   return <HomePage helmetObj={helmetObj} pageHeading={pageHeading} />;
 }

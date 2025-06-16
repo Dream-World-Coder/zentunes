@@ -141,12 +141,17 @@ header {
           }
 
           &.dropdown {
+            /* border: 1px solid color.adjust($headerBgClr, $lightness: 10%); */
+            border-radius: 6px;
+            padding: 2px 5px;
+            background-color: color.adjust($headerBgClr, $lightness: 10%);
+
             ul {
               flex-direction: column;
               position: absolute;
               top: 100%;
-              left: -150%;
-              width: 400%;
+              left: -100%;
+              width: 300%;
               height: auto;
               background-color: color.adjust($headerBgClr, $lightness: -5%);
               color: $headerClr;

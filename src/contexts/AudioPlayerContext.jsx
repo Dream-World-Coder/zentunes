@@ -30,15 +30,12 @@ export const AudioPlayerProvider = ({ children }) => {
   // fetch validPaths -- no need, cuz as of now they should be fixed bcz of music-page-data, just songs inside will vary
   const validPaths = [
     "home",
-    "nature",
-    "classical",
     "bangla_retro",
     "bangla_new",
     "rabindra_sangeet",
     "hindi_retro",
     "hindi_new",
     "religious",
-    "miscellaneous",
   ];
 
   /** ------ * current playlist * -----------------------

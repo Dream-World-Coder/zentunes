@@ -5,12 +5,10 @@ import {
   Sun,
   Moon,
   Trash,
-  Share2,
   Circle,
   RotateCw,
   CirclePlus,
   CircleMinus,
-  MessageCirclePlus,
 } from "lucide-react";
 import { useAudioPlayer } from "../contexts/AudioPlayerContext";
 import { handleAddSong, handleRemoveSong } from "../services/musicStorage";
@@ -19,12 +17,6 @@ import { getFormattedTitle as pretty } from "../services/formatting";
 import { navItems } from "../assets/data/navItems";
 import ham from "../assets/images/ham.svg";
 import "../styles/header.scss";
-
-function handleShare() {
-  const urlToShare = window.location.href;
-  navigator.clipboard.writeText(urlToShare);
-  alert("link copied to clipboard.");
-}
 
 export default function useHeader() {
   const [selectWindowOpen, setSelectWindowOpen] = useState(false);
@@ -75,12 +67,22 @@ export default function useHeader() {
     return (
       <header>
         <div className="wrapper">
-          <NavLink to="/" className="logo">
+          <div
+            className="logo"
+            onClick={() => {
+              const confirmReload = window.confirm(
+                "Are you sure you want to reload?"
+              );
+              if (confirmReload) {
+                window.location.reload();
+              }
+            }}
+          >
             <div className="logo__icon">
               <img src="/favicon.png" alt="logo" />
             </div>
             <span className="logo__text">Zentunes</span>
-          </NavLink>
+          </div>
 
           <nav>
             <ul>
@@ -133,15 +135,6 @@ export default function useHeader() {
           <div className="mobile__nav dropdown">
             <img src={ham} alt="" />
             <ul>
-              <h2 className="mobile__nav__header">Navigation</h2>
-              {navItems.map(
-                (item, idx) =>
-                  item.href !== "dropdown" && (
-                    <li key={idx}>
-                      <NavLink to={item.href}>{item.title}</NavLink>
-                    </li>
-                  )
-              )}
               <div className="mobile__nav__header">Actions</div>
 
               {genreDialogOpen ? (
@@ -191,17 +184,6 @@ export default function useHeader() {
                 onClick={() => window.location.reload()}
               >
                 <RotateCw size={16} /> Reload Page
-              </div>
-
-              <div className="mobile__nav__btn" onClick={handleShare}>
-                <Share2 size={16} /> Share
-              </div>
-
-              <div
-                className="mobile__nav__btn"
-                onClick={() => alert("Will be available soon")}
-              >
-                <MessageCirclePlus size={16} /> Feedback
               </div>
             </ul>
           </div>

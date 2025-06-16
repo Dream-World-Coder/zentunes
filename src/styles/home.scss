@@ -16,6 +16,7 @@ h2.heading__home {
   }
 }
 
+.allGenres,
 .lastViewedPages {
   padding: 0 0 80px;
 
@@ -51,6 +52,7 @@ h2.heading__home {
   }
 }
 
+body.dark .allGenres,
 body.dark .lastViewedPages {
   & h2 {
     background-color: color.adjust(#f6fcdf, $lightness: -85%);

@@ -6,18 +6,15 @@ export const navItems = [
 
     // no need to fetch them, cuz as of now they should be fixed bcz of music-page-data, just songs inside will vary
     dropdownItems: [
-      { title: "Nature", href: "/musics/nature" },
-      { title: "Classical", href: "/musics/classical" },
-      { title: "Retro Bangla", href: "/musics/bangla_retro" },
-      { title: "Contemporary Bangla", href: "/musics/bangla_new" },
+      { title: "পুরানো বাংলা", href: "/musics/bangla_retro" },
+      { title: "বাংলা", href: "/musics/bangla_new" },
       {
-        title: "Rabindra Sangeeet",
+        title: "রবীন্দ্র সঙ্গীত",
         href: "/musics/rabindra_sangeet",
       },
-      { title: "Retro Hindi", href: "/musics/hindi_retro" },
-      { title: "Contemporary Hindi", href: "/musics/hindi_new" },
-      { title: "Devotional", href: "/musics/religious" },
-      { title: "Gentle Tunes", href: "/musics/miscellaneous" },
+      { title: "পুরানো হিন্দি", href: "/musics/hindi_retro" },
+      { title: "হিন্দি", href: "/musics/hindi_new" },
+      { title: "ভজন", href: "/musics/religious" },
     ],
   },
   { title: "About", href: "/about" },
