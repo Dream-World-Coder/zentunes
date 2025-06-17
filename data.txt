@@ -21,4 +21,13 @@ npx cap open android
 to do: recently visited genre quick link in home page
 
 
-why do i need to expand the objects in useState? arn't they already structred like an object? so no ref change
+why do i need to expand the objects in useState? are n't they already structred like an object? so no ref change
+
+
+---
+boxed style in home nav
+cache: make a json file ready & read that
+loading issue fix
+copy to external storage btn
+use external storage btn ~ scan
+--------------------------
