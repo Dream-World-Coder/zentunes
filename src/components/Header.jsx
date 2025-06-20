@@ -1,22 +1,27 @@
 import { useEffect, useState, useRef } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import {
   X,
   Sun,
   Moon,
+  Scan,
   Trash,
+  Search,
   Share2,
   Circle,
   RotateCw,
   CirclePlus,
+  ToggleLeft,
+  ToggleRight,
   CircleMinus,
+  CopyPlusIcon,
   MessageCirclePlus,
 } from "lucide-react";
 import { useAudioPlayer } from "../contexts/AudioPlayerContext";
 import { handleAddSong, handleRemoveSong } from "../services/musicStorage";
 import { getFormattedTitle as pretty } from "../services/formatting";
 
-import { navItems } from "../assets/data/navItems";
+import { navItems as n1, navItemsSimple as n2 } from "../assets/data/navItems";
 import ham from "../assets/images/ham.svg";
 import "../styles/header.scss";
 
@@ -44,6 +49,17 @@ export default function useHeader() {
 
     const darkModeButtonRef = useRef(null);
     const { validPaths, currentAudio } = useAudioPlayer();
+
+    const navigate = useNavigate();
+    function toggleSimpleVersion() {
+      navigate("/");
+      const val = JSON.parse(localStorage.getItem("simpleVersion") || "false");
+      localStorage.setItem("simpleVersion", JSON.stringify(!val));
+    }
+    const simpleVersion = JSON.parse(
+      localStorage.getItem("simpleVersion") || "false"
+    );
+    const navItems = !simpleVersion ? n1 : n2;
 
     useEffect(() => {
       const savedDarkMode = localStorage.getItem("isDarkModeZentunes");
@@ -106,14 +122,8 @@ export default function useHeader() {
           </nav>
 
           <div className="options">
-            <div
-              className="dark-mode-button"
-              ref={darkModeButtonRef}
-              onClick={handleDarkModeToggle}
-              style={{ cursor: "pointer" }}
-            >
-              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-            </div>
+            {/* <div className="dark-mode-button"></div> */}
+            <Search size={18} onClick={() => {}} />
 
             {selectWindowOpen && audiosToDelete.length > 0 && (
               <div
@@ -142,6 +152,27 @@ export default function useHeader() {
                     </li>
                   )
               )}
+
+              {/* preferences */}
+              <div className="mobile__nav__header">Preferences</div>
+              <div
+                className="mobile__nav__btn"
+                ref={darkModeButtonRef}
+                onClick={handleDarkModeToggle}
+                style={{ cursor: "pointer" }}
+              >
+                {isDarkMode ? <Sun size={16} /> : <Moon size={16} />} Dark Mode
+              </div>
+              <div className="mobile__nav__btn" onClick={toggleSimpleVersion}>
+                {!simpleVersion ? (
+                  <ToggleLeft size={16} />
+                ) : (
+                  <ToggleRight size={16} />
+                )}
+                Simple Version
+              </div>
+
+              {/* actions */}
               <div className="mobile__nav__header">Actions</div>
 
               {genreDialogOpen ? (
@@ -188,9 +219,30 @@ export default function useHeader() {
 
               <div
                 className="mobile__nav__btn"
-                onClick={() => window.location.reload()}
+                onClick={() => {
+                  const confirmReload = window.confirm(
+                    "Are you sure you want to reload?"
+                  );
+                  if (confirmReload) {
+                    window.location.reload();
+                  }
+                }}
               >
                 <RotateCw size={16} /> Reload Page
+              </div>
+
+              <div
+                className="mobile__nav__btn"
+                onClick={() => alert("Will be available soon")}
+              >
+                <CopyPlusIcon size={16} /> Copy Songs in Device
+              </div>
+
+              <div
+                className="mobile__nav__btn"
+                onClick={() => alert("Will be available soon")}
+              >
+                <Scan size={16} /> Scan Songs
               </div>
 
               <div className="mobile__nav__btn" onClick={handleShare}>
@@ -222,25 +274,23 @@ export default function useHeader() {
               )}
             </div>
             <div className="genreDialog__options">
-              {validPaths
-                ?.filter((i) => i.toLowerCase() !== "home")
-                .map((genre) => (
-                  <div
-                    key={genre}
-                    className={`genreDialog__options__radio ${
-                      selectedGenre === genre ? "selected" : ""
-                    }`}
-                    onClick={() => {
-                      setSelectedGenre(genre);
-                    }}
-                  >
-                    <Circle
-                      size={16}
-                      fill={selectedGenre === genre ? "#f6fcdf" : "white"}
-                    />
-                    {genre === "miscellaneous" ? "Gentle Tunes" : pretty(genre)}
-                  </div>
-                ))}
+              {validPaths?.map((genre) => (
+                <div
+                  key={genre}
+                  className={`genreDialog__options__radio ${
+                    selectedGenre === genre ? "selected" : ""
+                  }`}
+                  onClick={() => {
+                    setSelectedGenre(genre);
+                  }}
+                >
+                  <Circle
+                    size={16}
+                    fill={selectedGenre === genre ? "#f6fcdf" : "white"}
+                  />
+                  {genre === "miscellaneous" ? "Gentle Tunes" : pretty(genre)}
+                </div>
+              ))}
             </div>
             <div
               className="genreDialog__submit"

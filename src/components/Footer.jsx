@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { navItems } from "../assets/data/navItems";
+import { navItems as n1, navItemsSimple as n2 } from "../assets/data/navItems";
 import "../styles/footer.scss";
 
 export default function Footer() {
   const [year] = useState(new Date().getFullYear());
+  const simpleVersion = JSON.parse(
+    localStorage.getItem("simpleVersion") || "false"
+  );
+  const navItems = !simpleVersion ? n1 : n2;
 
   return (
     <footer className="footer no-select">

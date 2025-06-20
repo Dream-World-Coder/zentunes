@@ -141,12 +141,16 @@ header {
           }
 
           &.dropdown {
+            border-radius: 6px;
+            padding: 2px 5px;
+            background-color: color.adjust($headerBgClr, $lightness: 10%);
+
             ul {
               flex-direction: column;
               position: absolute;
               top: 100%;
-              left: -150%;
-              width: 400%;
+              left: -100%;
+              width: 300%;
               height: auto;
               background-color: color.adjust($headerBgClr, $lightness: -5%);
               color: $headerClr;
@@ -222,7 +226,7 @@ header {
         position: absolute;
         top: 0;
         right: 0;
-        width: 60%;
+        width: 70%;
         height: 100dvh;
         background-color: color.adjust($headerBgClr, $lightness: -5%);
         color: $headerClr;

@@ -1,59 +1,26 @@
 import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { History } from "lucide-react";
 import PropTypes from "prop-types";
-import { History, ChevronRight } from "lucide-react";
 
 import useHeader from "../../components/Header";
 import Footer from "../../components/Footer";
-import AudioItem from "../../components/Audio";
-import PlayOptions from "../../components/PlayOptions";
 import { useAudioPlayer } from "../../contexts/AudioPlayerContext";
-import {
-  genreExistsLocally,
-  downloadGenreSongs,
-} from "../../services/musicStorage";
 import { getLastRoutes } from "../../services/historyTracker";
 import { getFormattedTitle as pretty } from "../../services/formatting";
+import {
+  navItems as n1,
+  navItemsSimple as n2,
+} from "../../assets/data/navItems";
 
 import "../../styles/home.scss";
 
 function HomePage({ helmetObj, pageHeading }) {
-  const { Header, selectWindowOpen, setAudiosToDelete } = useHeader();
-  const {
-    setIsPlaylistLoading,
-    loadPlaylists,
-    isPlaylistLoading: loading,
-    musicsList,
-    setMusicsList,
-    setCurrentAudio,
-  } = useAudioPlayer();
-
-  async function fetchSongs() {
-    try {
-      setIsPlaylistLoading(true);
-      await downloadGenreSongs("home");
-      await loadPlaylists("home");
-    } catch (e) {
-      console.error("Download failed:", e);
-    } finally {
-      setIsPlaylistLoading(false);
-    }
-  }
+  const { Header } = useHeader();
+  const { setCurrentAudio } = useAudioPlayer();
 
   useEffect(() => {
-    const checkAndDownloadIfNeeded = async () => {
-      const exists = await genreExistsLocally("home");
-
-      if (exists) {
-        await loadPlaylists("home");
-      } else {
-        await setMusicsList([]);
-        return;
-      }
-    };
-    checkAndDownloadIfNeeded();
-
     // stopping audio if playing [with page change]
     setCurrentAudio({
       index: null,
@@ -68,6 +35,12 @@ function HomePage({ helmetObj, pageHeading }) {
   const lastPages = getLastRoutes()
     ?.filter((i) => i?.includes("music"))
     .slice(0, 3);
+
+  const simpleVersion = JSON.parse(
+    localStorage.getItem("simpleVersion") || "false"
+  );
+  const navItems = simpleVersion ? n2 : n1;
+  const allGenres = navItems.find((i) => i.href === "dropdown")?.dropdownItems;
 
   return (
     <>
@@ -118,32 +91,40 @@ function HomePage({ helmetObj, pageHeading }) {
       <Header />
 
       <section className="container">
-        <h2 className="heading__home isr">{pageHeading}</h2>
+        <h2 className="heading__home isr">
+          {simpleVersion ? "Zentunes" : pageHeading}
+        </h2>
         <p className="description">
-          Here you will find a collection of beautiful music filled with
-          calmness and nostalgia. Enjoy them to the fullest.
-          <br />
-          There are multiple collections, such as{" "}
-          <NavLink to="/musics/classical" className="home__link">
-            Classical
-          </NavLink>
-          ,{" "}
-          <NavLink to="/musics/nature" className="home__link">
-            Nature
-          </NavLink>
-          ,{" "}
-          <NavLink to="/musics/bangla_retro" className="home__link">
-            Bangla Retro
-          </NavLink>
-          ,{" "}
-          <NavLink to="/musics/rabindra_sangeet" className="home__link">
-            Rabindra Sangeet
-          </NavLink>{" "}
-          etc, be sure to explore them all!
-          <br /> Below you will find one song from each of the collections.
-          <br />
-          <br />
-          Thank you for visiting!
+          {simpleVersion ? (
+            "Welcome 'Miss. Nomi'"
+          ) : (
+            <>
+              Here you will find a collection of beautiful music filled with
+              calmness and nostalgia. Enjoy them to the fullest.
+              <br />
+              There are multiple collections, such as{" "}
+              <NavLink to="/musics/classical" className="home__link">
+                Classical
+              </NavLink>
+              ,{" "}
+              <NavLink to="/musics/nature" className="home__link">
+                Nature
+              </NavLink>
+              ,{" "}
+              <NavLink to="/musics/bangla_retro" className="home__link">
+                Bangla Retro
+              </NavLink>
+              ,{" "}
+              <NavLink to="/musics/rabindra_sangeet" className="home__link">
+                Rabindra Sangeet
+              </NavLink>{" "}
+              etc, be sure to explore them all!
+              <br /> Below you will find one song from each of the collections.
+              <br />
+              <br />
+              Thank you for visiting!
+            </>
+          )}
         </p>
 
         {lastPages?.length > 0 && (
@@ -158,36 +139,24 @@ function HomePage({ helmetObj, pageHeading }) {
                     ? pretty(i.split("/").pop())
                     : "Gentle Tunes"}
 
-                  <ChevronRight size={16} />
+                  {/* <ChevronRight size={16} /> */}
                 </NavLink>
               ))}
             </div>
           </div>
         )}
 
-        {musicsList.length > 0 && <PlayOptions />}
-
-        <ul className={`musics ${loading ? "loading" : ""}`}>
-          {musicsList.length > 0 &&
-            musicsList.map((music, index) => (
-              <li key={`home-${music.src}`}>
-                <AudioItem
-                  audioId={music.audioId}
-                  src={music.src}
-                  title={music.title}
-                  mediaType={music.mediaType}
-                  index={index}
-                  selectWindowOpen={selectWindowOpen}
-                  setAudiosToDelete={setAudiosToDelete}
-                />
-              </li>
+        <div className="allGenres">
+          <h2 className="isri">All genres</h2>
+          <div className="genres">
+            {allGenres?.map((item) => (
+              <NavLink to={item.href} key={item.href} className="genres__child">
+                {item.title}
+                {/* <ChevronRight size={16} /> */}
+              </NavLink>
             ))}
-          {musicsList.length === 0 && (
-            <div>
-              No songs found <button onClick={fetchSongs}>Reload</button>
-            </div>
-          )}
-        </ul>
+          </div>
+        </div>
       </section>
 
       <Footer />

@@ -10,11 +10,8 @@ use useState or useMemo if it needs to be added in a dependency
 
 ------
 pnpm build
-
 npx cap sync android or npx cap copy android
-
 npx cap open android
-
 ./gradlew assembleDebug -> android/app/build/outputs/apk/debug/app-debug.apk
 ------
 
@@ -25,9 +22,7 @@ why do i need to expand the objects in useState? are n't they already structred 
 
 
 ---
-boxed style in home nav
 cache: make a json file ready & read that
 loading issue fix
-copy to external storage btn
-use external storage btn ~ scan
++ search, cache
 --------------------------

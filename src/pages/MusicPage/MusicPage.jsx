@@ -2,13 +2,19 @@ import { useParams } from "react-router-dom";
 import CategoryPage from "../../components/CategoryPage";
 import NotFoundPage from "../NotFound";
 import { useAudioPlayer } from "../../contexts/AudioPlayerContext";
-import musicsPageData from "./music-page-data";
+import { musicPageData, musicPageDataSimple } from "./music-page-data";
 
 export default function MusicPage() {
   let { genre } = useParams();
   genre = genre.toLowerCase();
+  const simpleVersion = JSON.parse(
+    localStorage.getItem("simpleVersion") || "false"
+  );
 
-  const pageData = musicsPageData[genre];
+  const pageData = !simpleVersion
+    ? musicPageData[genre]
+    : musicPageDataSimple[genre];
+
   const { validPaths } = useAudioPlayer();
 
   if (!validPaths.includes(genre)) return <NotFoundPage />;

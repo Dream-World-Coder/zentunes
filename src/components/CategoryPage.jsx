@@ -70,6 +70,10 @@ const CategoryPage = memo(function CategoryPage({
     });
   }, [genre]);
 
+  const simpleVersion = JSON.parse(
+    localStorage.getItem("simpleVersion") || "false"
+  );
+
   return (
     <>
       <Helmet>
@@ -120,9 +124,11 @@ const CategoryPage = memo(function CategoryPage({
       <Header />
 
       <section className="container">
-        <h2 className="heading isr">{pageHeading}</h2>
+        <h2 className={`heading isr ${simpleVersion ? "simpleVersion" : ""}`}>
+          {pageHeading}
+        </h2>
         <p
-          className="description"
+          className={`description ${simpleVersion ? "simpleVersion" : ""}`}
           dangerouslySetInnerHTML={{ __html: pageDescription || "" }}
         ></p>
 
