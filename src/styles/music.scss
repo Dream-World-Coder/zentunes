@@ -48,10 +48,15 @@ body.dark .musics::after {
   background: #1a1a1a;
 }
 
+.highlight {
+  background-color: yellowgreen !important;
+  color: black !important;
+}
+
 .music {
   font-size: 3rem;
   font-weight: 500;
-  background: #f6fcdf;
+  background-color: #f6fcdf;
   padding: 1rem 0;
   position: relative;
   z-index: 1;
@@ -63,6 +68,11 @@ body.dark .musics::after {
 
   @media (max-width: 440px) {
     font-size: 2rem;
+  }
+
+  &.highlight {
+    background-color: yellowgreen !important;
+    color: black !important;
   }
 
   &:visited {

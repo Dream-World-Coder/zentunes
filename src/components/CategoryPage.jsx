@@ -70,6 +70,39 @@ const CategoryPage = memo(function CategoryPage({
     });
   }, [genre]);
 
+  // find the audioId from hash, if exists, then go the 4th parent and hightlight it
+  useEffect(() => {
+    let attempts = 0;
+    const maxAttempts = 20;
+
+    const interval = setInterval(() => {
+      const hashValue = window.location.hash.substring(1);
+      if (!hashValue) return clearInterval(interval);
+
+      const audioElem = document.getElementById(hashValue);
+      if (!audioElem) {
+        if (++attempts >= maxAttempts) clearInterval(interval);
+        return;
+      }
+
+      let targetElm = audioElem;
+      for (let i = 0; i < 4 && targetElm; i++) {
+        targetElm = targetElm.parentNode;
+      }
+
+      if (targetElm) {
+        clearInterval(interval);
+        targetElm.classList.add("highlight");
+        targetElm.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => {
+          targetElm.classList.remove("highlight");
+        }, 8000);
+      }
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, []);
+
   const simpleVersion = JSON.parse(
     localStorage.getItem("simpleVersion") || "false"
   );

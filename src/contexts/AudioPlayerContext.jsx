@@ -18,7 +18,7 @@ import {
 } from "../services/audioMeta";
 
 import { Capacitor } from "@capacitor/core";
-import { Filesystem, Directory } from "@capacitor/filesystem";
+import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 import { CapacitorMusicControls } from "capacitor-music-controls-plugin";
 
 const AudioPlayerContext = createContext();
@@ -57,10 +57,9 @@ export const AudioPlayerProvider = ({ children }) => {
   const [currentPlaylist, setCurrentPlaylist] = useState(null); //array, just {name, totalSongs} will work fine
   const [musicsList, setMusicsList] = useState([]); // the musics list array
   const [isPlaylistLoading, setIsPlaylistLoading] = useState(false);
+  const [audioCache, setAudioCache] = useState(null);
 
-  /**
-   * it always loads from local files
-   */
+  /** loads from local files */
   async function loadPlaylists(genre) {
     if (!validPaths.includes(genre)) {
       setMusicsList([]);
@@ -70,15 +69,42 @@ export const AudioPlayerProvider = ({ children }) => {
     try {
       setIsPlaylistLoading(true);
 
-      const genreSongs = [];
+      // first try to reacd cache file, audioData.json, else read manually, load it in memory, in some state var
+      let genreSongs = [];
 
+      /** cache read
+      -----------------*/
+      try {
+        const file = await Filesystem.readFile({
+          path: "audios/audioData.json",
+          directory: Directory.Data, //fixed
+          encoding: Encoding.UTF8,
+        });
+        const data = JSON.parse(file.data) || {};
+        setAudioCache(data);
+
+        genreSongs = data[genre] || [];
+        setMusicsList(genreSongs);
+        setCurrentPlaylist({
+          name: getFormattedTitle(genre),
+          totalSongs: genreSongs.length,
+        });
+        return; //exit the func
+      } catch (err) {
+        genreSongs = [];
+        console.error("cache read error", JSON.stringify(err));
+      }
+
+      /** manual fallback
+      -------------------- */
       const result = await Filesystem.readdir({
         path: `audios/${genre}`,
-        // directory: Directory.Data,
         directory: Directory[import.meta.env.VITE_DIR],
       });
 
       for (const file of result.files) {
+        if (!file.uri || !file.name) continue;
+
         const filename = file.name;
         const fileUrl = Capacitor.convertFileSrc(file.uri);
 
@@ -97,6 +123,7 @@ export const AudioPlayerProvider = ({ children }) => {
           mediaType: getMediaTypeFromFilename(filename),
           duration,
           audioId: window.crypto.randomUUID(),
+          genre,
         });
       }
 
@@ -179,7 +206,7 @@ export const AudioPlayerProvider = ({ children }) => {
   }
 
   async function onCurrentAudioEnd() {
-    const nextPlayDelay = 1 * 1000;
+    const nextPlayDelay = 3 * 1000;
     switch (activeOption) {
       case "true":
         setTimeout(() => {
@@ -395,6 +422,8 @@ export const AudioPlayerProvider = ({ children }) => {
     musicsList,
     setMusicsList,
     loadPlaylists,
+    audioCache,
+    setAudioCache,
   };
 
   return (
@@ -410,7 +439,3 @@ AudioPlayerProvider.propTypes = {
 export const useAudioPlayer = () => {
   return useContext(AudioPlayerContext);
 };
-
-/*
-  The currentaudio will be always playing, so on click and similar events i just have to set the clicked audio as currentaudio
-*/

@@ -174,7 +174,7 @@ export async function handleAddSingleSong(selectedGenre) {
       message: err.message || "An unexpected error occurred.",
     });
   } finally {
-    window.location.reload();
+    // window.location.reload();
   }
 }
 
@@ -255,7 +255,7 @@ export async function handleAddSong(selectedGenre) {
       message: err.message || "An unexpected error occurred.",
     });
   } finally {
-    window.location.reload();
+    // window.location.reload();
   }
 }
 
@@ -393,7 +393,7 @@ export async function handleAddSongV2(selectedGenre) {
   } finally {
     // Only reload if at least one file was successfully processed
     if (results.successful.length > 0) {
-      window.location.reload();
+      // window.location.reload();
     }
   }
 }
@@ -510,6 +510,6 @@ export async function handleRemoveSong(audiosToDelete) {
     console.error("handleRemoveSong Error:", error);
     alert("An error occurred while deleting songs. Check console for details.");
   } finally {
-    window.location.reload();
+    // window.location.reload();
   }
 }

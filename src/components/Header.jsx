@@ -14,12 +14,14 @@ import {
   ToggleLeft,
   ToggleRight,
   CircleMinus,
+  DatabaseZap,
   CopyPlusIcon,
   MessageCirclePlus,
 } from "lucide-react";
 import { useAudioPlayer } from "../contexts/AudioPlayerContext";
 import { handleAddSong, handleRemoveSong } from "../services/musicStorage";
 import { getFormattedTitle as pretty } from "../services/formatting";
+import { makeAudioCache } from "../services/cacheService";
 
 import { navItems as n1, navItemsSimple as n2 } from "../assets/data/navItems";
 import ham from "../assets/images/ham.svg";
@@ -48,7 +50,7 @@ export default function useHeader() {
     const [selectedGenre, setSelectedGenre] = useState("");
 
     const darkModeButtonRef = useRef(null);
-    const { validPaths, currentAudio } = useAudioPlayer();
+    const { validPaths, currentAudio, setIsPlaylistLoading } = useAudioPlayer();
 
     const navigate = useNavigate();
     function toggleSimpleVersion() {
@@ -123,7 +125,12 @@ export default function useHeader() {
 
           <div className="options">
             {/* <div className="dark-mode-button"></div> */}
-            <Search size={18} onClick={() => {}} />
+            <Search
+              size={18}
+              onClick={() => {
+                navigate("/search");
+              }}
+            />
 
             {selectWindowOpen && audiosToDelete.length > 0 && (
               <div
@@ -243,6 +250,27 @@ export default function useHeader() {
                 onClick={() => alert("Will be available soon")}
               >
                 <Scan size={16} /> Scan Songs
+              </div>
+
+              <div
+                className="mobile__nav__btn"
+                onClick={async () => {
+                  try {
+                    setIsPlaylistLoading(true);
+                    const confirmReCache = window.confirm(
+                      "This may take upto 10 minutes. Are you sure?"
+                    );
+                    if (confirmReCache) {
+                      await makeAudioCache();
+                    }
+                  } catch (e) {
+                    console.log("header line:267", e);
+                  } finally {
+                    setIsPlaylistLoading(false);
+                  }
+                }}
+              >
+                <DatabaseZap size={16} /> Rebuild Cache
               </div>
 
               <div className="mobile__nav__btn" onClick={handleShare}>
