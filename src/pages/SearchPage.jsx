@@ -72,6 +72,12 @@ export default function SearchPage() {
     }
   }
 
+  const formatTime = (time) => {
+    const minutes = Math.floor(time / 60);
+    const seconds = Math.floor(time % 60);
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
+  };
+
   useEffect(() => {
     setCurrentAudio({
       index: null,
@@ -149,9 +155,7 @@ export default function SearchPage() {
                     >
                       <div>
                         {res.title}
-                        <strong>
-                          • Duration: {(res.duration / 60).toFixed(2)}
-                        </strong>
+                        <strong>• Duration: {formatTime(res.duration)}</strong>
                       </div>
                       <mark>{pretty(res.genre)}</mark>
                     </li>

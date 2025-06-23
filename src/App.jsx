@@ -11,6 +11,8 @@ import AboutPage from "./pages/About/About";
 import ContactPage from "./pages/Contact/Contact";
 import SearchPage from "./pages/SearchPage";
 import NotFoundPage from "./pages/NotFound";
+import Tmp from "./components/tmp";
+
 import { RouteTracker } from "./components/routeTracker";
 import BackButtonHandler from "./components/backBtn";
 
@@ -38,6 +40,7 @@ export default function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="/test" element={<Tmp />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <div className="status-bar-cover"></div>

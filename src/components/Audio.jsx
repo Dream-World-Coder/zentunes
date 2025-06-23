@@ -1,10 +1,14 @@
 import { useEffect, useRef, useState, useCallback, memo } from "react";
 import PropTypes from "prop-types";
-import { Music, BoxSelect } from "lucide-react";
+import {
+  Music,
+  BoxSelect,
+  // RotateCw,
+  // RotateCcw,
+  Play,
+  Pause,
+} from "lucide-react";
 import { useAudioPlayer } from "../contexts/AudioPlayerContext";
-
-import playBtn from "../assets/images/play.svg";
-import pauseBtn from "../assets/images/pause.svg";
 
 import "../styles/music.scss";
 // import { CapacitorMusicControls } from "capacitor-music-controls-plugin";
@@ -30,15 +34,13 @@ const AudioItem = memo(function AudioItem({
   );
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [timeDisplay, setTimeDisplay] = useState("00:00");
+  const [timeDisplay, setTimeDisplay] = useState("0:00");
 
   // format time helper, sec:int -> str
   const formatTime = useCallback((time) => {
     const minutes = Math.floor(time / 60);
     const seconds = Math.floor(time % 60);
-    return `${minutes < 10 ? "0" : ""}${minutes}:${
-      seconds < 10 ? "0" : ""
-    }${seconds}`;
+    return `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
   }, []);
 
   // handle time updates
@@ -194,7 +196,7 @@ const AudioItem = memo(function AudioItem({
           transform: "translate(0px, 0px)",
         }}
       >
-        <figure>
+        <figure className={isPlaying ? "isPlaying" : ""}>
           <figcaption>
             {selectWindowOpen ? (
               <BoxSelect
@@ -209,6 +211,7 @@ const AudioItem = memo(function AudioItem({
             )}
             <span>{title || "no title"}</span>
           </figcaption>
+
           {!selectWindowOpen && (
             <div className="audio-controls">
               <audio
@@ -220,28 +223,35 @@ const AudioItem = memo(function AudioItem({
                 <source src={src} type={mediaType} />
                 This audio is not supported by your browser.
               </audio>
-              <div
-                className="playPauseBtn"
-                onClick={handlePlayPause}
-                style={{ cursor: "pointer" }}
-              >
-                <img
-                  src={playBtn}
-                  alt="play music"
-                  className="playIcon"
-                  style={{
-                    display: isPlaying ? "none" : "block",
-                  }}
-                />
-                <img
-                  src={pauseBtn}
-                  alt="pause music"
-                  className="pauseIcon"
-                  style={{
-                    display: isPlaying ? "block" : "none",
-                  }}
-                />
+
+              <div className="playPauseBtn">
+                {/* {isPlaying && (
+                  <RotateCcw
+                    size={16}
+                    onClick={(p) => setCurrentTime(p - 10)}
+                  />
+                )} */}
+                {!isPlaying && (
+                  <Play
+                    size={16}
+                    onClick={handlePlayPause}
+                    color="#222222"
+                    strokeWidth="2px"
+                  />
+                )}
+                {isPlaying && (
+                  <Pause
+                    size={16}
+                    onClick={handlePlayPause}
+                    color="#222222"
+                    strokeWidth="1px"
+                  />
+                )}
+                {/* {isPlaying && (
+                  <RotateCw size={16} onClick={(p) => setCurrentTime(p + 10)} />
+                )} */}
               </div>
+
               <input
                 ref={progressBarRef}
                 className={`progressBar ${isPlaying ? "player-is-active" : ""}`}
@@ -252,10 +262,11 @@ const AudioItem = memo(function AudioItem({
                 step="0.1"
                 onChange={handleProgressChange}
               />
+
               <div
                 className={`timeDisplay ${isPlaying ? "player-is-active" : ""}`}
               >
-                {timeDisplay}
+                {timeDisplay} / {formatTime(duration)}
               </div>
             </div>
           )}

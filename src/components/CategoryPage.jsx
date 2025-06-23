@@ -72,18 +72,12 @@ const CategoryPage = memo(function CategoryPage({
 
   // find the audioId from hash, if exists, then go the 4th parent and hightlight it
   useEffect(() => {
-    let attempts = 0;
-    const maxAttempts = 20;
-
-    const interval = setInterval(() => {
+    setTimeout(() => {
       const hashValue = window.location.hash.substring(1);
-      if (!hashValue) return clearInterval(interval);
+      if (!hashValue) return;
 
       const audioElem = document.getElementById(hashValue);
-      if (!audioElem) {
-        if (++attempts >= maxAttempts) clearInterval(interval);
-        return;
-      }
+      if (!audioElem) return;
 
       let targetElm = audioElem;
       for (let i = 0; i < 4 && targetElm; i++) {
@@ -91,16 +85,13 @@ const CategoryPage = memo(function CategoryPage({
       }
 
       if (targetElm) {
-        clearInterval(interval);
         targetElm.classList.add("highlight");
         targetElm.scrollIntoView({ behavior: "smooth", block: "center" });
         setTimeout(() => {
           targetElm.classList.remove("highlight");
-        }, 8000);
+        }, 5000);
       }
-    }, 100);
-
-    return () => clearInterval(interval);
+    }, 650);
   }, []);
 
   const simpleVersion = JSON.parse(
@@ -171,7 +162,7 @@ const CategoryPage = memo(function CategoryPage({
           {musicsList.length > 0 &&
             reloadPresent &&
             musicsList.map((music, index) => (
-              <li key={`${genre}-${music.src}`}>
+              <li key={`${genre}-${music.audioId}`}>
                 <AudioItem
                   audioId={music.audioId}
                   src={music.src}

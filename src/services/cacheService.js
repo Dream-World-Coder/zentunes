@@ -62,5 +62,9 @@ export async function makeAudioCache() {
     });
   } catch (e) {
     console.error("Failed to rebuild cache:", JSON.stringify(e, null, 2));
+  } finally {
+    setTimeout(() => {
+      window.location.reload();
+    }, 650);
   }
 }

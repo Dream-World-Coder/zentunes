@@ -95,7 +95,7 @@ export const AudioPlayerProvider = ({ children }) => {
         console.error("cache read error", JSON.stringify(err));
       }
 
-      /** manual fallback
+      /** fallback
       -------------------- */
       const result = await Filesystem.readdir({
         path: `audios/${genre}`,
@@ -206,7 +206,7 @@ export const AudioPlayerProvider = ({ children }) => {
   }
 
   async function onCurrentAudioEnd() {
-    const nextPlayDelay = 3 * 1000;
+    const nextPlayDelay = 1.5 * 1000;
     switch (activeOption) {
       case "true":
         setTimeout(() => {
