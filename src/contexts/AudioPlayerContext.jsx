@@ -103,8 +103,6 @@ export const AudioPlayerProvider = ({ children }) => {
       });
 
       for (const file of result.files) {
-        if (!file.uri || !file.name) continue;
-
         const filename = file.name;
         const fileUrl = Capacitor.convertFileSrc(file.uri);
 

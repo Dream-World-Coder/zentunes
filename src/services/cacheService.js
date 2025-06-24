@@ -16,7 +16,7 @@ export async function makeAudioCache() {
     const genres = files
       .filter((file) => file.type === "directory")
       .map((dir) => dir.name);
-    const audioData = {};
+    const audioData = {}; // the entire data
 
     for (const genre of genres) {
       const genreSongs = [];
@@ -25,14 +25,14 @@ export async function makeAudioCache() {
         directory: DIR,
       });
 
+      const delay = (ms) => new Promise((res) => setTimeout(res, ms)); // helper
       for (const file of result.files) {
-        if (!file.uri || !file.name) continue;
-
         const filename = file.name;
         const fileUrl = Capacitor.convertFileSrc(file.uri);
 
         // const metaObj = await getAudioMetadata(fileUrl, file.name); // slowing a lot, so removing
         const dur = await getAudioDurationFromURI(fileUrl);
+        await delay(150);
 
         // const duration = dur
         //   ? Math.floor(dur)
@@ -58,6 +58,14 @@ export async function makeAudioCache() {
       path: `audios/audioData.json`,
       data: JSON.stringify(audioData),
       directory: Directory.Data, // fixed
+      encoding: Encoding.UTF8,
+    });
+
+    // for debug purposes
+    await Filesystem.writeFile({
+      path: `audios/audioData.json`,
+      data: JSON.stringify(audioData),
+      directory: Directory.External, // fixed
       encoding: Encoding.UTF8,
     });
   } catch (e) {

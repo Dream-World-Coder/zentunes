@@ -147,24 +147,44 @@ export async function getAudioMetadata(fileUrl, filename) {
 */
 
 export async function getAudioDurationFromURI(fileUri) {
-  try {
-    const duration = await new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
+    try {
       const audio = new Audio();
-      audio.src = fileUri;
       audio.preload = "metadata";
 
-      audio.addEventListener("loadedmetadata", () => {
-        resolve(audio.duration);
-      });
+      // Important: ensure a unique audio instance
+      audio.src = fileUri;
 
+      const cleanup = () => {
+        audio.removeAttribute("src");
+        audio.load(); // reset
+      };
+
+      const onLoadedMetadata = () => {
+        if (!isNaN(audio.duration) && audio.duration > 0) {
+          cleanup();
+          resolve(audio.duration);
+        } else {
+          // Fallback wait if metadata seems unreliable
+          setTimeout(() => {
+            if (!isNaN(audio.duration) && audio.duration > 0) {
+              cleanup();
+              resolve(audio.duration);
+            } else {
+              cleanup();
+              reject(new Error("Duration is invalid or zero"));
+            }
+          }, 300); // short delay fallback
+        }
+      };
+
+      audio.addEventListener("loadedmetadata", onLoadedMetadata);
       audio.addEventListener("error", (e) => {
+        cleanup();
         reject(new Error(`Failed to load audio metadata: ${e.message || e}`));
       });
-    });
-
-    return duration;
-  } catch (err) {
-    console.error("Error loading audio duration:", err);
-    return null;
-  }
+    } catch (err) {
+      reject(err);
+    }
+  });
 }
