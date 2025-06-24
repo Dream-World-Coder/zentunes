@@ -1,11 +1,9 @@
-/**
 // pnpm add music-metadata
 
 import { Filesystem, Directory } from "@capacitor/filesystem";
 import { parseBlob } from "music-metadata";
 import { extractFilePathFromCapacitorUriV2 } from "./musicStorage";
 import { getMediaTypeFromFilename } from "./formatting";
-
 
 // Polyfill Buffer for music-metadata
 if (typeof global === "undefined") {
@@ -59,10 +57,6 @@ if (typeof Buffer === "undefined") {
   };
 }
 
-/**
- * @param fileUri: URI,
- * @param filename: string
- * _/
 export async function getAudioMetadata(fileUrl, filename) {
   let res = {
     title: null,
@@ -85,7 +79,6 @@ export async function getAudioMetadata(fileUrl, filename) {
       return res;
     }
 
-    // const directory = Directory.Data;
     const directory = Directory[import.meta.env.VITE_DIR];
 
     const { data } = await Filesystem.readFile({
@@ -144,47 +137,205 @@ export async function getAudioMetadata(fileUrl, filename) {
     return res;
   }
 }
-*/
 
-export async function getAudioDurationFromURI(fileUri) {
-  return new Promise((resolve, reject) => {
-    try {
-      const audio = new Audio();
-      audio.preload = "metadata";
-
-      // Important: ensure a unique audio instance
-      audio.src = fileUri;
-
-      const cleanup = () => {
-        audio.removeAttribute("src");
-        audio.load(); // reset
-      };
-
-      const onLoadedMetadata = () => {
-        if (!isNaN(audio.duration) && audio.duration > 0) {
-          cleanup();
-          resolve(audio.duration);
-        } else {
-          // Fallback wait if metadata seems unreliable
-          setTimeout(() => {
-            if (!isNaN(audio.duration) && audio.duration > 0) {
-              cleanup();
-              resolve(audio.duration);
-            } else {
-              cleanup();
-              reject(new Error("Duration is invalid or zero"));
-            }
-          }, 300); // short delay fallback
-        }
-      };
-
-      audio.addEventListener("loadedmetadata", onLoadedMetadata);
-      audio.addEventListener("error", (e) => {
-        cleanup();
-        reject(new Error(`Failed to load audio metadata: ${e.message || e}`));
-      });
-    } catch (err) {
-      reject(err);
+// Improved duration extraction with multiple fallback strategies
+export async function getAudioDuration(fileUrl, filename) {
+  // Strategy 1: Try to get duration from music-metadata first (most reliable)
+  try {
+    const metadata = await getAudioMetadata(fileUrl, filename);
+    if (metadata.duration && metadata.duration > 0) {
+      console.log(
+        `Duration from metadata: ${metadata.duration}s for ${filename}`
+      );
+      return Math.floor(metadata.duration);
     }
+  } catch (error) {
+    console.warn(`Metadata extraction failed for ${filename}:`, error.message);
+  }
+
+  // Strategy 2: Use HTML Audio element with improved approach
+  try {
+    const duration = await getAudioDurationFromHTMLAudio(fileUrl);
+    if (duration && duration > 0) {
+      console.log(`Duration from HTML Audio: ${duration}s for ${filename}`);
+      return Math.floor(duration);
+    }
+  } catch (error) {
+    console.warn(`HTML Audio duration failed for ${filename}:`, error.message);
+  }
+
+  // Strategy 3: Try Web Audio API approach
+  try {
+    const duration = await getAudioDurationFromWebAudio(fileUrl);
+    if (duration && duration > 0) {
+      console.log(`Duration from Web Audio: ${duration}s for ${filename}`);
+      return Math.floor(duration);
+    }
+  } catch (error) {
+    console.warn(`Web Audio duration failed for ${filename}:`, error.message);
+  }
+
+  // Fallback: return a default duration
+  console.warn(
+    `All duration extraction methods failed for ${filename}, using fallback`
+  );
+  return 180; // 3 minutes fallback
+}
+
+// Improved HTML Audio approach
+async function getAudioDurationFromHTMLAudio(fileUri) {
+  return new Promise((resolve, reject) => {
+    const audio = new Audio();
+    let resolved = false;
+    const timeout = 5000; // 5 seconds timeout
+
+    const cleanup = () => {
+      audio.pause();
+      audio.removeAttribute("src");
+      audio.load();
+      audio.removeEventListener("loadedmetadata", onLoadedMetadata);
+      audio.removeEventListener("loadeddata", onLoadedData);
+      audio.removeEventListener("canplaythrough", onCanPlayThrough);
+      audio.removeEventListener("error", onError);
+      audio.removeEventListener("stalled", onStalled);
+    };
+
+    const resolveWithDuration = (source) => {
+      if (resolved) return;
+      if (
+        audio.duration &&
+        !isNaN(audio.duration) &&
+        isFinite(audio.duration) &&
+        audio.duration > 0
+      ) {
+        resolved = true;
+        console.log(
+          `HTML Audio duration resolved from ${source}: ${audio.duration}`
+        );
+        cleanup();
+        resolve(audio.duration);
+        return true;
+      }
+      return false;
+    };
+
+    const onLoadedMetadata = () => resolveWithDuration("loadedmetadata");
+    const onLoadedData = () => resolveWithDuration("loadeddata");
+    const onCanPlayThrough = () => resolveWithDuration("canplaythrough");
+
+    const onError = (e) => {
+      if (resolved) return;
+      resolved = true;
+      cleanup();
+      reject(
+        new Error(`Audio loading failed: ${e.message || "Unknown error"}`)
+      );
+    };
+
+    const onStalled = () => {
+      console.warn("Audio loading stalled, trying play trick...");
+      tryPlayTrick();
+    };
+
+    const tryPlayTrick = async () => {
+      try {
+        audio.muted = true;
+        audio.volume = 0;
+        const playPromise = audio.play();
+
+        if (playPromise) {
+          await playPromise;
+          setTimeout(() => {
+            if (!resolveWithDuration("play-trick")) {
+              audio.pause();
+            }
+          }, 1000);
+        }
+      } catch (err) {
+        console.warn("Play trick failed:", err.message);
+      }
+    };
+
+    // Set up event listeners
+    audio.addEventListener("loadedmetadata", onLoadedMetadata);
+    audio.addEventListener("loadeddata", onLoadedData);
+    audio.addEventListener("canplaythrough", onCanPlayThrough);
+    audio.addEventListener("error", onError);
+    audio.addEventListener("stalled", onStalled);
+
+    // Configure audio element
+    audio.preload = "metadata";
+    audio.muted = true;
+    audio.volume = 0;
+    audio.crossOrigin = "anonymous";
+
+    // Set timeout
+    const timeoutId = setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        cleanup();
+        reject(new Error("Timeout waiting for audio metadata"));
+      }
+    }, timeout);
+
+    // Start loading
+    audio.src = fileUri;
+
+    // Clear timeout if we resolve early
+    const originalResolve = resolve;
+    resolve = (value) => {
+      clearTimeout(timeoutId);
+      originalResolve(value);
+    };
   });
+}
+
+// Web Audio API approach (works with decoded audio data)
+async function getAudioDurationFromWebAudio(fileUrl) {
+  try {
+    // Fetch the audio file as array buffer
+    const response = await fetch(fileUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+
+    // Create audio context
+    const audioContext = new (window.AudioContext ||
+      window.webkitAudioContext)();
+
+    try {
+      // Decode audio data
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+      const duration = audioBuffer.duration;
+
+      // Clean up
+      await audioContext.close();
+
+      if (duration && duration > 0) {
+        return duration;
+      }
+
+      throw new Error("Invalid duration from Web Audio API");
+    } catch (decodeError) {
+      await audioContext.close();
+      throw decodeError;
+    }
+  } catch (error) {
+    throw new Error(`Web Audio API failed: ${error.message}`);
+  }
+}
+
+// Legacy function for backward compatibility
+export async function getAudioDurationFromURI(fileUri) {
+  console.warn(
+    "getAudioDurationFromURI is deprecated, use getAudioDuration instead"
+  );
+  try {
+    return await getAudioDurationFromHTMLAudio(fileUri);
+  } catch (error) {
+    console.error("Legacy duration extraction failed:", error);
+    return null;
+  }
 }

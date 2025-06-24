@@ -25,6 +25,7 @@
         "capacitor-music-controls-plugin": "^6.1.0",
         "fuse.js": "^7.1.0",
         "lucide-react": "^0.511.0",
+        "music-metadata": "^11.3.0",
         "prop-types": "^15.8.1",
         "react": "^18.3.1",
         "react-dom": "^18.3.1",

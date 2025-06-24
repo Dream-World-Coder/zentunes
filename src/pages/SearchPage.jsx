@@ -50,7 +50,7 @@ export default function SearchPage() {
 
       const regex = new RegExp(
         part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
-        "i"
+        "i",
       );
       const regexMatches = allSongs.filter((song) => regex.test(song.title));
 
@@ -59,7 +59,7 @@ export default function SearchPage() {
       } else {
         const fuse = new Fuse(allSongs, {
           keys: ["title"],
-          threshold: 0.68,
+          threshold: 0.6,
         });
         const fuzzyResults = fuse.search(part).map((r) => r.item);
         setSearchResults(fuzzyResults);
