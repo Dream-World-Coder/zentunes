@@ -16,6 +16,23 @@ function validateFileExtension(filename) {
   };
 }
 
+async function ensureDirExists(fullPath) {
+  try {
+    await Filesystem.mkdir({
+      path: fullPath,
+      directory: Directory.Documents,
+      recursive: true,
+    });
+    console.log(`✓ Directory ensured: ${fullPath}`);
+  } catch (e) {
+    // Ignore error if directory already exists
+    if (e.message?.toLowerCase().includes("already exists") === false) {
+      console.error("Failed to create directory:", fullPath, e);
+      throw e; // Re-throw if it's not an "already exists" error
+    }
+  }
+}
+
 // Function to copy all songs from app's Data directory to Android's Music directory
 export async function copyAllSongs(onProgress) {
   const results = {
@@ -28,6 +45,7 @@ export async function copyAllSongs(onProgress) {
 
   try {
     console.log("Starting copyAllSongs operation...");
+    await ensureDirExists("Zentunes");
 
     // Check if we have permission to write to external storage
     const permissions = await Filesystem.checkPermissions();
@@ -129,36 +147,24 @@ export async function copyAllSongs(onProgress) {
               throw new Error("File data is empty or corrupted");
             }
 
-            // Create the Music/ZenTunes/genre directory structure
-            const musicGenrePath = `ZenTunes/${genre}`;
+            // Create the Music/Zentunes/genre directory structure
+            const musicGenrePath = `Zentunes/${genre}`;
 
             // Ensure the genre directory exists in Music
-            try {
-              await Filesystem.mkdir({
-                path: musicGenrePath,
-                directory: Directory.ExternalStorage,
-                recursive: true,
-              });
-            } catch (mkdirError) {
-              // Directory might already exist, ignore error
-              console.log(
-                `Directory creation note for ${musicGenrePath}:`,
-                mkdirError.message
-              );
-            }
+            await ensureDirExists(musicGenrePath);
 
             // Write the file to Music directory
-            const musicFilePath = `ZenTunes/${genre}/${filename}`;
+            const musicFilePath = `Zentunes/${genre}/${filename}`;
             await Filesystem.writeFile({
               path: musicFilePath,
               data: audioData.data, // Keep as base64, Filesystem will handle conversion
-              directory: Directory.ExternalStorage,
+              directory: Directory.Documents,
             });
 
             // Verify the written file
             const verification = await Filesystem.stat({
               path: musicFilePath,
-              directory: Directory.ExternalStorage,
+              directory: Directory.Documents,
             });
 
             if (!verification.size || verification.size === 0) {
@@ -247,7 +253,7 @@ export async function copyAllSongs(onProgress) {
 
     if (successCount > 0) {
       message += `\nTotal size copied: ${totalSizeMB} MB\n`;
-      message += `Location: /storage/emulated/0/Music/ZenTunes/\n`;
+      message += `Location: /storage/emulated/0/Music/Zentunes/\n`;
       message += `\nYou can now access your songs through any music player app!`;
     }
 
