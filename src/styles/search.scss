@@ -16,17 +16,19 @@
     margin-bottom: 5rem;
 
     & input {
+      width: 80%;
+      height: 45px;
       border-radius: 25px;
-      padding: 5px 12px;
-      font-size: 1.2rem;
+      padding: 5px 15px;
+      font-size: 1.85rem;
       border: 1px solid black;
       outline: none;
     }
 
     & button {
       border-radius: 25px;
+      height: 45px;
       padding: 5px 16px;
-      font-size: 1.2rem;
       background-color: greenyellow;
       border: 1px solid black;
       outline: none;
@@ -39,6 +41,8 @@
   }
 
   &__results {
+    min-height: 80dvh;
+
     h2 {
       font-size: 2rem;
       text-underline-offset: 2px;

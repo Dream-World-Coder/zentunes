@@ -513,3 +513,451 @@ export async function handleRemoveSong(audiosToDelete) {
     // window.location.reload();
   }
 }
+
+/*
+// Helper function for safe base64 conversion that handles large files
+function arrayBufferToBase64(buffer) {
+  const uint8Array = new Uint8Array(buffer);
+  let binary = '';
+  const chunkSize = 32768; // 32KB chunks to avoid stack overflow
+
+  for (let i = 0; i < uint8Array.length; i += chunkSize) {
+    const chunk = uint8Array.slice(i, i + chunkSize);
+    binary += String.fromCharCode.apply(null, chunk);
+  }
+
+  return btoa(binary);
+}
+
+// Helper function to convert base64 to ArrayBuffer
+function base64ToArrayBuffer(base64) {
+  const binaryString = atob(base64);
+  const arrayBuffer = new ArrayBuffer(binaryString.length);
+  const uint8Array = new Uint8Array(arrayBuffer);
+
+  for (let i = 0; i < binaryString.length; i++) {
+    uint8Array[i] = binaryString.charCodeAt(i);
+  }
+
+  return arrayBuffer;
+}
+
+// Helper function to validate file extension
+function validateFileExtension(filename) {
+  const validExts = ["mp3", "m4a", "ogg", "wav"];
+  const sp = filename.split(".");
+  const fExt = sp[sp.length - 1].toLowerCase();
+
+  return {
+    isValid: validExts.includes(fExt),
+    extension: fExt,
+    validExtensions: validExts
+  };
+}
+
+// Helper function to get file data from various sources
+async function getFileData(file) {
+  let fileBuffer;
+
+  if (file.blob) {
+    // Get ArrayBuffer directly from blob
+    fileBuffer = await file.blob.arrayBuffer();
+  } else if (file.data) {
+    // Convert base64 to ArrayBuffer
+    fileBuffer = base64ToArrayBuffer(file.data);
+  } else if (file.path) {
+    // Read from file path
+    const readResult = await Filesystem.readFile({
+      path: file.path,
+    });
+    fileBuffer = base64ToArrayBuffer(readResult.data);
+  } else {
+    throw new Error("Could not access file data - no valid source found");
+  }
+
+  if (!fileBuffer || fileBuffer.byteLength === 0) {
+    throw new Error("File data is empty or invalid");
+  }
+
+  return fileBuffer;
+}
+
+// Helper function to verify written file
+async function verifyWrittenFile(path, directory, originalSize) {
+  try {
+    const writtenFile = await Filesystem.readFile({
+      path: path,
+      directory: directory,
+    });
+
+    if (!writtenFile.data || writtenFile.data.length === 0) {
+      throw new Error("Written file is empty");
+    }
+
+    // Approximate size check (base64 is ~33% larger than binary)
+    const expectedBase64Size = Math.ceil(originalSize * 4 / 3);
+    const actualSize = writtenFile.data.length;
+    const sizeDifference = Math.abs(actualSize - expectedBase64Size) / expectedBase64Size;
+
+    if (sizeDifference > 0.1) { // Allow 10% variance
+      console.warn(`Size mismatch for ${path}: expected ~${expectedBase64Size}, got ${actualSize}`);
+    }
+
+    return {
+      success: true,
+      size: actualSize,
+      expectedSize: expectedBase64Size
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error.message
+    };
+  }
+}
+
+export async function handleAddSingleSong(selectedGenre) {
+  try {
+    // Pick audio file
+    const result = await FilePicker.pickFiles({
+      types: ["audio/*"],
+      multiple: false,
+    });
+
+    if (!result?.files?.length) {
+      await Dialog.alert({
+        title: "Cancelled",
+        message: "No file selected.",
+      });
+      return;
+    }
+
+    const file = result.files[0];
+    const filename = file.name;
+
+    // Validate file extension
+    const validation = validateFileExtension(filename);
+    if (!validation.isValid) {
+      await Dialog.alert({
+        title: "Invalid File Type",
+        message: `File type .${validation.extension} is not supported. Supported formats: ${validation.validExtensions.join(", ")}`
+      });
+      return;
+    }
+
+    // Check file size (50MB limit)
+    if (file.size && file.size > 50 * 1024 * 1024) {
+      await Dialog.alert({
+        title: "File Too Large",
+        message: "File size exceeds 50MB limit. Please choose a smaller file."
+      });
+      return;
+    }
+
+    // Get file data
+    const fileBuffer = await getFileData(file);
+
+    // Convert to base64 safely
+    const base64Data = arrayBufferToBase64(fileBuffer);
+
+    // Write binary file as base64
+    const filePath = `audios/${selectedGenre}/${filename}`;
+    await Filesystem.writeFile({
+      path: filePath,
+      data: base64Data,
+      directory: DIR,
+      recursive: true,
+    });
+
+    // Verify the written file
+    const verification = await verifyWrittenFile(filePath, DIR, fileBuffer.byteLength);
+
+    if (!verification.success) {
+      throw new Error(`File verification failed: ${verification.error}`);
+    }
+
+    await Dialog.alert({
+      title: "Success",
+      message: `Successfully saved: ${filename}\nFile size: ${Math.round(fileBuffer.byteLength / 1024)} KB`
+    });
+
+  } catch (err) {
+    console.error("Error in handleAddSingleSong:", err);
+    await Dialog.alert({
+      title: "Error",
+      message: err.message || "An unexpected error occurred while adding the song."
+    });
+  }
+}
+
+export async function handleAddSong(selectedGenre) {
+  const results = {
+    successful: [],
+    failed: [],
+    skipped: [],
+  };
+
+  try {
+    // Pick multiple audio files
+    const result = await FilePicker.pickFiles({
+      types: ["audio/*"],
+      multiple: true,
+    });
+
+    if (!result?.files?.length) {
+      await Dialog.alert({
+        title: "Cancelled",
+        message: "No files selected.",
+      });
+      return;
+    }
+
+    const files = result.files;
+    console.log(`Processing ${files.length} files...`);
+
+    // Process each file individually
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const filename = file.name;
+
+      console.log(`Processing file ${i + 1}/${files.length}: ${filename}`);
+
+      try {
+        // Validate file extension
+        const validation = validateFileExtension(filename);
+        if (!validation.isValid) {
+          results.skipped.push({
+            filename,
+            reason: `Invalid file type: .${validation.extension}. Supported: ${validation.validExtensions.join(", ")}`
+          });
+          continue;
+        }
+
+        // Check file size (50MB limit)
+        if (file.size && file.size > 50 * 1024 * 1024) {
+          results.skipped.push({
+            filename,
+            reason: "File too large (>50MB)"
+          });
+          continue;
+        }
+
+        // Get file data
+        const fileBuffer = await getFileData(file);
+
+        // Convert to base64 safely
+        const base64Data = arrayBufferToBase64(fileBuffer);
+
+        // Write file
+        const filePath = `audios/${selectedGenre}/${filename}`;
+        await Filesystem.writeFile({
+          path: filePath,
+          data: base64Data,
+          directory: DIR,
+          recursive: true,
+        });
+
+        // Verify the written file
+        const verification = await verifyWrittenFile(filePath, DIR, fileBuffer.byteLength);
+
+        if (!verification.success) {
+          throw new Error(`File verification failed: ${verification.error}`);
+        }
+
+        results.successful.push({
+          filename,
+          path: filePath,
+          size: Math.round(fileBuffer.byteLength / 1024) // Size in KB
+        });
+
+        console.log(`✓ Successfully processed: ${filename}`);
+
+      } catch (fileError) {
+        console.error(`✗ Error processing file ${filename}:`, fileError);
+        results.failed.push({
+          filename,
+          error: fileError.message || "Unknown error occurred"
+        });
+      }
+    }
+
+    // Show summary dialog
+    const totalFiles = files.length;
+    const successCount = results.successful.length;
+    const failedCount = results.failed.length;
+    const skippedCount = results.skipped.length;
+
+    let message = `Processed ${totalFiles} file(s):\n`;
+    message += `✓ ${successCount} successful\n`;
+
+    if (failedCount > 0) {
+      message += `✗ ${failedCount} failed\n`;
+    }
+
+    if (skippedCount > 0) {
+      message += `⚠ ${skippedCount} skipped\n`;
+    }
+
+    // Add details for failed/skipped files (limit to first 5 of each)
+    if (failedCount > 0 || skippedCount > 0) {
+      message += `\nDetails:\n`;
+
+      results.failed.slice(0, 5).forEach((item) => {
+        message += `Failed: ${item.filename} - ${item.error}\n`;
+      });
+
+      if (results.failed.length > 5) {
+        message += `... and ${results.failed.length - 5} more failed files\n`;
+      }
+
+      results.skipped.slice(0, 5).forEach((item) => {
+        message += `Skipped: ${item.filename} - ${item.reason}\n`;
+      });
+
+      if (results.skipped.length > 5) {
+        message += `... and ${results.skipped.length - 5} more skipped files\n`;
+      }
+    }
+
+    // Add successful files summary
+    if (successCount > 0) {
+      const totalSize = results.successful.reduce((sum, item) => sum + item.size, 0);
+      message += `\nTotal size added: ${Math.round(totalSize / 1024)} MB`;
+    }
+
+    await Dialog.alert({
+      title: successCount > 0 ? "Processing Complete" : "No Files Processed",
+      message: message.trim(),
+    });
+
+  } catch (err) {
+    console.error("Error in handleAddSong:", err);
+    await Dialog.alert({
+      title: "Error",
+      message: err.message || "An unexpected error occurred while processing files."
+    });
+  } finally {
+    // Only reload if at least one file was successfully processed
+    if (results.successful.length > 0) {
+      console.log(`Successfully added ${results.successful.length} songs. Consider reloading the app to refresh the audio list.`);
+      // Uncomment the next line if you want to auto-reload
+      // window.location.reload();
+    }
+  }
+}
+
+// Alternative version with progress callback (if you want to show progress)
+export async function handleAddSongWithProgress(selectedGenre, onProgress) {
+  const results = {
+    successful: [],
+    failed: [],
+    skipped: [],
+  };
+
+  try {
+    const result = await FilePicker.pickFiles({
+      types: ["audio/*"],
+      multiple: true,
+    });
+
+    if (!result?.files?.length) {
+      await Dialog.alert({
+        title: "Cancelled",
+        message: "No files selected.",
+      });
+      return;
+    }
+
+    const files = result.files;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const filename = file.name;
+
+      // Call progress callback if provided
+      if (onProgress) {
+        onProgress({
+          current: i + 1,
+          total: files.length,
+          filename: filename,
+          status: 'processing'
+        });
+      }
+
+      try {
+        const validation = validateFileExtension(filename);
+        if (!validation.isValid) {
+          results.skipped.push({
+            filename,
+            reason: `Invalid file type: .${validation.extension}`
+          });
+          continue;
+        }
+
+        if (file.size && file.size > 50 * 1024 * 1024) {
+          results.skipped.push({
+            filename,
+            reason: "File too large (>50MB)"
+          });
+          continue;
+        }
+
+        const fileBuffer = await getFileData(file);
+        const base64Data = arrayBufferToBase64(fileBuffer);
+
+        const filePath = `audios/${selectedGenre}/${filename}`;
+        await Filesystem.writeFile({
+          path: filePath,
+          data: base64Data,
+          directory: DIR,
+          recursive: true,
+        });
+
+        const verification = await verifyWrittenFile(filePath, DIR, fileBuffer.byteLength);
+
+        if (!verification.success) {
+          throw new Error(`File verification failed: ${verification.error}`);
+        }
+
+        results.successful.push({
+          filename,
+          path: filePath,
+          size: Math.round(fileBuffer.byteLength / 1024)
+        });
+
+        if (onProgress) {
+          onProgress({
+            current: i + 1,
+            total: files.length,
+            filename: filename,
+            status: 'completed'
+          });
+        }
+
+      } catch (fileError) {
+        console.error(`Error processing file ${filename}:`, fileError);
+        results.failed.push({
+          filename,
+          error: fileError.message || "Unknown error occurred"
+        });
+
+        if (onProgress) {
+          onProgress({
+            current: i + 1,
+            total: files.length,
+            filename: filename,
+            status: 'failed',
+            error: fileError.message
+          });
+        }
+      }
+    }
+
+    return results;
+
+  } catch (err) {
+    console.error("Error in handleAddSongWithProgress:", err);
+    throw err;
+  }
+}
+*/

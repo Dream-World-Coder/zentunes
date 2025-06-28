@@ -95,7 +95,7 @@ const CategoryPage = memo(function CategoryPage({
   }, []);
 
   const simpleVersion = JSON.parse(
-    localStorage.getItem("simpleVersion") || "false"
+    localStorage.getItem("simpleVersion") || "false",
   );
 
   return (
@@ -168,6 +168,7 @@ const CategoryPage = memo(function CategoryPage({
                   src={music.src}
                   title={music.title}
                   mediaType={music.mediaType}
+                  duration={music.duration}
                   index={index}
                   selectWindowOpen={selectWindowOpen}
                   setAudiosToDelete={setAudiosToDelete}

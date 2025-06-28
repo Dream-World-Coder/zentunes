@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { Filesystem, Directory, Encoding } from "@capacitor/filesystem";
 import Fuse from "fuse.js";
+import { Search } from "lucide-react";
 
 import useHeader from "../components/Header";
 import Footer from "../components/Footer";
@@ -23,6 +24,7 @@ export default function SearchPage() {
   const [searchResults, setSearchResults] = useState([]);
   const [searchPart, setSearchPart] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [searchedSomething, setSearchedSomething] = useState(false);
 
   async function searchSongs(part) {
     try {
@@ -50,7 +52,7 @@ export default function SearchPage() {
 
       const regex = new RegExp(
         part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
-        "i",
+        "i"
       );
       const regexMatches = allSongs.filter((song) => regex.test(song.title));
 
@@ -133,37 +135,44 @@ export default function SearchPage() {
               <button
                 type="submit"
                 className={`search__submitBtn ${isLoading ? "loading" : ""}`}
+                onClick={() => setSearchedSomething(true)}
               >
-                {isLoading ? "Searching ..." : "Search"}
+                {isLoading ? "Searching ..." : <Search size={20} />}
               </button>
             </form>
 
             <div className="search__results">
-              <h2>Results</h2>
-              <ol
-                className={`${searchResults.length === 0 ? "no__res" : ""} ${
-                  isLoading ? "loading" : ""
-                }`}
-              >
-                {searchResults.length > 0 ? (
-                  searchResults.map((res, idx) => (
-                    <li
-                      key={idx}
-                      onClick={() => {
-                        navigate(`/musics/${res.genre}#${res.audioId || ""}`);
-                      }}
-                    >
-                      <div>
-                        {res.title}
-                        <strong>• Duration: {formatTime(res.duration)}</strong>
-                      </div>
-                      <mark>{pretty(res.genre)}</mark>
-                    </li>
-                  ))
-                ) : (
-                  <div className="no__res">No Results Found</div>
-                )}
-              </ol>
+              {searchedSomething && (
+                <>
+                  <h2>Results</h2>
+                  <ol className={` ${isLoading ? "loading" : ""}`}>
+                    {/*${searchResults.length === 0 ? "no__res" : ""} */}
+                    {searchResults.length > 0 ? (
+                      searchResults.map((res, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => {
+                            navigate(
+                              `/musics/${res.genre}#${res.audioId || ""}`
+                            );
+                          }}
+                        >
+                          <div>
+                            {res.title}
+                            <strong>
+                              • Duration: {formatTime(res.duration)}
+                            </strong>
+                          </div>
+                          <mark>{pretty(res.genre)}</mark>
+                        </li>
+                      ))
+                    ) : (
+                      // <div className="no__res">No Results Found</div>
+                      <li className="">No Results Found</li>
+                    )}
+                  </ol>
+                </>
+              )}
             </div>
           </div>
         </div>

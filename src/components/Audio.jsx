@@ -9,6 +9,7 @@ import {
   Pause,
 } from "lucide-react";
 import { useAudioPlayer } from "../contexts/AudioPlayerContext";
+import { getFormattedTitle } from "../services/formatting";
 
 import "../styles/music.scss";
 // import { CapacitorMusicControls } from "capacitor-music-controls-plugin";
@@ -18,6 +19,7 @@ const AudioItem = memo(function AudioItem({
   src,
   title,
   mediaType = "audio/mpeg",
+  duration: dur,
   index,
   selectWindowOpen = false,
   setAudiosToDelete = () => {},
@@ -49,7 +51,7 @@ const AudioItem = memo(function AudioItem({
     if (!audio) return;
 
     const handleLoadedMetadata = () => {
-      setDuration(audio.duration);
+      setDuration(audio.duration != 0 ? audio.duration : dur);
 
       // if (currentAudio.index === index) {
       //   setCurrentAudio((prev) => ({ ...prev, duration: audio.duration }));
@@ -87,7 +89,7 @@ const AudioItem = memo(function AudioItem({
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
       clearInterval(interval);
     };
-  }, [formatTime]); // ,currentAudio.index, index]);
+  }, [formatTime, dur]); // ,currentAudio.index, index]);
 
   // important cuz props are staying same i.guess, so multiple playing at once
   // --------------------------------------------------------------------------
@@ -209,7 +211,7 @@ const AudioItem = memo(function AudioItem({
             ) : (
               <Music className="ms" />
             )}
-            <span>{title || "no title"}</span>
+            <span>{getFormattedTitle(title || "no title")}</span>
           </figcaption>
 
           {!selectWindowOpen && (
@@ -219,6 +221,65 @@ const AudioItem = memo(function AudioItem({
                 ref={audioRef}
                 className="audio"
                 preload="metadata"
+                onEnded={() => console.log("Ended")}
+                onError={(e) => {
+                  const audioEl = e.target;
+                  const err = audioEl.error;
+
+                  console.error(
+                    "Audio error:",
+                    JSON.stringify(
+                      {
+                        code: err?.code,
+                        message: err?.message,
+                        currentTime: audioEl.currentTime,
+                        duration: audioEl.duration,
+                        src: audioEl.src,
+                      },
+                      null,
+                      2
+                    )
+                  );
+
+                  if (err?.code === 3) {
+                    // MEDIA_ERR_DECODE
+                    console.log("Attempting to recover from decode error");
+
+                    // Store current position
+                    const currentTime = audioEl.currentTime;
+
+                    // Clear source and reload
+                    audioEl.src = "";
+                    audioEl.load();
+
+                    // Reset source after a brief delay
+                    setTimeout(() => {
+                      audioEl.src = src;
+                      audioEl.load();
+
+                      // Try to resume from where it failed (optional)
+                      audioEl.addEventListener(
+                        "canplay",
+                        function resumePlayback() {
+                          if (currentTime > 0) {
+                            audioEl.currentTime = Math.max(0, currentTime - 2); // Go back 2 seconds
+                          }
+                          audioEl.removeEventListener(
+                            "canplay",
+                            resumePlayback
+                          );
+                        }
+                      );
+                    }, 100);
+                  }
+                }}
+                onStalled={() => {
+                  console.log("Audio stalled, attempting reload");
+                  const audioEl = audioRef.current;
+                  if (audioEl) {
+                    audioEl.load();
+                  }
+                }}
               >
                 <source src={src} type={mediaType} />
                 This audio is not supported by your browser.
@@ -226,10 +287,7 @@ const AudioItem = memo(function AudioItem({
 
               <div className="playPauseBtn">
                 {/* {isPlaying && (
-                  <RotateCcw
-                    size={16}
-                    onClick={(p) => setCurrentTime(p - 10)}
-                  />
+                  <RotateCcw size={16} onClick={(p) => setCurrentTime(p - 10)} />
                 )} */}
                 {!isPlaying && (
                   <Play
@@ -257,7 +315,7 @@ const AudioItem = memo(function AudioItem({
                 className={`progressBar ${isPlaying ? "player-is-active" : ""}`}
                 type="range"
                 min="0"
-                max={duration || 2}
+                max={duration}
                 value={currentTime}
                 step="0.1"
                 onChange={handleProgressChange}
@@ -290,6 +348,7 @@ AudioItem.propTypes = {
   src: PropTypes.string,
   title: PropTypes.string,
   mediaType: PropTypes.string,
+  duration: PropTypes.number,
   index: PropTypes.number,
   selectWindowOpen: PropTypes.bool,
   setAudiosToDelete: PropTypes.func,

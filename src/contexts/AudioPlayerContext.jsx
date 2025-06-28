@@ -84,6 +84,8 @@ export const AudioPlayerProvider = ({ children }) => {
         setAudioCache(data);
 
         genreSongs = data[genre] || [];
+        console.log(JSON.stringify(genreSongs, null, 2));
+
         setMusicsList(genreSongs);
         setCurrentPlaylist({
           name: getFormattedTitle(genre),

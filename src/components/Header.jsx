@@ -2,8 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import {
   X,
-  Sun,
-  Moon,
   Scan,
   Trash,
   Search,
@@ -168,7 +166,12 @@ export default function useHeader() {
                 onClick={handleDarkModeToggle}
                 style={{ cursor: "pointer" }}
               >
-                {isDarkMode ? <Sun size={16} /> : <Moon size={16} />} Dark Mode
+                {isDarkMode ? (
+                  <ToggleRight size={16} />
+                ) : (
+                  <ToggleLeft size={16} />
+                )}{" "}
+                Dark Mode
               </div>
               <div className="mobile__nav__btn" onClick={toggleSimpleVersion}>
                 {!simpleVersion ? (
