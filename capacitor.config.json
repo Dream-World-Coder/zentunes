@@ -9,6 +9,10 @@
       "backgroundColor": "#31511e",
       "androidSplashResourceName": "splash",
       "showSpinner": false
+    },
+    "Filesystem": {
+      "iosDefaultLocation": "Documents",
+      "androidDefaultLocation": "ExternalStorage"
     }
   }
 }

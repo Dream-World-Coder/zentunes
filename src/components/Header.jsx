@@ -1,5 +1,6 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
+import PropTypes from "prop-types";
 import {
   X,
   Scan,
@@ -20,16 +21,134 @@ import { useAudioPlayer } from "../contexts/AudioPlayerContext";
 import { handleAddSong, handleRemoveSong } from "../services/musicStorage";
 import { getFormattedTitle as pretty } from "../services/formatting";
 import { makeAudioCache } from "../services/cacheService";
+import { copyAllSongs } from "../services/copyAudios";
 
 import { navItems as n1, navItemsSimple as n2 } from "../assets/data/navItems";
 import ham from "../assets/images/ham.svg";
 import "../styles/header.scss";
 
-function handleShare() {
-  const urlToShare = window.location.href;
-  navigator.clipboard.writeText(urlToShare);
-  alert("link copied to clipboard.");
-}
+const ProgressDialog = ({
+  isOpen,
+  progress,
+  currentFile,
+  message,
+  onClose,
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        zIndex: 999999,
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: "white",
+          color: "black",
+          padding: "24px",
+          borderRadius: "8px",
+          minWidth: "400px",
+          maxWidth: "500px",
+          boxShadow: "0 4px 12px rgba(0, 0, 0, 0.3)",
+        }}
+      >
+        <h3
+          style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "bold" }}
+        >
+          Copying Songs...
+        </h3>
+
+        {/* Progress Bar */}
+        <div
+          style={{
+            width: "100%",
+            height: "20px",
+            backgroundColor: "#f0f0f0",
+            borderRadius: "10px",
+            overflow: "hidden",
+            marginBottom: "12px",
+          }}
+        >
+          <div
+            style={{
+              width: `${progress}%`,
+              height: "100%",
+              backgroundColor: "#31511e",
+              transition: "width 0.3s ease",
+            }}
+          />
+        </div>
+
+        {/* Progress Text */}
+        <div style={{ fontSize: "14px", marginBottom: "8px" }}>
+          {progress}% Complete
+        </div>
+
+        {/* Current File */}
+        {currentFile && (
+          <div
+            style={{
+              fontSize: "12px",
+              color: "#666",
+              marginBottom: "8px",
+              wordBreak: "break-all",
+            }}
+          >
+            Current: {currentFile}
+          </div>
+        )}
+
+        {/* Status Message */}
+        {message && (
+          <div
+            style={{
+              fontSize: "12px",
+              color: "#666",
+              marginBottom: "16px",
+            }}
+          >
+            {message}
+          </div>
+        )}
+
+        {/* Close Button (only show when complete) */}
+        {progress >= 100 && (
+          <button
+            onClick={onClose}
+            style={{
+              backgroundColor: "#31511e",
+              color: "white",
+              border: "none",
+              padding: "8px 16px",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontSize: "14px",
+            }}
+          >
+            Close
+          </button>
+        )}
+      </div>
+    </div>
+  );
+};
+ProgressDialog.propTypes = {
+  isOpen: PropTypes.bool,
+  progress: PropTypes.number,
+  currentFile: PropTypes.string,
+  message: PropTypes.string,
+  onClose: PropTypes.func,
+};
 
 export default function useHeader() {
   const [selectWindowOpen, setSelectWindowOpen] = useState(false);
@@ -40,6 +159,12 @@ export default function useHeader() {
     setSelectWindowOpen(false);
     setAudiosToDelete([]);
   }, [genre]);
+
+  function handleShare() {
+    const urlToShare = window.location.href;
+    navigator.clipboard.writeText(urlToShare);
+    alert("link copied to clipboard.");
+  }
 
   function Header() {
     const [isDarkMode, setIsDarkMode] = useState(false);
@@ -61,6 +186,79 @@ export default function useHeader() {
     );
     const navItems = !simpleVersion ? n1 : n2;
 
+    const handleDarkModeToggle = () => {
+      const newDarkMode = !isDarkMode;
+      setIsDarkMode(newDarkMode);
+
+      if (newDarkMode) {
+        document.body.classList.add("dark");
+        localStorage.setItem("isDarkModeZentunes", "true");
+      } else {
+        document.body.classList.remove("dark");
+        localStorage.setItem("isDarkModeZentunes", "false");
+      }
+    };
+
+    // progressbar -> when copying
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [progress, setProgress] = useState(0);
+    const [currentFile, setCurrentFile] = useState("");
+    const [message, setMessage] = useState("");
+    const [isProcessing, setIsProcessing] = useState(false);
+
+    // Progress handler
+    const progressHandler = useCallback((progressData) => {
+      const { current, total, currentGenre, filename, status, error } =
+        progressData;
+      const percentage = Math.round((current / total) * 100);
+
+      setProgress(percentage);
+      setCurrentFile(`${currentGenre}/${filename}`);
+
+      let statusMessage = "";
+      if (status === "completed") {
+        statusMessage = "Completed";
+      } else if (status === "failed") {
+        statusMessage = `Failed: ${error}`;
+      } else if (status === "processing") {
+        statusMessage = "Processing...";
+      }
+
+      setMessage(statusMessage);
+    }, []);
+
+    // Start copy operation
+    const handleStartCopy = async () => {
+      setIsPlaylistLoading(true);
+      setIsDialogOpen(true);
+      setProgress(0);
+      setCurrentFile("");
+      setMessage("Starting...");
+      setIsProcessing(true);
+
+      try {
+        const results = await copyAllSongs(progressHandler);
+        setMessage(
+          `Copy completed! ${results.successful.length} songs copied successfully.`
+        );
+        console.log("Copy results:", results);
+      } catch (error) {
+        setMessage(`Copy failed: ${error.message}`);
+        console.error("Copy error:", error);
+      } finally {
+        setIsProcessing(false);
+        setIsPlaylistLoading(false);
+      }
+    };
+
+    // Close dialog
+    const handleCloseDialog = () => {
+      setIsDialogOpen(false);
+      setProgress(0);
+      setCurrentFile("");
+      setMessage("");
+    };
+
     useEffect(() => {
       const savedDarkMode = localStorage.getItem("isDarkModeZentunes");
 
@@ -74,19 +272,6 @@ export default function useHeader() {
         console.log("No dark mode preference found");
       }
     }, []);
-
-    const handleDarkModeToggle = () => {
-      const newDarkMode = !isDarkMode;
-      setIsDarkMode(newDarkMode);
-
-      if (newDarkMode) {
-        document.body.classList.add("dark");
-        localStorage.setItem("isDarkModeZentunes", "true");
-      } else {
-        document.body.classList.remove("dark");
-        localStorage.setItem("isDarkModeZentunes", "false");
-      }
-    };
 
     return (
       <header>
@@ -243,7 +428,9 @@ export default function useHeader() {
 
               <div
                 className="mobile__nav__btn"
-                onClick={() => alert("Will be available soon")}
+                onClick={handleStartCopy}
+                disabled={isProcessing}
+                style={{ pointerEvents: isProcessing ? "none" : "all" }}
               >
                 <CopyPlusIcon size={16} /> Copy Songs in Device
               </div>
@@ -289,6 +476,8 @@ export default function useHeader() {
             </ul>
           </div>
         </div>
+
+        {/* add songs dialog */}
         {genreDialogOpen && (
           <div className="genreDialog">
             <div className="genreDialog__header">
@@ -345,6 +534,15 @@ export default function useHeader() {
             </div>
           </div>
         )}
+
+        {/* copy songs dialog */}
+        <ProgressDialog
+          isOpen={isDialogOpen}
+          progress={progress}
+          currentFile={currentFile}
+          message={message}
+          onClose={handleCloseDialog}
+        />
       </header>
     );
   }
