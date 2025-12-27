@@ -1,15 +1,9 @@
 {
-  "id": "/",
+  "id": "https://zentunes.vercel.app",
   "name": "Zentunes",
   "short_name": "Zentunes",
-  "description": "Zentunes is a digital sanctuary of beautiful and nostalgic music. It is a place where sound can be a source of peace and gentle reflection.",
-  "start_url": "/",
-  "scope": "/",
-  "scope_extensions": [
-    {
-      "origin": "https://zentunes.vercel.app"
-    }
-  ],
+  "description": "An audio player, just for you.",
+  "start_url": "https://zentunes.vercel.app",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#31511e",
