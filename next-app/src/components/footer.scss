@@ -1,0 +1,133 @@
+.footer {
+  $headerBgClr: #31511e;
+  $headerClr: #f6fcdf;
+  background-color: $headerBgClr;
+  width: 100%;
+  margin-top: 10rem;
+  color: $headerClr;
+  padding-top: 30px;
+  padding-bottom: 20px;
+
+  &.dark {
+    background-color: #222;
+    color: #d1d1d1;
+  }
+
+  &__inner {
+    max-width: 1368px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    /* border: 1px solid white; */
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+  }
+
+  &__logo {
+    margin-bottom: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 10px;
+    padding-left: 2rem;
+
+    @media (min-width: 768px) {
+      margin-bottom: 0;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    .footer__icon {
+      max-height: 28px;
+      max-width: 28px;
+      border-radius: 6px;
+      overflow: hidden;
+
+      @media screen and (min-width: 640px) {
+        max-height: 38px;
+        max-width: 38px;
+      }
+
+      & img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+    }
+
+    .footer__title {
+      font-size: 2rem;
+      margin: 0;
+
+      @media screen and (min-width: 640px) {
+        font-size: 4rem;
+      }
+    }
+  }
+
+  &__links {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    @media (min-width: 640px) {
+      flex-direction: row;
+    }
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    & {
+      margin-left: 2rem;
+      @media (min-width: 768px) {
+        margin-left: 4rem;
+      }
+    }
+  }
+
+  &__item {
+    margin-bottom: 0.5rem;
+  }
+
+  &__link {
+    color: inherit;
+    text-decoration: none;
+    font-size: 1.5rem;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+      text-decoration-thickness: 1px;
+    }
+  }
+
+  &__bottom {
+    padding: 4rem 2rem 2rem;
+    width: 100%;
+    max-width: 1368px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.25rem;
+
+    .dark & {
+      border-color: #333;
+    }
+  }
+}
+.footer__item {
+  margin-bottom: 1rem;
+  font-size: 1.65rem;
+  font-weight: 600;
+}
+.faded {
+  opacity: 60%;
+}
