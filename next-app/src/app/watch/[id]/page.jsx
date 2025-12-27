@@ -7,7 +7,6 @@ import { ytd } from "@/services/ytData";
 import "../watch.scss";
 
 export default function PlayPage({ params }) {
-  // In Next.js App Router, params is a Promise in newer versions
   const decodedParams = use(params);
   const id = decodedParams.id;
 
@@ -16,7 +15,7 @@ export default function PlayPage({ params }) {
   const [isLoading, setIsLoading] = useState(true);
   const playerRef = useRef(null);
 
-  // Load YouTube IFrame API script
+  // load YouTube IFrame API script
   useEffect(() => {
     if (!window.YT) {
       const tag = document.createElement("script");

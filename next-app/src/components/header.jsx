@@ -12,7 +12,6 @@ export default function Header() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const pathname = usePathname();
 
-  // Consistent key for localStorage
   const STORAGE_KEY = "isDarkModeZentunes";
 
   useEffect(() => {

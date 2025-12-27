@@ -13,7 +13,6 @@ export default function AboutPage() {
 
   const pageHeading = helmetObj.title;
 
-  // Simplified string (backticks handle newlines and quotes naturally)
   const pageDescription = `
     Welcome.<br/><br/>
     I'm glad you've found your way here.<br/>

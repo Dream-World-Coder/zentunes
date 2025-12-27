@@ -34,7 +34,7 @@ export async function GET(request) {
   const LIMIT = 10;
 
   try {
-    // Logic for Similar Songs (Recommendation)
+    // for Similar Songs :Recommendatio)
     if (videoId) {
       const detailRes = await fetch(
         `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`,
@@ -56,7 +56,7 @@ export async function GET(request) {
       return NextResponse.json(data.items || []);
     }
 
-    // Logic for Standard Search
+    // for Standard Search
     if (query) {
       const response = await fetch(
         `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video,playlist&maxResults=${LIMIT}&key=${API_KEY}`,

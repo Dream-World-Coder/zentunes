@@ -7,8 +7,8 @@ export default function NotFoundPage() {
     title: "Page not found",
     description: "404 zentunes",
     robotsTxt: "index, follow",
-    currentUrl: window.location.href,
-    cannonical: window.location.href,
+    currentUrl: "https://zentunes.vercel.app",
+    cannonical: "https://zentunes.vercel.app",
     previewImagePath: "/preview-image.png",
     mainEntityType: "WebPage",
   };
