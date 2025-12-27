@@ -16,7 +16,6 @@ export default function PlayPage({ params }) {
   const [isLoading, setIsLoading] = useState(true);
   const playerRef = useRef(null);
 
-  // Load YouTube IFrame API script
   useEffect(() => {
     if (!window.YT) {
       const tag = document.createElement("script");
@@ -33,7 +32,7 @@ export default function PlayPage({ params }) {
         playerRef.current.destroy();
       }
 
-      // Fix: Only provide videoId if it's NOT a playlist
+      // Base Config
       const playerConfig = {
         height: "100%",
         width: "100%",
@@ -43,18 +42,20 @@ export default function PlayPage({ params }) {
         events: {
           onStateChange: (event) => {
             if (event.data === 0 && recommendations.length > 0) {
+              const nextItem = recommendations[0];
               const nextId =
-                recommendations[0].id?.videoId ||
-                recommendations[0].snippet?.resourceId?.videoId;
+                nextItem.id?.videoId || nextItem.snippet?.resourceId?.videoId;
               if (nextId) router.push(`/watch/${nextId}`);
             }
           },
         },
       };
 
+      // THE FIX: Strict separation
       if (isPlaylist) {
         playerConfig.playerVars.listType = "playlist";
         playerConfig.playerVars.list = id;
+        // Do NOT set playerConfig.videoId at all
       } else {
         playerConfig.videoId = id;
       }
@@ -78,29 +79,21 @@ export default function PlayPage({ params }) {
     };
   }, [id, recommendations, router, isPlaylist]);
 
-  // Fetch Playlist Items or Recommendations
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
       try {
-        if (isPlaylist) {
-          // Fetch videos from the playlist instead of general recommendations
-          // Ensure your ytd service has a method like getPlaylistVideos
-          const playlistVideos = await ytd.getPlaylistVideos(id);
-          setRecommendations(playlistVideos);
-        } else {
-          const recs = await ytd.getSimilarSongs(id);
-          setRecommendations(recs);
-        }
+        const data = isPlaylist
+          ? await ytd.getPlaylistVideos(id)
+          : await ytd.getSimilarSongs(id);
+        setRecommendations(data);
       } catch (error) {
-        console.error("Failed to fetch content:", error);
+        console.error("Data fetch error:", error);
       } finally {
         setIsLoading(false);
       }
     };
-
     fetchData();
-    window.scrollTo(0, 0);
   }, [id, isPlaylist]);
 
   return (

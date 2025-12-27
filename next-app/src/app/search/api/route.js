@@ -6,9 +6,6 @@ export async function GET(request) {
   const host = headerList.get("host");
   const referer = headerList.get("referer");
 
-  // 1. Basic Domain Lockdown
-  // Only allow requests if they come from your own domain
-  // Note: During local development, host will be 'localhost:3000'
   const isAllowed =
     host === "zentunes.vercel.app" ||
     host?.startsWith("localhost:") ||
@@ -21,6 +18,7 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const query = searchParams.get("q");
   const videoId = searchParams.get("videoId");
+  const playlistId = searchParams.get("playlistId"); // Extract playlistId
 
   const API_KEY = process.env.GOOGLE_CLOUD_API_KEY;
 
@@ -31,10 +29,27 @@ export async function GET(request) {
     );
   }
 
-  const LIMIT = 10;
+  const LIMIT = 15;
 
   try {
-    // for Similar Songs :Recommendatio)
+    // 1. Handle Playlist Items
+    if (playlistId) {
+      const response = await fetch(
+        `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${playlistId}&maxResults=${LIMIT}&key=${API_KEY}`,
+      );
+      const data = await response.json();
+
+      if (data.error) {
+        return NextResponse.json(
+          { error: data.error.message },
+          { status: data.error.code },
+        );
+      }
+
+      return NextResponse.json(data.items || []);
+    }
+
+    // 2. Handle Similar Songs (Recommendations)
     if (videoId) {
       const detailRes = await fetch(
         `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${API_KEY}`,
@@ -56,7 +71,7 @@ export async function GET(request) {
       return NextResponse.json(data.items || []);
     }
 
-    // for Standard Search
+    // 3. Handle Standard Search
     if (query) {
       const response = await fetch(
         `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(query)}&type=video,playlist&maxResults=${LIMIT}&key=${API_KEY}`,
