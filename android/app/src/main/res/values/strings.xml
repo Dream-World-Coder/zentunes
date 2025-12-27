@@ -1,7 +1,0 @@
-<?xml version='1.0' encoding='utf-8'?>
-<resources>
-    <string name="app_name">zentunes</string>
-    <string name="title_activity_main">zentunes</string>
-    <string name="package_name">com.subhajit.zentunes</string>
-    <string name="custom_url_scheme">com.subhajit.zentunes</string>
-</resources>

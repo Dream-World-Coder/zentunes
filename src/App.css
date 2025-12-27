@@ -3,50 +3,50 @@
 *,
 *:before,
 *:after {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 @font-face {
-    font-family: "pally";
-    src: url("./assets/fonts/Pally-Regular.woff2") format("woff2");
-    font-weight: 400;
-    font-display: swap;
-    font-style: normal;
+  font-family: "pally";
+  src: url("./assets/fonts/Pally-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
 }
 @font-face {
-    font-family: Matter;
-    font-weight: 300;
-    font-style: normal;
-    src: url("./assets/fonts/matter-light.woff2") format("woff2");
-    font-display: swap;
+  font-family: Matter;
+  font-weight: 300;
+  font-style: normal;
+  src: url("./assets/fonts/matter-light.woff2") format("woff2");
+  font-display: swap;
 }
 
 .instrument-serif-regular,
 .isr {
-    font-family: "Instrument Serif", serif;
-    font-weight: 500;
-    font-style: normal;
+  font-family: "Instrument Serif", serif;
+  font-weight: 500;
+  font-style: normal;
 }
 
 .instrument-serif-regular-italic,
 .isri {
-    font-family: "Instrument Serif", serif;
-    font-weight: 400;
-    font-style: italic;
+  font-family: "Instrument Serif", serif;
+  font-weight: 400;
+  font-style: italic;
 }
 
 .ecr {
-    font-family: pally, serif;
-    font-style: normal;
+  font-family: pally, serif;
+  font-style: normal;
 }
 
 @keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

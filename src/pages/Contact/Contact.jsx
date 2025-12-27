@@ -1,17 +1,17 @@
 import CategoryPage from "../../components/CategoryPage";
 
 export default function ContactPage() {
-    const helmetObj = {
-        title: "Contact",
-        description: "Contact page of Zentunes",
-        robotsTxt: "index, follow",
-        currentUrl: "https://zentunes.vercel.app/contact",
-        cannonical: "https://zentunes.vercel.app/contact",
-        previewImagePath: "/preview-image.png",
-        mainEntityType: "ContactPage",
-    };
-    const pageHeading = helmetObj.title;
-    const pageDescription = `
+  const helmetObj = {
+    title: "Contact",
+    description: "Contact page of Zentunes",
+    robotsTxt: "index, follow",
+    currentUrl: "https://zentunes.vercel.app/contact",
+    cannonical: "https://zentunes.vercel.app/contact",
+    previewImagePath: "/preview-image.png",
+    mainEntityType: "ContactPage",
+  };
+  const pageHeading = helmetObj.title;
+  const pageDescription = `
         Hi,<br/>
         I'm Subhajit Gorai, the developer & maintainer of this site.
         Currently I am a CS undergraduate at IIEST Shibpur.
@@ -29,11 +29,11 @@ export default function ContactPage() {
         By the way, I'm always ready to build cool projects, so feel free to connect & collaborate.
         `;
 
-    return (
-        <CategoryPage
-            helmetObj={helmetObj}
-            pageHeading={pageHeading}
-            pageDescription={pageDescription}
-        />
-    );
+  return (
+    <CategoryPage
+      helmetObj={helmetObj}
+      pageHeading={pageHeading}
+      pageDescription={pageDescription}
+    />
+  );
 }
