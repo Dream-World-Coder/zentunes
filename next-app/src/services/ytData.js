@@ -22,4 +22,15 @@ export const ytd = {
       return [];
     }
   },
+
+  getPlaylistVideos: async (playlistId) => {
+    try {
+      const response = await fetch(`/search/api?playlistId=${playlistId}`);
+      if (!response.ok) throw new Error("Playlist request failed");
+      return await response.json();
+    } catch (error) {
+      console.error("Frontend Playlist Error:", error);
+      return [];
+    }
+  },
 };

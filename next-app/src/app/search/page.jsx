@@ -95,7 +95,13 @@ function SearchContent() {
                             dangerouslySetInnerHTML={{ __html: title }}
                           />
                           <p className="result-item__channel">{channelTitle}</p>
-                          <span className="result-item__type">
+                          <span
+                            className="result-item__type"
+                            style={{
+                              backgroundColor: "yellow",
+                              color: "black",
+                            }}
+                          >
                             {videoId ? "Video" : "Playlist"}
                           </span>
                         </div>
