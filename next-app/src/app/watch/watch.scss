@@ -1,0 +1,71 @@
+.play-container {
+  padding-top: 2rem;
+}
+
+.player-section {
+  min-height: min-content;
+  padding: 4rem 2rem 0 2rem;
+
+  @media screen and (min-width: 1024px) {
+    padding: 6rem 3rem 0 3rem;
+  }
+}
+
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%; // 16:9 aspect ratio
+  height: 0;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #000;
+
+  iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.recommendations-section {
+  margin-top: 3rem;
+  min-height: min-content;
+  padding: 4rem 2rem 0 2rem;
+
+  @media screen and (min-width: 1024px) {
+    padding: 6rem 3rem 0 3rem;
+  }
+
+  .rec-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  h3 {
+    margin-bottom: 2rem;
+  }
+}
+
+.rec-card {
+  cursor: pointer;
+  img {
+    width: 100%;
+    border-radius: 8px;
+    aspect-ratio: 16/9;
+    object-fit: cover;
+  }
+  h4 {
+    margin: 0.5rem 0 0.2rem;
+    font-size: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  p {
+    font-size: 0.85rem;
+    color: #888;
+  }
+}

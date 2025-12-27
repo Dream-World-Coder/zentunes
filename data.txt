@@ -1,9 +1,6 @@
----- concept:
-
-why we shall not add a const/let/function vars/objs in a dependency array of useEffect or something else?
-cuz on every re-render the reference [mem location] of the variavle will change, [redefined in each render]
-and as the reference changes useEffect will run the code inside it again, if that results in a re-render [which happens most of the time] then it variable will be redefined again and thus creating an infinite loop.
-
-use useState or useMemo if it needs to be added in a dependency
-
--- new branch: self use
+autoplay next audio
+handle playlists
+direct url extraction
+save playlists
+I might use a flask backend or next, no problems on that. more importantly is this type of playing reliable by embedding or yt has different api for playing like iframe api? them implement that. also playlist is not working, handle playlist videos, & autoplay next vid. I have uploaded the necessary codes, write modified files.
+secure .env

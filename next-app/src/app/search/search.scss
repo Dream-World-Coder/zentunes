@@ -1,0 +1,90 @@
+@use "sass:color";
+
+.description {
+  margin-bottom: 10rem;
+  max-width: 100ch;
+}
+
+.search {
+  position: relative;
+
+  &__form {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 5rem;
+
+    & input {
+      width: 80%;
+      height: 45px;
+      border-radius: 25px;
+      padding: 5px 15px;
+      font-size: 1.85rem;
+      border: 1px solid black;
+      outline: none;
+    }
+
+    & button {
+      border-radius: 25px;
+      height: 45px;
+      padding: 5px 16px;
+      background-color: greenyellow;
+      border: 1px solid black;
+      outline: none;
+
+      &.loading {
+        pointer-events: none;
+        opacity: 65%;
+      }
+    }
+  }
+
+  &__results {
+    min-height: 55dvh;
+
+    h2 {
+      font-size: 2rem;
+      text-underline-offset: 2px;
+      text-decoration: underline;
+    }
+
+    ol {
+      padding-left: 5px;
+      list-style-type: none;
+
+      &.loading {
+        font-size: 0;
+        pointer-events: none;
+      }
+
+      &.no__res {
+        padding-left: 0;
+      }
+
+      li {
+        padding: 8px 0;
+
+        strong {
+          margin-left: 6px;
+        }
+
+        mark {
+          padding: 0 3px;
+        }
+      }
+
+      .no__res {
+        margin: 16px 0;
+        padding: 20px 0;
+        border-radius: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: color.adjust(#31511e, $lightness: 36%);
+        color: black;
+        height: 200px;
+      }
+    }
+  }
+}
