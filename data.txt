@@ -3,3 +3,4 @@ handle playlists
 direct url extraction
 save playlists
 I might use a flask backend or next, no problems on that. more importantly is this type of playing reliable by embedding or yt has different api for playing like iframe api? them implement that. also playlist is not working, handle playlist videos, & autoplay next vid. I have uploaded the necessary codes, write modified files.
+secure .env
