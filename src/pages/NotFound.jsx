@@ -12,9 +12,9 @@ export default function NotFoundPage() {
   };
   const pageHeading = helmetObj.title;
   const pageDescription = `
-        The page you are looking for could not be found. Check the url again for typos.
-        <br/>
-        Error 404`;
+    The page you are looking for could not be found. Check the url again for typos.
+    <br/>
+    Error 404`;
 
   return (
     <CategoryPage

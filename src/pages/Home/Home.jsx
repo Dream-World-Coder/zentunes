@@ -1,117 +1,21 @@
-import { useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { gsap } from "gsap";
+// import { History } from "lucide-react";
 import PropTypes from "prop-types";
 
 import Header from "../../components/Header";
 import Footer from "../../components/Footer";
-import AudioItem from "../../components/Audio";
-import PlayOptions from "../../components/PlayOptions";
-import { useAudioPlayer } from "../../contexts/AudioPlayerContext";
+// import { getLastSearches } from "../../services/historyTracker";
+import { navItems } from "../../assets/data/navItems";
 
 import "../../styles/home.scss";
 
-function HomePage({ helmetObj, pageHeading, musicsList = [], loading }) {
-  const musicItemsRef = useRef([]);
+function HomePage({ helmetObj }) {
+  // const lastPages = getLastRoutes()
+  //   ?.filter((i) => i?.includes("music"))
+  //   .slice(0, 3);
 
-  /*
-   * inspired from: https://www.supah.it/portfolio/
-   * credit: Favio Ottoviani
-   */
-  const isDesktop =
-    !/Android/i.test(navigator.userAgent) && window.innerWidth > 1025;
-
-  // Handle mouse enter animation
-  const handleMouseEnter = (e, index) => {
-    if (!isDesktop) return;
-
-    const music = musicItemsRef.current[index];
-    if (!music) return;
-
-    const link = music.querySelector("figcaption");
-    const overlay = music.querySelector(".overlay");
-
-    if (!link || !overlay) return;
-
-    // Determine if mouse is entering from top or bottom
-    const bounds = music.getBoundingClientRect();
-    const top = e.clientY < bounds.y + bounds.height / 2;
-
-    // Animate link movement and overlay scale
-    gsap.to(link, {
-      x: "2rem",
-      duration: 0.5,
-      ease: "power3.out",
-    });
-
-    gsap.fromTo(
-      overlay,
-      {
-        scaleY: 0,
-        transformOrigin: top ? "0 0" : "0 100%",
-      },
-      {
-        scaleY: 1,
-        duration: 0.5,
-        ease: "power3.out",
-      },
-    );
-  };
-
-  // Handle mouse leave animation
-  const handleMouseLeave = (e, index) => {
-    if (!isDesktop) return;
-
-    const music = musicItemsRef.current[index];
-    if (!music) return;
-
-    const link = music.querySelector("figcaption");
-    const overlay = music.querySelector(".overlay");
-
-    if (!link || !overlay) return;
-
-    // Determine if mouse is leaving from top or bottom
-    const bounds = music.getBoundingClientRect();
-    const top = e.clientY < bounds.y + bounds.height / 2;
-
-    // Reset animations
-    gsap.killTweensOf([overlay, link]);
-
-    gsap.to(link, {
-      x: 0,
-      duration: 0.3,
-      ease: "power3.out",
-    });
-
-    gsap.to(overlay, {
-      scaleY: 0,
-      transformOrigin: top ? "0 0" : "0 100%",
-      duration: 0.7,
-      ease: "power3.out",
-    });
-  };
-
-  // Cleanup animations on unmount
-  useEffect(() => {
-    return () => {
-      // Kill all GSAP animations when component unmounts
-      musicItemsRef.current.forEach((music) => {
-        if (music) {
-          const link = music.querySelector("figcaption");
-          const overlay = music.querySelector(".overlay");
-          if (link && overlay) {
-            gsap.killTweensOf([overlay, link]);
-          }
-        }
-      });
-    };
-  }, []);
-
-  // Set ref for each music item
-  const setMusicRef = (el, index) => {
-    musicItemsRef.current[index] = el;
-  };
+  const allGenres = navItems.find((i) => i.href === "dropdown")?.dropdownItems;
 
   return (
     <>
@@ -162,54 +66,36 @@ function HomePage({ helmetObj, pageHeading, musicsList = [], loading }) {
       <Header />
 
       <section className="container">
-        <h2 className="heading isr">{pageHeading}</h2>
-        <p className="description">
-          Here you will find a collection of beautiful music filled with
-          calmness and nostalgia. Enjoy them to the fullest.
-          <br />
-          There are multiple collections, such as{" "}
-          <NavLink to="/musics/classical" className="home__link">
-            Classical
-          </NavLink>
-          ,{" "}
-          <NavLink to="/musics/nature" className="home__link">
-            Nature
-          </NavLink>
-          ,{" "}
-          <NavLink to="/musics/bangla_retro" className="home__link">
-            Bangla Retro
-          </NavLink>
-          ,{" "}
-          <NavLink to="/musics/rabindra_sangeet" className="home__link">
-            Rabindra Sangeet
-          </NavLink>{" "}
-          among many others. Be sure to explore them all! Below you will find
-          one song from each of the collections.
-          <br />
-          <br />
-          Thank you for visiting!
-        </p>
+        <h2 className="heading__home isr">Zentunes</h2>
+        <p className="description">Listen to songs without ads.</p>
 
-        {musicsList.length > 0 && <PlayOptions />}
+        {/* {lastPages?.length > 0 && (
+          <div className="lastViewedPages">
+            <h2 className="isri">Recently Visited</h2>
+            <div className="pages">
+              {lastPages.map((i, j) => (
+                <NavLink to={i} key={j} className="pages__child">
+                  <History className="circ" size={16} />
 
-        <ul className={`musics ${loading ? "loading" : ""}`}>
-          {musicsList.length > 0 &&
-            musicsList.map((music, index) => (
-              <li
-                key={`home-${music.src}`}
-                ref={(el) => setMusicRef(el, index)}
-                onMouseEnter={(e) => handleMouseEnter(e, index)}
-                onMouseLeave={(e) => handleMouseLeave(e, index)}
-              >
-                <AudioItem
-                  src={music.src}
-                  title={music.title}
-                  mediaType={music.mediaType}
-                  index={index}
-                />
-              </li>
+                  {i !== "miscellaneous"
+                    ? pretty(i.split("/").pop())
+                    : "Gentle Tunes"}
+                </NavLink>
+              ))}
+            </div>
+          </div>
+        )}*/}
+
+        <div className="allGenres">
+          <h2 className="isri">Genres</h2>
+          <div className="genres">
+            {allGenres?.map((item) => (
+              <NavLink to={item.href} key={item.href} className="genres__child">
+                {item.title}
+              </NavLink>
             ))}
-        </ul>
+          </div>
+        </div>
       </section>
 
       <Footer />
@@ -218,9 +104,7 @@ function HomePage({ helmetObj, pageHeading, musicsList = [], loading }) {
 }
 HomePage.propTypes = {
   helmetObj: PropTypes.object,
-  musicsList: PropTypes.array,
   pageHeading: PropTypes.string,
-  loading: PropTypes.bool,
 };
 
 export default function Home() {
@@ -233,27 +117,7 @@ export default function Home() {
     previewImagePath: "/preview-image.png",
     mainEntityType: "WebPage",
   };
-  const pageHeading = "welcome to zentunes";
-  const { musicsList, isPlaylistLoading, loadPlaylists, setCurrentAudio } =
-    useAudioPlayer();
+  const pageHeading = "Welcome to Zentunes";
 
-  useEffect(() => {
-    loadPlaylists("home");
-    setCurrentAudio({
-      index: null,
-      title: "",
-      duration: 0,
-      currentTime: 0,
-      audioRef: null,
-    });
-  }, []);
-
-  return (
-    <HomePage
-      helmetObj={helmetObj}
-      pageHeading={pageHeading}
-      musicsList={musicsList}
-      loading={isPlaylistLoading}
-    />
-  );
+  return <HomePage helmetObj={helmetObj} pageHeading={pageHeading} />;
 }

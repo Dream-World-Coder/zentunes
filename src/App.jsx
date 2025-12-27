@@ -8,12 +8,11 @@ import "./styles/style.css";
 import "./App.css";
 
 import Home from "./pages/Home/Home";
-import MusicPage from "./pages/MusicPage/MusicPage";
+import SearchPage from "./pages/SearchPage";
 import AboutPage from "./pages/About/About";
 import ContactPage from "./pages/Contact/Contact";
 import NotFoundPage from "./pages/NotFound";
-
-import { AudioPlayerProvider } from "./contexts/AudioPlayerContext";
+import PlayPage from "./pages/PlayPage";
 
 export default function App() {
   useEffect(() => {
@@ -34,19 +33,18 @@ export default function App() {
 
   return (
     <HelmetProvider>
-      <AudioPlayerProvider>
-        <Analytics />
-        <Router>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/musics/:genre" element={<MusicPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/contact" element={<ContactPage />} />
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </Router>
-      </AudioPlayerProvider>
+      <Analytics />
+      <Router>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/watch/:id" element={<PlayPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Router>
     </HelmetProvider>
   );
 }
