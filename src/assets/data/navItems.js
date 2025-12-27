@@ -14,6 +14,9 @@ export const navItems = [
       { title: "Hindi Retro", href: "/search?query=hindi+retro+songs" },
       { title: "New Hindi", href: "/search?query=new+hindi+songs" },
       { title: "Shamya Sangeet", href: "/search?query=pannalal+shaymasangeet" },
+      { title: "Lata Mangeshkar", href: "/search?query=Lata+Mangeshkar" },
+      { title: "Kishore Kumar", href: "/search?query=Kishore+Kumar" },
+      { title: "Sanam", href: "/search?query=sanam+puri" },
     ],
   },
   //*/
