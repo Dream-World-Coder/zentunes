@@ -191,9 +191,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 ---
 
 <div align="center">
-
 **Created with ❤️ by [Dream-World-Coder](https://github.com/Dream-World-Coder)**
-
 </div>
 
 ### How to use this:
