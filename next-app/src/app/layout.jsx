@@ -6,7 +6,7 @@ import "./globals.css";
 
 export const metadata = {
   title: "Zentunes",
-  description: "An music app just for you",
+  description: "A music app just for you",
   width: "device-width",
   initialScale: 1,
   manifest: "/manifest.json",

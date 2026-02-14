@@ -6,7 +6,7 @@ export default function NotFoundPage() {
   const helmetObj = {
     title: "Page not found",
     description: "404 zentunes",
-    robotsTxt: "index, follow",
+    robotsTxt: "noindex, nofollow",
     currentUrl: "https://zentunes.vercel.app",
     cannonical: "https://zentunes.vercel.app",
     previewImagePath: "/preview-image.png",

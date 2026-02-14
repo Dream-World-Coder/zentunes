@@ -4,7 +4,7 @@ export default function AboutPage() {
   const helmetObj = {
     title: "About",
     description: "About zentunes",
-    robotsTxt: "index, follow",
+    robotsTxt: "noindex, nofollow",
     currentUrl: "https://zentunes.vercel.app/about",
     cannonicalUrl: "https://zentunes.vercel.app/about",
     previewImagePath: "/preview-image.png",

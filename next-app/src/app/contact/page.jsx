@@ -4,7 +4,7 @@ export default function ContactPage() {
   const helmetObj = {
     title: "Contact",
     description: "Contact page of Zentunes",
-    robotsTxt: "index, follow",
+    robotsTxt: "noindex, nofollow",
     currentUrl: "https://zentunes.vercel.app/contact",
     cannonicalUrl: "https://zentunes.vercel.app/contact",
     previewImagePath: "/preview-image.png",
