@@ -43,8 +43,26 @@ function SearchContent() {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    if (searchPart.trim()) {
-      router.push(`/search?query=${encodeURIComponent(searchPart.trim())}`);
+    const query = searchPart.trim();
+
+    if (query) {
+      router.push(`/search?query=${encodeURIComponent(query)}`);
+
+      try {
+        const existingSearches =
+          JSON.parse(localStorage.getItem("recentSearches")) || [];
+
+        const updatedSearches = [
+          query,
+          ...existingSearches.filter((item) => item !== query),
+        ];
+
+        const limitedSearches = updatedSearches.slice(0, 5);
+
+        localStorage.setItem("recentSearches", JSON.stringify(limitedSearches));
+      } catch (error) {
+        console.error("Failed to save to local storage:", error);
+      }
     }
   };
 

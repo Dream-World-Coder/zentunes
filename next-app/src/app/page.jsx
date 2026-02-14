@@ -1,24 +1,25 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
 import Lenis from "lenis";
 import Link from "next/link";
 import Head from "next/head";
 import PropTypes from "prop-types";
-// import { History } from "lucide-react";
+import { History } from "lucide-react";
 
 import { navItems } from "@/assets/data/navItems";
-// import { getLastSearches } from "@/services/historyTracker";
+import { getRecentSearches } from "@/services/historyTracker";
 
 import "./styles/home.scss";
 import "./styles/music.scss";
 
 const HomePage = ({ helmetObj }) => {
   const allGenres = navItems.find((i) => i.href === "dropdown")?.dropdownItems;
-  // const lastPages = getLastRoutes()
-  //   ?.filter((i) => i?.includes("music"))
-  //   .slice(0, 3);
-
+  const [history, setHistory] = useState([]);
+  useEffect(() => {
+    const searches = getRecentSearches();
+    setHistory(searches);
+  }, []);
   return (
     <>
       <Head>
@@ -72,22 +73,22 @@ const HomePage = ({ helmetObj }) => {
         <h2 className="heading__home isr">Zentunes</h2>
         <p className="description">Listen to songs without ads.</p>
 
-        {/* {lastPages?.length > 0 && (
+        {history.length > 0 && (
           <div className="lastViewedPages">
             <h2 className="isri">Recently Visited</h2>
             <div className="pages">
-              {lastPages.map((i, j) => (
-                <NavLink to={i} key={j} className="pages__child">
-                  <History className="circ" size={16} />
-
-                  {i !== "miscellaneous"
-                    ? pretty(i.split("/").pop())
-                    : "Gentle Tunes"}
-                </NavLink>
+              {history.map((itm) => (
+                <Link
+                  key={itm}
+                  href={`/search?query=${encodeURIComponent(itm)}`}
+                  className="pages__child"
+                >
+                  <History className="circ" size={16} /> {itm}
+                </Link>
               ))}
             </div>
           </div>
-        )}*/}
+        )}
 
         <div className="allGenres">
           <h2 className="isri">Genres</h2>
