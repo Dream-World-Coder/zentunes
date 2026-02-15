@@ -22,7 +22,7 @@ $gapLen: 16px;
 header {
   @include flexed;
 
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;

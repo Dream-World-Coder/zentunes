@@ -18,7 +18,9 @@ const HomePage = ({ helmetObj }) => {
   const [history, setHistory] = useState([]);
   useEffect(() => {
     const searches = getRecentSearches();
-    setHistory(searches);
+    setTimeout(() => {
+      setHistory(searches);
+    }, 100);
   }, []);
   return (
     <>
@@ -34,7 +36,7 @@ const HomePage = ({ helmetObj }) => {
         <meta property="og:url" content={helmetObj.currentUrl} />
         <meta
           property="og:image"
-          content={`https://zentunes.vercel.app${helmetObj.previewImagePath}`}
+          content="https://zentunes.vercel.app/preview-image.png"
         />
 
         <meta name="twitter:card" content="summary_large_image" />
@@ -42,7 +44,7 @@ const HomePage = ({ helmetObj }) => {
         <meta name="twitter:description" content={helmetObj.description} />
         <meta
           name="twitter:image"
-          content={`https://zentunes.vercel.app${helmetObj.previewImagePath}`}
+          content="https://zentunes.vercel.app/preview-image.png"
         />
 
         <link rel="canonical" href={helmetObj.cannonicalUrl} />
@@ -134,7 +136,6 @@ export default function Home() {
     robotsTxt: "noindex, nofollow",
     currentUrl: "https://zentunes.vercel.app",
     cannonicalUrl: "https://zentunes.vercel.app",
-    previewImagePath: "/preview-image.png",
     mainEntityType: "WebPage",
   };
 

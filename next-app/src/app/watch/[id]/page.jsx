@@ -51,11 +51,11 @@ export default function PlayPage({ params }) {
         },
       };
 
-      // THE FIX: Strict separation
+      // separation
       if (isPlaylist) {
         playerConfig.playerVars.listType = "playlist";
         playerConfig.playerVars.list = id;
-        // Do NOT set playerConfig.videoId at all
+        // NOT set playerConfig.videoId at all
       } else {
         playerConfig.videoId = id;
       }
@@ -116,7 +116,7 @@ export default function PlayPage({ params }) {
           ) : (
             <div className="rec-grid">
               {recommendations.map((item) => {
-                // Handle different ID structures for search results vs playlist items
+                // different ID structures for search results & playlist items
                 const videoId =
                   item.id?.videoId || item.snippet?.resourceId?.videoId;
                 if (!videoId) return null;
